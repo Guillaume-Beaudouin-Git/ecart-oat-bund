@@ -1,0 +1,18 @@
+# Fichiers produits par Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.pytest_cache/
+
+# Environnement virtuel
+.venv
+
+# Données brutes (Eurostat, BCE, CERS, Bundesbank, Banco de España) : recréées par scripts/telecharger.py,
+# non versionnées. Les TEC de la Banque de France (indices Euronext) ne doivent jamais entrer dans le dépôt.
+data/
+
+# Fichiers système
+.DS_Store
