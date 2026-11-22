@@ -158,7 +158,12 @@ def faits(d: Donnees) -> dict:
         "france_au_dessus_de_l_italie": {"de_2025_12_a_la_fin": au_dessus_recents,
                                           "nombre_de_mois": len(au_dessus_recents),
                                           "premier_mois_depuis_1999": au_dessus_tous[0] if au_dessus_tous else None,
-                                          "tous_les_mois_depuis_1999": au_dessus_tous},
+                                          "tous_les_mois_depuis_1999": au_dessus_tous,
+                                          # ajouté après l'audit indépendant, hors plan : de combien la France dépasse
+                                          "ecarts_france_moins_italie_pb_ajout_apres_audit": {
+                                              m: float(100 * (d.taux["FR"].loc[m] - d.taux["IT"].loc[m]))
+                                              for m in au_dessus_tous},
+                                          "note_ajout": "écarts ajoutés après l'audit indépendant, hors plan"},
         "grece": {"plus_grand_ecart_pb": float(s_el.max()), "mois": str(s_el.idxmax()),
                   "mois_sans_valeur": [str(p) for p in s_el.index[s_el.isna()]]},
     }

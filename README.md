@@ -2,13 +2,14 @@
 
 ## 1. Note
 
-**Sur 96 pb de hausse de l'écart de taux à 10 ans entre la France et l'Allemagne, de mai 2024 à octobre 2026 et en
-moyenne mensuelle, 100 pb [73 ; 126] sont propres à la France** (intervalle à 95 %). Les huit pays pairs ne
-l'expliquent pas : leur écart moyen à l'Allemagne, pondéré par le PIB de 2019, a baissé de 8 pb sur la période, et
-la part commune de l'écart français est de −3 pb ; la part propre dépasse donc la hausse observée. Les cinq
-variantes fixées d'avance donnent toutes 99 ou 100 pb. En octobre 2026, l'écart OAT-Bund (147 pb en moyenne
-mensuelle) est au plus haut depuis novembre 2011, et le taux français dépasse l'italien pour le sixième mois
-depuis décembre 2025, une première depuis 1999.
+**Toute la hausse de l'écart OAT-Bund de mai 2024 à octobre 2026 (+96 pb, de 51 à 147 pb en moyenne mensuelle) est
+propre à la France : 100 pb [73 ; 126] ; en suivant ses pairs, l'écart aurait baissé de 3 pb.** L'intervalle est à
+95 %. Les arrondis expliquent que 100 − 3 ne fasse pas 96 : la part propre vaut 99,6 pb, la part commune −3,2 pb et
+la hausse 96,4 pb. L'écart moyen des huit pays pairs à l'Allemagne, pondéré par le PIB de 2019, a baissé de 8 pb sur
+la période. Les cinq variantes fixées d'avance donnent toutes 99 ou 100 pb. En octobre 2026, l'écart OAT-Bund
+(147 pb en moyenne mensuelle) est au plus haut depuis novembre 2011, et, en moyenne mensuelle, le taux français
+dépasse l'italien pour le sixième mois depuis décembre 2025 (de moins de 4 pb avant septembre 2026), une première
+depuis 1999.
 
 - **Quand.** La part propre apparaît dès juin 2024 (12 pb), reste entre 12 et 43 pb jusqu'en août 2026, puis passe
   à 57 pb en septembre et à 100 pb en octobre 2026. L'épisode de l'automne 2026 en fait plus de la moitié : 56 pb
@@ -34,22 +35,25 @@ depuis décembre 2025, une première depuis 1999.
   résorption de la prime rapporterait 8,4 M€ ; le choc commun de 2011, transposé, coûterait 5,2 M€. Couverte contre
   le Bund en DV01, la position ne garde que le risque d'écart, mais elle le garde en entier.
 - **ABE 2025.** En moyenne annuelle, l'écart observé a suivi le scénario central de l'ABE (76 pb en 2025, comme le
-  scénario) ; le niveau d'octobre 2026, 147 pb sur un mois, approche celui du scénario adverse pour 2025, 157 pb en
-  moyenne annuelle.
+  scénario). Le niveau d'octobre 2026, 147 pb sur un mois, approche l'écart adverse de 2025 (157 pb) et dépasse celui
+  de 2026 (135 pb) ; mais l'ABE raisonne en moyenne annuelle.
 
 Sources : Eurostat, BCE, CERS ; calculs de l'auteur. C'est une mesure, ni une prévision ni une recommandation de
-position. Le plan a été commité avant tout calcul
-(`PLAN.md`, commit `f938339`), le code de la décomposition avant les résultats. Le code a été écrit et relu par des
-agents de programmation IA (Claude Code) sous la direction de l'auteur ; il fixe l'objectif et les règles de
-validation, et décide de ce qui est gardé.
+position. Le plan a été commité avant la décomposition (écarts bruts déjà vus : `PLAN.md`, section 0 ; commit
+`f938339`) ; c'est un engagement, pas une preuve. Le code de la décomposition a été commité avant les résultats. Le
+plan (son « je » est l'agent), le code et cette note ont été rédigés et relus par des agents d'IA (Claude Code), sous
+la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles de validation, et décide de ce qui est gardé.
 
-> **In English.** Of the 96 bp rise in the 10-year France-Germany yield spread between May 2024 and October 2026
-> (monthly averages), 100 bp [73; 126] are specific to France: the GDP-weighted spread of eight euro-area peers to
-> Germany fell by 8 bp over the period, and all five robustness variants fixed in the plan give 99 or 100 bp. More
-> than half of it came in September and October 2026. The French part is a lower bound if French stress spilled over to the
-> peers; it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth
-> EUR 81k. Plan committed before any computation. Code written and reviewed by AI coding agents (Claude Code) under
-> the author's direction; he sets the objective and the validation rules, and decides what is kept.
+> **In English.** The whole 96 bp rise in the 10-year OAT-Bund spread between May 2024 and October 2026 (from 51 to
+> 147 bp, monthly averages) is France-specific: 100 bp [73; 126]; had France followed its peers, the spread would
+> have fallen by 3 bp (100 − 3 differs from 96 by rounding). The GDP-weighted spread of eight euro-area peers to
+> Germany fell by 8 bp, and all five robustness variants fixed in the plan give 99 or 100 bp. More than half of the
+> French part came in September and October 2026. It is a lower bound if French stress spilled over to the peers,
+> and it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth EUR 81k.
+> The plan was committed before the decomposition (raw spreads already seen: PLAN.md, section 0): a commitment, not
+> a proof. The plan (its "I" is the agent), the code and this note were written and reviewed by AI agents (Claude
+> Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation rules, and decides what
+> is kept.
 
 ## 2. L'écart depuis 1999
 
@@ -60,10 +64,10 @@ validation, et décide de ce qui est gardé.
   constante : les titres retenus sont remplacés à mesure qu'ils vieillissent.
 - En octobre 2026, l'écart OAT-Bund est de 147 pb en moyenne mensuelle, contre 51 pb en mai 2024. Il faut remonter
   à novembre 2011 (154 pb) pour trouver un mois plus haut.
-- En moyenne mensuelle, le taux français dépasse l'italien en décembre 2025, janvier et février 2026, puis d'août
-  à octobre 2026 :
-  six mois, et aucun avant décembre 2025 depuis janvier 1999. En mai 2024, il était 81 pb en dessous ; en octobre
-  2026, il est 21 pb au-dessus.
+- En moyenne mensuelle, le taux français dépasse l'italien en décembre 2025, janvier et février 2026, puis d'août à
+  octobre 2026 : six mois, et aucun avant décembre 2025 depuis janvier 1999. L'écart est faible jusqu'en août 2026
+  (de 0,8 à 3,8 pb), puis de 7,8 pb en septembre et de 21 pb en octobre (écarts ajoutés après l'audit). En mai 2024,
+  le taux français était 81 pb en dessous de l'italien.
 - Les pairs pèsent selon leur PIB de 2019 : Italie 32 %, Espagne 22 %, Pays-Bas 15 %, Belgique 9 %, Autriche 7 %,
   Irlande 7 %, Finlande 4 %, Portugal 4 %. Leur écart moyen à l'Allemagne passe de 80 pb en mai 2024 à 72 pb en
   octobre 2026.
@@ -109,8 +113,8 @@ générale du gouvernement de M. François Bayrou rejetée le 8 septembre 2025
 
 - **Règle de repli, fixée d'avance** : si une variante s'écartait de plus de 20 pb du modèle principal, l'en-tête
   deviendrait le tableau sans modèle ci-dessous. Le plus grand écart est de 0,7 pb : la règle ne joue pas.
-- Les variantes s'accordent parce que l'écart moyen des pairs a peu bougé en net, pas parce que b serait bien
-  connu : b va de 0,28 (périphérie) à 0,88 (cœur). Dans la variante en taux, le taux français suit le Bund à 0,59
+- Les variantes s'accordent parce que l'écart moyen des pairs a peu bougé en net : b dépend de l'échelle du facteur
+  (0,28 à 0,88), la part commune non. Dans la variante en taux, le taux français suit le Bund à 0,59
   et les pairs à 0,40 ; la somme, 0,99, est proche de 1, ce qui revient au modèle en écarts.
 - **Dérive** (diagnostic fixé d'avance) : sur la fenêtre d'estimation, le résidu moyen est de 0,48 pb par mois. Un
   modèle avec constante prolongerait cette dérive, soit 14 pb sur 29 mois : la part propre serait alors de l'ordre de
@@ -229,7 +233,7 @@ par l'auteur à partir des taux du scénario macrofinancier du CERS :
   la France et 2,34 % pour l'Allemagne, contre 2,97 % et 2,32 % chez Eurostat.
 - **En moyenne annuelle, l'écart a suivi le scénario central**, pas l'adverse : 76 pb en 2025 pour 76 dans le
   scénario central et 157 dans l'adverse. Le niveau d'octobre 2026 (147 pb en moyenne mensuelle) approche
-  l'adverse de 2025, mais c'est un mois contre une moyenne annuelle.
+  l'adverse de 2025 (157 pb) et dépasse celui de 2026 (135 pb), mais c'est un mois contre des moyennes annuelles.
 - **Le choc de marché de l'ABE** (instantané, à 10 ans) monte le swap en euro de 79 pb, l'écart souverain français
   contre swap de 112 pb et l'allemand de 31 pb : +191 pb pour le taux français, +110 pb pour l'allemand, +81 pb pour
   l'écart OAT-Bund. Ces écarts sont mesurés contre swap, pas contre le Bund ; seule leur différence se compare à
@@ -237,6 +241,9 @@ par l'auteur à partir des taux du scénario macrofinancier du CERS :
 
 ## 7. Les limites
 
+- **Le niveau d'octobre 2026 n'est pas confronté à une source de marché quotidienne.** L'audit indépendant n'a pas pu
+  le vérifier sur des prix quotidiens ouverts, et le SovCISS de la France n'en confirme pas l'ampleur (0,27 au plus
+  pendant l'automne 2026, contre 0,72 en 2011).
 - **Moyennes mensuelles.** Pas de taux français quotidien ouvert : la Banque de France publie les TEC, mais ce sont
   des indices d'Euronext qu'on ne peut redistribuer ; l'API Webstat exige un compte ; le site de l'AFT refuse les
   scripts. Un épisode de quelques jours se dilue dans la moyenne du mois (section 4, E2).
@@ -277,7 +284,7 @@ déplacerait un peu les poids.
 
 | fichier | |
 |---|---|
-| `PLAN.md` | le plan, commité avant tout calcul |
+| `PLAN.md` | le plan, commité avant la décomposition (écarts bruts déjà vus : section 0) ; un engagement, pas une preuve |
 | `src/ecart_oat_bund/donnees.py` | téléchargement et lecture des sources |
 | `src/ecart_oat_bund/decomposition.py` | estimation, part propre, intervalle de Newey-West, tableau sans modèle |
 | `src/ecart_oat_bund/analyse.py` | le plan traduit en constantes : fenêtres, groupes, variantes, épisodes |
@@ -289,7 +296,7 @@ déplacerait un peu les poids.
 
 | source | séries | conditions |
 |---|---|---|
-| Eurostat | `irt_lt_mcby_m` (taux longs du critère de convergence, collectés par la BCE auprès des banques centrales nationales), `nama_10_gdp` (PIB de 2019) | réutilisation libre, commerciale ou non, licence CC BY 4.0, « à condition de mentionner la source et d'indiquer les modifications » ([avis de droit d'auteur](https://ec.europa.eu/eurostat/fr/help/copyright-notice)) |
+| Eurostat | `irt_lt_mcby_m` (taux longs du critère de convergence, collectés par la BCE auprès des banques centrales nationales), `nama_10_gdp` (PIB de 2019) | réutilisation libre, commerciale ou non, « à condition de mentionner la source » ([avis de droit d'auteur](https://ec.europa.eu/eurostat/fr/help/copyright-notice)) |
 | BCE | courbe AAA `YC/B.U2.EUR.4F.G_N_A.SV_C_YM`, SovCISS de la France `CISS/D.FR.Z0Z.4F.EC.SOV_CIN.IDX` | réutilisation gratuite « on the condition that the source is quoted (e.g. "Source: ECB statistics.") and that the statistics (including metadata) are not modified » ([politique du SEBC](https://www.ecb.europa.eu/stats/ecb_statistics/governance_and_quality_framework/html/usage_policy.en.html)) |
 | CERS (ESRB) | scénarios macrofinancier et de marché de l'ABE 2025 | libre usage, à condition de citer le CERS et de signaler toute transformation ([avis juridique](https://www.esrb.europa.eu/services/disclaimer/html/index.en.html)) |
 | Bundesbank | 10 ans zéro-coupon des titres fédéraux, `BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A` (contrôle) | politique du SEBC, comme la BCE |

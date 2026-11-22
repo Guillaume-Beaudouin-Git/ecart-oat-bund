@@ -10,6 +10,7 @@
 Sort avec le code 1 et la liste des écarts si un contrôle échoue.
 """
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -53,19 +54,26 @@ def attendus(r: dict) -> dict[str, str]:
     A, B = pos["A_oat_seule"], pos["B_oat_contre_bund"]
     e = {}
     # Note et en-tête
-    e["hausse"] = f"Sur {fr(p['variation_observee_pb'])} pb de hausse"
-    e["part propre"] = f"{fr(p['part_propre_pb'])} pb {ic(p['ic95_pb'])} sont propres à la France"
+    assert p["part_commune_pb"] < 0 < p["part_propre_pb"]
+    e["en-tête"] = (f"Toute la hausse de l'écart OAT-Bund de mai 2024 à octobre 2026 ({signe(p['variation_observee_pb'])} pb, "
+                    f"de {fr(p['ecart_base_pb'])} à {fr(p['ecart_fin_pb'])} pb en moyenne mensuelle) est propre à la France : "
+                    f"{fr(p['part_propre_pb'])} pb {ic(p['ic95_pb'])} ; en suivant ses pairs, l'écart aurait baissé de "
+                    f"{fr(-p['part_commune_pb'])} pb")
+    e["arrondis"] = (f"Les arrondis expliquent que {fr(p['part_propre_pb'])} − {fr(-p['part_commune_pb'])} ne fasse pas "
+                     f"{fr(p['variation_observee_pb'])} : la part propre vaut {fr(p['part_propre_pb'], 1)} pb, la part "
+                     f"commune {fr(p['part_commune_pb'], 1)} pb et la hausse {fr(p['variation_observee_pb'], 1)} pb")
     e["baisse des pairs"] = f"a baissé de {fr(p['P_G8_base_pb'] - p['P_G8_fin_pb'])} pb"
-    e["part commune"] = f"la part commune de l'écart français est de {fr(p['part_commune_pb'])} pb"
     xs = sorted(round(v["part_propre_pb"]) for v in var.values())
     e["variantes"] = f"donnent toutes {xs[0]} ou {xs[-1]} pb"
-    e["147"] = (f"l'écart OAT-Bund ({fr(f['ecart_fin_pb'])} pb en moyenne\nmensuelle) est au plus haut depuis "
+    e["147"] = (f"l'écart OAT-Bund ({fr(f['ecart_fin_pb'])} pb en moyenne mensuelle) est au plus haut depuis "
                 f"{mois_fr(f['plus_haut_depuis'])}")
     fi = f["france_au_dessus_de_l_italie"]
     nombres = {6: "sixième"}
-    e["italie"] = (f"pour le {nombres[fi['nombre_de_mois']]} mois\ndepuis {mois_fr(fi['premier_mois_depuis_1999'])}, "
-                   "une première depuis 1999")
-    e["part propre dépasse"] = "la part propre dépasse donc la hausse observée" if p["part_commune_pb"] < 0 else "?"
+    gaps = fi["ecarts_france_moins_italie_pb_ajout_apres_audit"]
+    avant_sept = [g for m, g in gaps.items() if m < "2026-09"]
+    e["italie"] = (f"et, en moyenne mensuelle, le taux français dépasse l'italien pour le {nombres[fi['nombre_de_mois']]} "
+                   f"mois depuis {mois_fr(fi['premier_mois_depuis_1999'])} (de moins de {math.ceil(max(avant_sept))} pb "
+                   "avant septembre 2026), une première depuis 1999")
     chemin_avant = {m: v for m, v in ch.items() if m <= "2026-08"}
     bas = min(chemin_avant.items(), key=lambda kv: kv[1]["propre"])
     haut = max(chemin_avant.items(), key=lambda kv: kv[1]["propre"])
@@ -96,22 +104,29 @@ def attendus(r: dict) -> dict[str, str]:
     obs = abe["ecart_observe_moyenne_annuelle_pb"]
     ea = abe["ecart_france_allemagne_abe_pb"]
     e["ABE note"] = f"({fr(obs['2025'])} pb en 2025, comme le\n  scénario)"
-    e["ABE note 2"] = f"{fr(f['ecart_fin_pb'])} pb sur un mois, approche celui du scénario adverse pour 2025, {fr(ea['adverse_2025'])} pb"
+    e["ABE note 2"] = (f"Le niveau d'octobre 2026, {fr(f['ecart_fin_pb'])} pb sur un mois, approche l'écart adverse de 2025 "
+                       f"({fr(ea['adverse_2025'])} pb) et dépasse celui de 2026 ({fr(ea['adverse_2026'])} pb) ; mais l'ABE "
+                       "raisonne en moyenne annuelle")
     e["plan"] = f"commit `{ref['plan']['commit']}`"
     # Résumé anglais
-    e["anglais 1"] = f"Of the {fr(p['variation_observee_pb'])} bp rise"
-    e["anglais 2"] = f"{fr(p['part_propre_pb'])} bp [{fr(p['ic95_pb'][0])}; {fr(p['ic95_pb'][1])}] are specific to France"
+    e["anglais 1"] = f"The whole {fr(p['variation_observee_pb'])} bp rise"
+    e["anglais 2"] = f"is France-specific: {fr(p['part_propre_pb'])} bp [{fr(p['ic95_pb'][0])}; {fr(p['ic95_pb'][1])}]"
+    e["anglais 2b"] = (f"(from {fr(p['ecart_base_pb'])} to {fr(p['ecart_fin_pb'])} bp, monthly averages)")
+    e["anglais 2c"] = (f"the spread would have fallen by {fr(-p['part_commune_pb'])} bp ({fr(p['part_propre_pb'])} − "
+                       f"{fr(-p['part_commune_pb'])} differs from {fr(p['variation_observee_pb'])} by rounding)")
     e["anglais 3"] = f"fell by {fr(p['P_G8_base_pb'] - p['P_G8_fin_pb'])} bp"
     e["anglais 4"] = f"give {xs[0]} or {xs[-1]} bp"
     e["anglais 5"] = f"EUR {fr(ref['plan']['nominal_oat_meur'])}m of {ref['plan']['maturite_ans']}-year OATs"
-    e["anglais 6"] = f"worth\n> EUR {fr(A['dv01_taux_keur_par_pb'])}k"
+    e["anglais 6"] = f"worth EUR {fr(A['dv01_taux_keur_par_pb'])}k"
     # Section 2
     e["s2 147"] = (f"l'écart OAT-Bund est de {fr(f['ecart_fin_pb'])} pb en moyenne mensuelle, contre "
                    f"{fr(f['ecart_mai_2024_pb'])} pb en mai 2024")
     e["s2 2011"] = f"à novembre 2011 ({fr(f['ecart_au_plus_haut_depuis_pb'])} pb)"
     e["s2 italie"] = f"six mois, et aucun avant décembre 2025 depuis janvier 1999"
-    e["s2 italie niveaux"] = (f"il était {fr(-sm['IT']['base_pb'])} pb en dessous ; en octobre\n  2026, il est "
-                              f"{fr(sm['IT']['fin_pb'])} pb au-dessus")
+    e["s2 italie niveaux"] = f"le taux français était {fr(-sm['IT']['base_pb'])} pb en dessous de l'italien"
+    e["s2 italie écarts"] = (f"L'écart est faible jusqu'en août 2026 (de {fr(min(avant_sept), 1)} à {fr(max(avant_sept), 1)} pb), "
+                             f"puis de {fr(gaps['2026-09'], 1)} pb en septembre et de {fr(gaps['2026-10'])} pb en octobre "
+                             "(écarts ajoutés après l'audit)")
     w = dec["poids_pib_2019"]["G8"]
     e["poids"] = (f"Italie {fr(100 * w['IT'])} %, Espagne {fr(100 * w['ES'])} %, Pays-Bas {fr(100 * w['NL'])} %, "
                   f"Belgique {fr(100 * w['BE'])} %, Autriche {fr(100 * w['AT'])} %,\n  Irlande {fr(100 * w['IE'])} %, "
@@ -157,8 +172,8 @@ def attendus(r: dict) -> dict[str, str]:
     e["repli écart"] = f"Le plus grand écart est de {fr(repli['plus_grand_ecart_pb'], 1)} pb : la règle ne joue pas"
     e["repli non appliqué"] = "la règle ne joue pas" if not repli["applique"] else "LA RÈGLE JOUE"
     cb = var["taux_bund_libre"]["estimation"]["coefficients"]
-    e["b plage"] = (f"b va de {fr(var['peripherie']['estimation']['coefficients']['P'], 2)} (périphérie) à "
-                    f"{fr(var['coeur']['estimation']['coefficients']['P'], 2)} (cœur)")
+    bs = [v["estimation"]["coefficients"]["P"] for v in list(var.values()) + [p] if "P" in v["estimation"]["coefficients"]]
+    e["b plage"] = f"b dépend de l'échelle du facteur ({fr(min(bs), 2)} à {fr(max(bs), 2)}), la part commune non"
     e["somme"] = f"la somme, {fr(cb['DE'] + cb['pairs'], 2)}, est proche de 1"
     e["dérive s3"] = f"le résidu moyen est de {fr(derive['moyenne_residus_pb_par_mois'], 2)} pb par mois"
     e["dérive s3 total"] = (f"soit {fr(derive['derive_sur_h_mois_pb'])} pb sur {p['h_mois']} mois : la part propre serait "
@@ -250,8 +265,10 @@ def attendus(r: dict) -> dict[str, str]:
                          f"{fr(cd['eurostat_moyenne_2024_pct']['DE'], 2)} % chez Eurostat")
     e["abe suivi"] = (f"{fr(obs['2025'])} pb en 2025 pour {fr(ea['central_2025'])} dans le\n  scénario central et "
                       f"{fr(ea['adverse_2025'])} dans l'adverse")
-    e["abe octobre"] = (f"Le niveau d'octobre 2026 ({fr(f['ecart_fin_pb'])} pb en moyenne mensuelle) approche\n  "
-                        "l'adverse de 2025")
+    assert ea["adverse_2026"] < f["ecart_fin_pb"] < ea["adverse_2025"]
+    e["abe octobre"] = (f"Le niveau d'octobre 2026 ({fr(f['ecart_fin_pb'])} pb en moyenne mensuelle) approche "
+                        f"l'adverse de 2025 ({fr(ea['adverse_2025'])} pb) et dépasse celui de 2026 ({fr(ea['adverse_2026'])} pb), "
+                        "mais c'est un mois contre des moyennes annuelles")
     ca2 = st["controle_ajoute_apres_coup"]["taux_eurostat_pct"]
     e["contrôle coupons"] = (f"Eurostat donne {fr(ca2['FR'], 2)} % pour la France et {fr(ca2['DE'], 2)} % pour\n  "
                              "l'Allemagne en octobre 2026")
@@ -262,6 +279,16 @@ def attendus(r: dict) -> dict[str, str]:
                        f"l'allemand, {signe(cm['ecart_oat_bund'])} pb pour\n  l'écart OAT-Bund")
     # Section 7
     e["limite dérive"] = f"la part propre perd {fr(derive['derive_sur_h_mois_pb'])} pb"
+    e["limite quotidien"] = (f"n'en confirme pas l'ampleur ({fr(sov['E5']['maximum'], 2)} au plus pendant l'automne 2026, "
+                             f"contre {fr(sov['E1']['maximum'], 2)} en 2011)")
+    e["plan avant décomposition"] = ("Le plan a été commité avant la décomposition (écarts bruts déjà vus : `PLAN.md`, "
+                                     "section 0 ; commit `" + ref["plan"]["commit"] + "`) ; c'est un engagement, pas une preuve")
+    e["IA"] = ("Le plan (son « je » est l'agent), le code et cette note ont été rédigés et relus par des agents d'IA "
+               "(Claude Code), sous la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles de validation, "
+               "et décide de ce qui est gardé")
+    e["IA anglais"] = ("The plan (its \"I\" is the agent), the code and this note were written and reviewed by AI agents "
+                       "(Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation "
+                       "rules, and decides what is kept")
     e["limite contagion"] = f"(par exemple de {fr(e5['variation_P_G8_pb'])} pb à l'automne 2026)"
     # Section 9
     al, es = ctl["allemagne_bundesbank_moins_eurostat"], ctl["espagne_banco_de_espana_moins_eurostat"]
@@ -283,6 +310,18 @@ def attendus(r: dict) -> dict[str, str]:
     e["plan 304"] = f"{pl['fenetre_depuis_1999_variations']} mois"
     e["plan 22 jours"] = f"{ca['jours']}\n  jours"
     return e
+
+
+# Formulations corrigées par l'audit indépendant : elles ne doivent pas revenir.
+INTERDITES = ["avant tout calcul", "before any computation", "CC BY", "d'indiquer les modifications", "bien connu",
+              "sont propres à la France", "are specific to France"]
+
+
+def normaliser(texte: str) -> str:
+    """Sans les marques de citation en début de ligne, et avec un seul espace entre les mots : la vérification ne
+    dépend pas de l'endroit où les lignes sont coupées."""
+    texte = re.sub(r"^> ?", "", texte, flags=re.M)
+    return re.sub(r"\s+", " ", texte)
 
 
 def charger() -> dict:
@@ -327,9 +366,13 @@ def main() -> int:
     readme = Path("README.md").read_text(encoding="utf-8")
     erreurs = []
     e = attendus(r)
+    page = normaliser(readme)
     for nom, chaine in e.items():
-        if chaine not in readme:
+        if normaliser(chaine) not in page:
             erreurs.append(f"absent du README ({nom}) : {chaine!r}")
+    for formule in INTERDITES:
+        if normaliser(formule) in page:
+            erreurs.append(f"formulation retirée après l'audit, de retour dans le README : {formule!r}")
     dates, mois = dates_et_mois(r)
     texte = nettoyer(readme)
     # dates « jour mois [année] »

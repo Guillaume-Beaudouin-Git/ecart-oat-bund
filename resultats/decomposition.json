@@ -809,7 +809,16 @@
         "2026-08",
         "2026-09",
         "2026-10"
-      ]
+      ],
+      "ecarts_france_moins_italie_pb_ajout_apres_audit": {
+        "2025-12": 0.8,
+        "2026-01": 3.8,
+        "2026-02": 1.2,
+        "2026-08": 1.4,
+        "2026-09": 7.8,
+        "2026-10": 21.0
+      },
+      "note_ajout": "écarts ajoutés après l'audit indépendant, hors plan"
     },
     "grece": {
       "plus_grand_ecart_pb": 2739.0,
