@@ -215,7 +215,8 @@ Hypothèses (`PLAN.md`, section 10 ; `src/ecart_oat_bund/stress.py`) :
 
 L'ABE a lancé le 20 janvier 2025 son test de résistance sur 2025-2027, avec un scénario adverse conçu par le CERS
 ([communiqué](https://www.eba.europa.eu/publications-and-media/press-releases/eba-launches-its-2025-eu-wide-stress-test)) ;
-le scénario de marché a été mis à jour le 12 février 2025. Écart France-Allemagne des taux longs, en pb :
+le scénario de marché a été mis à jour le 12 février 2025. Écart France-Allemagne des taux longs, en pb, calculé
+par l'auteur à partir des taux du scénario macrofinancier du CERS :
 
 | | 2024 | décembre 2024 | 2025 | 2026 | 2027 |
 |---|---|---|---|---|---|
