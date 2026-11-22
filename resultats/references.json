@@ -1,0 +1,114 @@
+{
+  "note": "Fichier écrit à la main, le seul de resultats/ : les constantes fixées par le plan (PLAN.md, commit f938339), les événements cités dans le README avec leur source primaire, et les chiffres d'un autre travail repris en annexe. Tous les autres fichiers de resultats/ sont écrits par les scripts.",
+  "plan": {
+    "commit": "f938339",
+    "mois_de_base": "2024-05",
+    "fenetre_principale_variations": 60,
+    "fenetre_longue_variations": 120,
+    "fenetre_depuis_1999_variations": 304,
+    "premier_mois_fenetre_depuis_1999": "1999-02",
+    "seuil_de_repli_pb": 20,
+    "niveau_de_l_intervalle_pct": 95,
+    "quantile_normal": 1.96,
+    "retards_newey_west": {
+      "60": 3,
+      "120": 4,
+      "304": 5
+    },
+    "nombre_de_pairs": 8,
+    "nombre_de_variantes": 5,
+    "nombre_d_episodes": 5,
+    "nombre_de_chocs": 5,
+    "nombre_de_positions": 2,
+    "nominal_oat_meur": 100,
+    "maturite_ans": 10,
+    "lambda_diebold_li_par_mois": 0.0609,
+    "demi_pas_des_differences_centrees_pb": 0.5,
+    "annee_des_poids_pib": 2019
+  },
+  "evenements": [
+    {
+      "date": "2024-06-09",
+      "fait": "dissolution de l'Assemblée nationale",
+      "source": "Décret du 9 juin 2024 portant dissolution de l'Assemblée nationale, JORF n° 0134 du 10 juin 2024",
+      "url": "https://www.legifrance.gouv.fr/jorf/id/JORFTEXT000049689651",
+      "numero_jorf": 134,
+      "date_de_publication_au_jorf": "2024-06-10"
+    },
+    {
+      "date": "2024-12-04",
+      "fait": "motion de censure adoptée (article 49, alinéa 3)",
+      "source": "Assemblée nationale, scrutin public n° 519",
+      "url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/519",
+      "numero_du_scrutin": 519,
+      "pour": 331
+    },
+    {
+      "date": "2025-09-08",
+      "fait": "déclaration de politique générale du gouvernement de M. François Bayrou non adoptée (article 49, alinéa 1)",
+      "source": "Assemblée nationale, scrutin public n° 3054",
+      "url": "https://www.assemblee-nationale.fr/dyn/17/scrutins/3054",
+      "numero_du_scrutin": 3054,
+      "pour": 194,
+      "contre": 364,
+      "abstention": 15
+    },
+    {
+      "date": "2017-04-23",
+      "fait": "premier tour de l'élection présidentielle (22 et 23 avril 2017)",
+      "source": "Conseil constitutionnel, décision n° 2017-169 PDR du 26 avril 2017",
+      "url": "https://www.conseil-constitutionnel.fr/decision/2017/2017169PDR.htm",
+      "date_de_la_decision": "2017-04-26",
+      "premier_jour_du_scrutin": "2017-04-22"
+    },
+    {
+      "date": "2020-03-18",
+      "fait": "la BCE annonce un programme d'achats d'urgence face à la pandémie de 750 Md€",
+      "source": "BCE, communiqué du 18 mars 2020",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2020/html/ecb.pr200318_1~3949d6f266.en.html",
+      "montant_md_eur": 750
+    },
+    {
+      "date": "2022-07-21",
+      "fait": "la BCE relève ses trois taux directeurs de 50 pb",
+      "source": "BCE, décisions de politique monétaire du 21 juillet 2022",
+      "url": "https://www.ecb.europa.eu/press/pr/date/2022/html/ecb.mp220721~53e5bdd317.en.html",
+      "hausse_pb": 50
+    },
+    {
+      "date": "2025-01-20",
+      "fait": "l'ABE lance son test de résistance de 2025, sur les années 2025 à 2027, avec le scénario adverse du CERS",
+      "source": "ABE, communiqué « The EBA launches its 2025 EU-wide stress test »",
+      "url": "https://www.eba.europa.eu/publications-and-media/press-releases/eba-launches-its-2025-eu-wide-stress-test",
+      "annees": [
+        2025,
+        2026,
+        2027
+      ]
+    },
+    {
+      "date": "2025-02-12",
+      "fait": "mise à jour du scénario de marché de l'ABE 2025",
+      "source": "CERS, fichier du scénario de marché, feuille « Read-me »"
+    }
+  ],
+  "annexe_prevision": {
+    "source": "Travail séparé de l'auteur, non publié à ce jour : Nelson-Siegel dynamique (Diebold et Li, 2006) contre la marche aléatoire sur la courbe AAA de la BCE, prévisions faites chaque fin de mois de décembre 2009 à octobre 2026 moins l'horizon, plan du test commité avant les résultats.",
+    "horizons_mois": [
+      1,
+      6,
+      12
+    ],
+    "rmse_superieure_a_la_marche_aleatoire_pct": {
+      "1": 19,
+      "6": 21,
+      "12": 30
+    }
+  },
+  "exclusions": {
+    "luxembourg_taux_harmonise_depuis": "2010-05",
+    "grece_mois_sans_valeur": "2015-07",
+    "source": "Eurostat, métadonnées de irt_lt_mcby (ESMS) : taux harmonisé du Luxembourg à partir de la mi-mai 2010 ; pas de donnée pour la Grèce en juillet 2015, marché fermé",
+    "url": "https://ec.europa.eu/eurostat/cache/metadata/en/irt_lt_mcby_esms.htm"
+  }
+}

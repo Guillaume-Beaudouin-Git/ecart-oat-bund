@@ -1,0 +1,27 @@
+{
+  "source": "Eurostat ; Deutsche Bundesbank (10 ans zéro-coupon, Svensson) ; Banco de España (10 ans, marché secondaire). Calculs de l'auteur.",
+  "plan": "PLAN.md, section 12, commit f938339",
+  "allemagne_bundesbank_moins_eurostat": {
+    "mois": [
+      "1999-01",
+      "2026-10"
+    ],
+    "nombre_de_mois": 334,
+    "ecart_moyen_pb": 12.491774,
+    "plus_grand_ecart_absolu_pb": 48.181818,
+    "mois_du_plus_grand_ecart": "2009-03",
+    "correlation_des_variations_mensuelles": 0.990846
+  },
+  "espagne_banco_de_espana_moins_eurostat": {
+    "mois": [
+      "1999-01",
+      "2026-10"
+    ],
+    "nombre_de_mois": 334,
+    "ecart_moyen_pb": 0.048936,
+    "plus_grand_ecart_absolu_pb": 3.545455,
+    "mois_du_plus_grand_ecart": "2022-11",
+    "correlation_des_variations_mensuelles": 0.999375
+  },
+  "note": "La Bundesbank publie un taux zéro-coupon, Eurostat des rendements d'obligations proches de 10 ans : un écart de niveau est attendu, les variations doivent se suivre."
+}

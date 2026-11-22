@@ -1,0 +1,827 @@
+{
+  "source": "Eurostat (irt_lt_mcby_m, nama_10_gdp) ; BCE (SovCISS de la France). Calculs de l'auteur.",
+  "plan": "PLAN.md, commit f938339 ; calcul fait une fois, selon le plan",
+  "donnees": {
+    "premier_mois": "1999-01",
+    "dernier_mois": "2026-10",
+    "telechargement": "2026-11-22"
+  },
+  "poids_pib_2019": {
+    "G8": {
+      "IT": 0.322891,
+      "ES": 0.22486,
+      "NL": 0.148824,
+      "BE": 0.085991,
+      "AT": 0.070972,
+      "PT": 0.03847,
+      "FI": 0.04278,
+      "IE": 0.065212
+    },
+    "coeur": {
+      "NL": 0.426959,
+      "BE": 0.2467,
+      "AT": 0.203612,
+      "FI": 0.12273
+    },
+    "peripherie": {
+      "IT": 0.495662,
+      "ES": 0.345178,
+      "PT": 0.059054,
+      "IE": 0.100106
+    }
+  },
+  "pib_2019_meur": {
+    "FR": 2432206.8,
+    "DE": 3557630.0,
+    "IT": 1800281.8,
+    "ES": 1253710.0,
+    "NL": 829767.0,
+    "BE": 479444.9,
+    "AT": 395706.8,
+    "PT": 214489.9,
+    "FI": 238518.0,
+    "IE": 363591.0
+  },
+  "modele_principal": {
+    "estimation": {
+      "fenetre": [
+        "2019-06",
+        "2024-05"
+      ],
+      "variations": 60,
+      "retards_newey_west": 3,
+      "coefficients": {
+        "P": 0.397977
+      },
+      "erreurs_types_newey_west": {
+        "P": 0.05218
+      },
+      "r2_non_centre": 0.656178,
+      "ecart_type_residus_pb": 2.687056,
+      "moyenne_residus_pb": 0.484223
+    },
+    "base": "2024-05",
+    "fin": "2026-10",
+    "ecart_base_pb": 51.0,
+    "ecart_fin_pb": 147.4,
+    "P_G8_base_pb": 80.025152,
+    "P_G8_fin_pb": 71.983177,
+    "mois": "2026-10",
+    "h_mois": 29,
+    "variation_observee_pb": 96.4,
+    "part_commune_pb": -3.20052,
+    "part_propre_pb": 99.60052,
+    "sigma_pb": 13.59435,
+    "ic95_pb": [
+      72.956083,
+      126.244956
+    ],
+    "diagnostic_derive": {
+      "moyenne_residus_pb_par_mois": 0.484223,
+      "derive_sur_h_mois_pb": 14.042459,
+      "note": "fixé dans le plan, sans décision qui en dépende"
+    },
+    "significative": true,
+    "chemin": {
+      "2024-06": {
+        "h": 1.0,
+        "observe": 16.0,
+        "commune": 3.709945,
+        "propre": 12.290055,
+        "sigma": 2.730728,
+        "bas": 6.937927,
+        "haut": 17.642184
+      },
+      "2024-07": {
+        "h": 2.0,
+        "observe": 17.0,
+        "commune": 1.390403,
+        "propre": 15.609597,
+        "sigma": 3.688622,
+        "bas": 8.380032,
+        "haut": 22.839163
+      },
+      "2024-08": {
+        "h": 3.0,
+        "observe": 22.0,
+        "commune": 3.420665,
+        "propre": 18.579335,
+        "sigma": 4.472492,
+        "bas": 9.813412,
+        "haut": 27.345258
+      },
+      "2024-09": {
+        "h": 4.0,
+        "observe": 22.0,
+        "commune": 1.704318,
+        "propre": 20.295682,
+        "sigma": 5.117765,
+        "bas": 10.265047,
+        "haut": 30.326317
+      },
+      "2024-10": {
+        "h": 5.0,
+        "observe": 25.0,
+        "commune": -1.105487,
+        "propre": 26.105487,
+        "sigma": 5.701065,
+        "bas": 14.931605,
+        "haut": 37.279368
+      },
+      "2024-11": {
+        "h": 6.0,
+        "observe": 27.0,
+        "commune": -1.691123,
+        "propre": 28.691123,
+        "sigma": 6.234568,
+        "bas": 16.471594,
+        "haut": 40.910653
+      },
+      "2024-12": {
+        "h": 7.0,
+        "observe": 32.0,
+        "commune": -3.511077,
+        "propre": 35.511077,
+        "sigma": 6.735885,
+        "bas": 22.308985,
+        "haut": 48.713169
+      },
+      "2025-01": {
+        "h": 8.0,
+        "observe": 32.6,
+        "commune": -3.285134,
+        "propre": 35.885134,
+        "sigma": 7.189249,
+        "bas": 21.794465,
+        "haut": 49.975802
+      },
+      "2025-02": {
+        "h": 9.0,
+        "observe": 23.5,
+        "commune": -3.559703,
+        "propre": 27.059703,
+        "sigma": 7.619524,
+        "bas": 12.12571,
+        "haut": 41.993697
+      },
+      "2025-03": {
+        "h": 10.0,
+        "observe": 17.9,
+        "commune": -4.735447,
+        "propre": 22.635447,
+        "sigma": 8.035195,
+        "bas": 6.886754,
+        "haut": 38.38414
+      },
+      "2025-04": {
+        "h": 11.0,
+        "observe": 24.0,
+        "commune": -2.653584,
+        "propre": 26.653584,
+        "sigma": 8.404729,
+        "bas": 10.180619,
+        "haut": 43.12655
+      },
+      "2025-05": {
+        "h": 12.0,
+        "observe": 19.0,
+        "commune": -5.461764,
+        "propre": 24.461764,
+        "sigma": 8.796066,
+        "bas": 7.221792,
+        "haut": 41.701737
+      },
+      "2025-06": {
+        "h": 13.0,
+        "observe": 21.0,
+        "commune": -6.700161,
+        "propre": 27.700161,
+        "sigma": 9.163473,
+        "bas": 9.740084,
+        "haut": 45.660238
+      },
+      "2025-07": {
+        "h": 14.0,
+        "observe": 22.0,
+        "commune": -8.199437,
+        "propre": 30.199437,
+        "sigma": 9.523277,
+        "bas": 11.534158,
+        "haut": 48.864717
+      },
+      "2025-08": {
+        "h": 15.0,
+        "observe": 24.0,
+        "commune": -9.132388,
+        "propre": 33.132388,
+        "sigma": 9.864599,
+        "bas": 13.798129,
+        "haut": 52.466648
+      },
+      "2025-09": {
+        "h": 16.0,
+        "observe": 31.0,
+        "commune": -9.52995,
+        "propre": 40.52995,
+        "sigma": 10.18712,
+        "bas": 20.563562,
+        "haut": 60.496338
+      },
+      "2025-10": {
+        "h": 17.0,
+        "observe": 31.3,
+        "commune": -10.644507,
+        "propre": 41.944507,
+        "sigma": 10.512065,
+        "bas": 21.341239,
+        "haut": 62.547775
+      },
+      "2025-11": {
+        "h": 18.0,
+        "observe": 27.3,
+        "commune": -11.321157,
+        "propre": 38.621157,
+        "sigma": 10.821209,
+        "bas": 17.411977,
+        "haut": 59.830336
+      },
+      "2025-12": {
+        "h": 19.0,
+        "observe": 23.7,
+        "commune": -13.168057,
+        "propre": 36.868057,
+        "sigma": 11.145207,
+        "bas": 15.023854,
+        "haut": 58.712261
+      },
+      "2026-01": {
+        "h": 20.0,
+        "observe": 21.3,
+        "commune": -13.480135,
+        "propre": 34.780135,
+        "sigma": 11.432329,
+        "bas": 12.373182,
+        "haut": 57.187087
+      },
+      "2026-02": {
+        "h": 21.0,
+        "observe": 14.6,
+        "commune": -14.243337,
+        "propre": 28.843337,
+        "sigma": 11.721835,
+        "bas": 5.868963,
+        "haut": 51.817712
+      },
+      "2026-03": {
+        "h": 22.0,
+        "observe": 22.0,
+        "commune": -11.196822,
+        "propre": 33.196822,
+        "sigma": 11.933508,
+        "bas": 9.807576,
+        "haut": 56.586068
+      },
+      "2026-04": {
+        "h": 23.0,
+        "observe": 22.0,
+        "commune": -11.628652,
+        "propre": 33.628652,
+        "sigma": 12.20318,
+        "bas": 9.710858,
+        "haut": 57.546446
+      },
+      "2026-05": {
+        "h": 24.0,
+        "observe": 18.5,
+        "commune": -12.65821,
+        "propre": 31.15821,
+        "sigma": 12.47746,
+        "bas": 6.702838,
+        "haut": 55.613583
+      },
+      "2026-06": {
+        "h": 25.0,
+        "observe": 20.6,
+        "commune": -13.142191,
+        "propre": 33.742191,
+        "sigma": 12.737394,
+        "bas": 8.777357,
+        "haut": 58.707025
+      },
+      "2026-07": {
+        "h": 26.0,
+        "observe": 27.0,
+        "commune": -12.20903,
+        "propre": 39.20903,
+        "sigma": 12.968195,
+        "bas": 13.791835,
+        "haut": 64.626225
+      },
+      "2026-08": {
+        "h": 27.0,
+        "observe": 30.5,
+        "commune": -12.784491,
+        "propre": 43.284491,
+        "sigma": 13.219716,
+        "bas": 17.374324,
+        "haut": 69.194657
+      },
+      "2026-09": {
+        "h": 28.0,
+        "observe": 45.7,
+        "commune": -11.570343,
+        "propre": 57.270343,
+        "sigma": 13.438456,
+        "bas": 30.931454,
+        "haut": 83.609232
+      },
+      "2026-10": {
+        "h": 29.0,
+        "observe": 96.4,
+        "commune": -3.20052,
+        "propre": 99.60052,
+        "sigma": 13.59435,
+        "bas": 72.956083,
+        "haut": 126.244956
+      }
+    }
+  },
+  "variantes": {
+    "fenetre_120": {
+      "libelle": "fenêtre de 120 mois",
+      "estimation": {
+        "fenetre": [
+          "2014-06",
+          "2024-05"
+        ],
+        "variations": 120,
+        "retards_newey_west": 4,
+        "coefficients": {
+          "P": 0.395301
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.058371
+        },
+        "r2_non_centre": 0.523454,
+        "ecart_type_residus_pb": 3.602491,
+        "moyenne_residus_pb": 0.153646
+      },
+      "mois": "2026-10",
+      "h_mois": 29,
+      "variation_observee_pb": 96.4,
+      "part_commune_pb": -3.178998,
+      "part_propre_pb": 99.578998,
+      "sigma_pb": 20.57046,
+      "ic95_pb": [
+        59.261636,
+        139.896359
+      ]
+    },
+    "depuis_1999": {
+      "libelle": "fenêtre depuis 1999",
+      "estimation": {
+        "fenetre": [
+          "1999-02",
+          "2024-05"
+        ],
+        "variations": 304,
+        "retards_newey_west": 5,
+        "coefficients": {
+          "P": 0.383263
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.05086
+        },
+        "r2_non_centre": 0.515152,
+        "ecart_type_residus_pb": 4.638784,
+        "moyenne_residus_pb": 0.066867
+      },
+      "mois": "2026-10",
+      "h_mois": 29,
+      "variation_observee_pb": 96.4,
+      "part_commune_pb": -3.082193,
+      "part_propre_pb": 99.482193,
+      "sigma_pb": 23.989748,
+      "ic95_pb": [
+        52.46315,
+        146.501236
+      ]
+    },
+    "coeur": {
+      "libelle": "pairs « cœur » NL, BE, AT, FI",
+      "estimation": {
+        "fenetre": [
+          "2019-06",
+          "2024-05"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.883091
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.166115
+        },
+        "r2_non_centre": 0.646016,
+        "ecart_type_residus_pb": 2.726476,
+        "moyenne_residus_pb": 0.032323
+      },
+      "mois": "2026-10",
+      "h_mois": 29,
+      "variation_observee_pb": 96.4,
+      "part_commune_pb": -2.84446,
+      "part_propre_pb": 99.24446,
+      "sigma_pb": 12.65987,
+      "ic95_pb": [
+        74.43157,
+        124.057349
+      ]
+    },
+    "peripherie": {
+      "libelle": "pairs « périphérie » IT, ES, PT, IE",
+      "estimation": {
+        "fenetre": [
+          "2019-06",
+          "2024-05"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.283851
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.045178
+        },
+        "r2_non_centre": 0.607323,
+        "ecart_type_residus_pb": 2.871623,
+        "moyenne_residus_pb": 0.534885
+      },
+      "mois": "2026-10",
+      "h_mois": 29,
+      "variation_observee_pb": 96.4,
+      "part_commune_pb": -3.014943,
+      "part_propre_pb": 99.414943,
+      "sigma_pb": 14.435741,
+      "ic95_pb": [
+        71.121412,
+        127.708475
+      ]
+    },
+    "taux_bund_libre": {
+      "libelle": "taux, coefficient libre sur le Bund",
+      "estimation": {
+        "fenetre": [
+          "2019-06",
+          "2024-05"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "DE": 0.591683,
+          "pairs": 0.400824
+        },
+        "erreurs_types_newey_west": {
+          "DE": 0.067356,
+          "pairs": 0.05454
+        },
+        "r2_non_centre": 0.983477,
+        "ecart_type_residus_pb": 2.683067,
+        "moyenne_residus_pb": 0.519825
+      },
+      "mois": "2026-10",
+      "h_mois": 29,
+      "variation_observee_pb": 186.0,
+      "part_commune_pb": 85.705257,
+      "part_propre_pb": 100.294743,
+      "sigma_pb": 13.732974,
+      "ic95_pb": [
+        73.378608,
+        127.210877
+      ]
+    }
+  },
+  "regle_de_repli": {
+    "seuil_pb": 20.0,
+    "ecarts_au_principal_pb": {
+      "fenetre_120": -0.021522,
+      "depuis_1999": -0.118327,
+      "coeur": -0.35606,
+      "peripherie": -0.185576,
+      "taux_bund_libre": 0.694223
+    },
+    "plus_grand_ecart_pb": 0.694223,
+    "variante_la_plus_eloignee": "taux_bund_libre",
+    "applique": false
+  },
+  "sans_modele": {
+    "DE": {
+      "base_pb": 51.0,
+      "fin_pb": 147.4,
+      "variation_pb": 96.4
+    },
+    "IT": {
+      "base_pb": -81.0,
+      "fin_pb": 21.0,
+      "variation_pb": 102.0
+    },
+    "ES": {
+      "base_pb": -27.0,
+      "fin_pb": 82.4,
+      "variation_pb": 109.4
+    },
+    "NL": {
+      "base_pb": 20.0,
+      "fin_pb": 135.5,
+      "variation_pb": 115.5
+    },
+    "BE": {
+      "base_pb": -3.0,
+      "fin_pb": 51.0,
+      "variation_pb": 54.0
+    },
+    "AT": {
+      "base_pb": 1.0,
+      "fin_pb": 120.02,
+      "variation_pb": 119.02
+    },
+    "PT": {
+      "base_pb": -13.0,
+      "fin_pb": 97.3,
+      "variation_pb": 110.3
+    },
+    "FI": {
+      "base_pb": 3.0,
+      "fin_pb": 106.9,
+      "variation_pb": 103.9
+    },
+    "IE": {
+      "base_pb": 12.0,
+      "fin_pb": 133.75,
+      "variation_pb": 121.75
+    },
+    "G8": {
+      "base_pb": -29.025152,
+      "fin_pb": 75.416823,
+      "variation_pb": 104.441975
+    }
+  },
+  "episodes": {
+    "E1": {
+      "libelle": "crise des dettes souveraines",
+      "base": "2011-06",
+      "fin": "2011-11",
+      "estimation": {
+        "fenetre": [
+          "2006-07",
+          "2011-06"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.37842
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.034855
+        },
+        "r2_non_centre": 0.660912,
+        "ecart_type_residus_pb": 3.288048,
+        "moyenne_residus_pb": -0.541255
+      },
+      "ecart_base_pb": 54.0,
+      "ecart_fin_pb": 154.0,
+      "variation_P_G8_pb": 165.361264,
+      "mois": "2011-11",
+      "h_mois": 5,
+      "variation_observee_pb": 100.0,
+      "part_commune_pb": 62.576092,
+      "part_propre_pb": 37.423908,
+      "sigma_pb": 9.161877,
+      "ic95_pb": [
+        19.466959,
+        55.380858
+      ],
+      "lecture": null
+    },
+    "E2": {
+      "libelle": "élection présidentielle de 2017",
+      "base": "2016-12",
+      "fin": "2017-04",
+      "estimation": {
+        "fenetre": [
+          "2012-01",
+          "2016-12"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.288484
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.039741
+        },
+        "r2_non_centre": 0.361344,
+        "ecart_type_residus_pb": 6.666322,
+        "moyenne_residus_pb": 0.024311
+      },
+      "ecart_base_pb": 50.0,
+      "ecart_fin_pb": 66.0,
+      "variation_P_G8_pb": 21.070151,
+      "mois": "2017-04",
+      "h_mois": 4,
+      "variation_observee_pb": 16.0,
+      "part_commune_pb": 6.078408,
+      "part_propre_pb": 9.921592,
+      "sigma_pb": 14.863229,
+      "ic95_pb": [
+        -19.209801,
+        39.052985
+      ],
+      "lecture": {
+        "attente": "positive, intervalle sans 0",
+        "verifiee": false
+      }
+    },
+    "E3": {
+      "libelle": "pandémie",
+      "base": "2020-02",
+      "fin": "2020-04",
+      "estimation": {
+        "fenetre": [
+          "2015-03",
+          "2020-02"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.352115
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.086484
+        },
+        "r2_non_centre": 0.408057,
+        "ecart_type_residus_pb": 4.330671,
+        "moyenne_residus_pb": 0.056631
+      },
+      "ecart_base_pb": 29.0,
+      "ecart_fin_pb": 51.0,
+      "variation_P_G8_pb": 49.874831,
+      "mois": "2020-04",
+      "h_mois": 2,
+      "variation_observee_pb": 22.0,
+      "part_commune_pb": 17.561694,
+      "part_propre_pb": 4.438306,
+      "sigma_pb": 7.864202,
+      "ic95_pb": [
+        -10.975246,
+        19.851859
+      ],
+      "lecture": {
+        "attente": "intervalle contenant 0",
+        "verifiee": true
+      }
+    },
+    "E4": {
+      "libelle": "resserrement monétaire",
+      "base": "2021-12",
+      "fin": "2022-10",
+      "estimation": {
+        "fenetre": [
+          "2017-01",
+          "2021-12"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.38229
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.0794
+        },
+        "r2_non_centre": 0.491778,
+        "ecart_type_residus_pb": 4.131317,
+        "moyenne_residus_pb": 0.060149
+      },
+      "ecart_base_pb": 43.0,
+      "ecart_fin_pb": 58.0,
+      "variation_P_G8_pb": 48.473426,
+      "mois": "2022-10",
+      "h_mois": 10,
+      "variation_observee_pb": 15.0,
+      "part_commune_pb": 18.530888,
+      "part_propre_pb": -3.530888,
+      "sigma_pb": 14.234005,
+      "ic95_pb": [
+        -31.429026,
+        24.36725
+      ],
+      "lecture": {
+        "attente": "intervalle contenant 0",
+        "verifiee": true
+      }
+    },
+    "E5": {
+      "libelle": "automne 2026",
+      "base": "2026-08",
+      "fin": "2026-10",
+      "estimation": {
+        "fenetre": [
+          "2019-06",
+          "2024-05"
+        ],
+        "variations": 60,
+        "retards_newey_west": 3,
+        "coefficients": {
+          "P": 0.397977
+        },
+        "erreurs_types_newey_west": {
+          "P": 0.05218
+        },
+        "r2_non_centre": 0.656178,
+        "ecart_type_residus_pb": 2.687056,
+        "moyenne_residus_pb": 0.484223
+      },
+      "ecart_base_pb": 81.5,
+      "ecart_fin_pb": 147.4,
+      "variation_P_G8_pb": 24.081732,
+      "mois": "2026-10",
+      "h_mois": 2,
+      "variation_observee_pb": 65.9,
+      "part_commune_pb": 9.583971,
+      "part_propre_pb": 56.316029,
+      "sigma_pb": 3.89252,
+      "ic95_pb": [
+        48.68683,
+        63.945228
+      ],
+      "lecture": null
+    }
+  },
+  "sovciss": {
+    "E1": {
+      "date_du_maximum": "2011-11-01",
+      "maximum": 0.720062
+    },
+    "E2": {
+      "date_du_maximum": "2017-03-16",
+      "maximum": 0.438956
+    },
+    "E3": {
+      "date_du_maximum": "2020-04-02",
+      "maximum": 0.445058
+    },
+    "E4": {
+      "date_du_maximum": "2022-10-19",
+      "maximum": 0.544894
+    },
+    "E5": {
+      "date_du_maximum": "2026-10-21",
+      "maximum": 0.269381
+    },
+    "juin_2024": {
+      "jour_de_la_plus_forte_hausse": "2024-06-14",
+      "jour_precedent": "2024-06-13",
+      "valeur_jour_precedent": 0.106537,
+      "valeur_du_jour": 0.246412,
+      "hausse": 0.139876
+    }
+  },
+  "faits": {
+    "ecart_mai_2024_pb": 51.0,
+    "ecart_fin_pb": 147.4,
+    "hausse_pb": 96.4,
+    "plus_haut_depuis": "2011-11",
+    "ecart_au_plus_haut_depuis_pb": 154.0,
+    "france_au_dessus_de_l_italie": {
+      "de_2025_12_a_la_fin": [
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-08",
+        "2026-09",
+        "2026-10"
+      ],
+      "nombre_de_mois": 6,
+      "premier_mois_depuis_1999": "2025-12",
+      "tous_les_mois_depuis_1999": [
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-08",
+        "2026-09",
+        "2026-10"
+      ]
+    },
+    "grece": {
+      "plus_grand_ecart_pb": 2739.0,
+      "mois": "2012-02",
+      "mois_sans_valeur": [
+        "2015-07"
+      ]
+    }
+  },
+  "decompte": {
+    "decompositions": 6,
+    "episodes": 5,
+    "tableau_sans_modele": 1
+  }
+}

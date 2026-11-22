@@ -1,0 +1,172 @@
+{
+  "source": "ECB statistics (courbe AAA) ; Eurostat (écart d'octobre 2026) ; CERS (scénario de marché de l'ABE 2025). Calculs de l'auteur.",
+  "plan": "PLAN.md, section 10, commit f938339",
+  "courbe_aaa": {
+    "mois": "2026-10",
+    "jours": 22,
+    "taux_zero_coupon_pct": {
+      "SR_3M": 2.555795,
+      "SR_1Y": 2.886573,
+      "SR_2Y": 3.031711,
+      "SR_5Y": 3.164975,
+      "SR_10Y": 3.452257,
+      "SR_20Y": 3.744364,
+      "SR_30Y": 3.703326
+    },
+    "controle_moyenne_des_courbes_contre_moyenne_des_taux_publies_point": 0.0
+  },
+  "ecart_oat_pb": 147.4,
+  "oat": {
+    "coupon_pct": 5.001891,
+    "duration_ans": 8.090993
+  },
+  "bund": {
+    "coupon_pct": 3.479506,
+    "nominal_meur": -94.056216,
+    "duration_ans": 8.602295
+  },
+  "facteurs_2022": {
+    "decembre_2021": {
+      "niveau": 0.207568,
+      "pente": -0.840737,
+      "courbure": -1.652547
+    },
+    "decembre_2022": {
+      "niveau": 2.392485,
+      "pente": -0.800288,
+      "courbure": 1.954736
+    },
+    "variation_pb": {
+      "niveau": 218.491684,
+      "pente": 4.044846,
+      "courbure": 360.728299
+    },
+    "dates": [
+      "2021-12-31",
+      "2022-12-30"
+    ]
+  },
+  "abe_2025_marche_pb": {
+    "france_contre_swap": {
+      "swap_de_reference": "EUR",
+      "3M": 136.0,
+      "1Y": 106.0,
+      "5Y": 109.0,
+      "10Y": 112.0,
+      "15Y": 132.0
+    },
+    "allemagne_contre_swap": {
+      "swap_de_reference": "EUR",
+      "3M": 43.0,
+      "1Y": 23.0,
+      "5Y": 21.0,
+      "10Y": 31.0,
+      "15Y": 49.0
+    },
+    "swap_eur": {
+      "description": "Interest rate SWAP on the EUR (Euro)",
+      "3M": 127.0,
+      "1Y": 115.0,
+      "5Y": 97.0,
+      "10Y": 79.0
+    }
+  },
+  "chocs": {
+    "C1_prime_resorbee": {
+      "libelle": "prime française résorbée",
+      "ecart_10_ans_pb": -99.60052,
+      "aaa_10_ans_pb": 0.0
+    },
+    "C2_choc_commun_2011": {
+      "libelle": "choc commun de 2011",
+      "ecart_10_ans_pb": 65.80998,
+      "aaa_10_ans_pb": 0.0
+    },
+    "C3_niveau_2022": {
+      "libelle": "niveau de 2022",
+      "ecart_10_ans_pb": 0.0,
+      "aaa_10_ans_pb": 218.491684
+    },
+    "C4_rejeu_2022": {
+      "libelle": "rejeu des trois facteurs de 2022",
+      "ecart_10_ans_pb": 0.0,
+      "aaa_10_ans_pb": 268.130713
+    },
+    "C5_abe_2025_marche": {
+      "libelle": "choc de marché de l'ABE 2025",
+      "ecart_10_ans_pb": 81.0,
+      "aaa_10_ans_pb": 110.0
+    }
+  },
+  "entrees": {
+    "part_propre_pb": 99.60052,
+    "b": 0.397977,
+    "variation_P_G8_2011_06_2011_11_pb": 165.361264
+  },
+  "positions": {
+    "A_oat_seule": {
+      "valeur_depart_meur": 100.0,
+      "dv01_taux_keur_par_pb": 80.909936,
+      "sensibilite_ecart_keur_par_pb": 80.909936,
+      "chocs": {
+        "C1_prime_resorbee": {
+          "variation_meur": 8.439461,
+          "variation_pct_du_nominal_oat": 8.439461,
+          "premier_ordre_meur": 8.058672
+        },
+        "C2_choc_commun_2011": {
+          "variation_meur": -5.167014,
+          "variation_pct_du_nominal_oat": -5.167014,
+          "premier_ordre_meur": -5.324681
+        },
+        "C3_niveau_2022": {
+          "variation_meur": -16.021029,
+          "variation_pct_du_nominal_oat": -16.021029,
+          "premier_ordre_meur": -17.678148
+        },
+        "C4_rejeu_2022": {
+          "variation_meur": -19.641166,
+          "variation_pct_du_nominal_oat": -19.641166,
+          "premier_ordre_meur": -21.694439
+        },
+        "C5_abe_2025_marche": {
+          "variation_meur": -14.362412,
+          "variation_pct_du_nominal_oat": -14.362412,
+          "premier_ordre_meur": -15.453798
+        }
+      }
+    },
+    "B_oat_contre_bund": {
+      "valeur_depart_meur": 5.943784,
+      "dv01_taux_keur_par_pb": 0.0,
+      "sensibilite_ecart_keur_par_pb": 80.909936,
+      "chocs": {
+        "C1_prime_resorbee": {
+          "variation_meur": 8.439461,
+          "variation_pct_du_nominal_oat": 8.439461,
+          "premier_ordre_meur": 8.058672
+        },
+        "C2_choc_commun_2011": {
+          "variation_meur": -5.167014,
+          "variation_pct_du_nominal_oat": -5.167014,
+          "premier_ordre_meur": -5.324681
+        },
+        "C3_niveau_2022": {
+          "variation_meur": -0.041987,
+          "variation_pct_du_nominal_oat": -0.041987,
+          "premier_ordre_meur": -0.0
+        },
+        "C4_rejeu_2022": {
+          "variation_meur": -0.183065,
+          "variation_pct_du_nominal_oat": -0.183065,
+          "premier_ordre_meur": -0.0
+        },
+        "C5_abe_2025_marche": {
+          "variation_meur": -5.818113,
+          "variation_pct_du_nominal_oat": -5.818113,
+          "premier_ordre_meur": -6.553705
+        }
+      }
+    }
+  }
+}

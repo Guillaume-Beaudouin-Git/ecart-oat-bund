@@ -1,0 +1,64 @@
+{
+  "source": "CERS (ESRB), scénarios du test de résistance de l'ABE de 2025 (publiés le 20 janvier 2025, scénario de marché mis à jour le 12 février 2025) ; Eurostat (écart observé). Calculs de l'auteur.",
+  "plan": "PLAN.md, section 11, commit f938339",
+  "taux_longs_abe_pct": {
+    "FR": {
+      "depart_moyenne_2024": 2.976146,
+      "depart_decembre_2024": 3.024045,
+      "central_2025": 3.163633,
+      "central_2026": 3.327817,
+      "central_2027": 3.468558,
+      "adverse_2025": 5.073633,
+      "adverse_2026": 4.817617,
+      "adverse_2027": 4.630602
+    },
+    "DE": {
+      "depart_moyenne_2024": 2.340597,
+      "depart_decembre_2024": 2.223091,
+      "central_2025": 2.39985,
+      "central_2026": 2.486575,
+      "central_2027": 2.586208,
+      "adverse_2025": 3.49985,
+      "adverse_2026": 3.469425,
+      "adverse_2027": 3.464385
+    }
+  },
+  "ecart_france_allemagne_abe_pb": {
+    "depart_moyenne_2024": 63.554902,
+    "depart_decembre_2024": 80.095455,
+    "central_2025": 76.378325,
+    "central_2026": 84.124175,
+    "central_2027": 88.235,
+    "adverse_2025": 157.378325,
+    "adverse_2026": 134.819175,
+    "adverse_2027": 116.621753
+  },
+  "ecart_observe_moyenne_annuelle_pb": {
+    "2024": 64.666667,
+    "2025": 75.775,
+    "2026_janvier_octobre": 82.86,
+    "mois_2026": 10
+  },
+  "choc_de_marche_10_ans_pb": {
+    "france_contre_swap": 112.0,
+    "allemagne_contre_swap": 31.0,
+    "swap_eur": 79.0,
+    "taux_france": 191.0,
+    "taux_allemagne": 110.0,
+    "ecart_oat_bund": 81.0
+  },
+  "controle_depart_2024": {
+    "abe_moyenne_2024_pct": {
+      "FR": 2.976146,
+      "DE": 2.340597
+    },
+    "eurostat_moyenne_2024_pct": {
+      "FR": 2.969167,
+      "DE": 2.3225
+    },
+    "ecart_abe_moins_eurostat_pb": {
+      "FR": 0.697925,
+      "DE": 1.80969
+    }
+  }
+}
