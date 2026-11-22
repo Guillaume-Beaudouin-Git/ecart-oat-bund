@@ -103,6 +103,13 @@
     "b": 0.397977,
     "variation_P_G8_2011_06_2011_11_pb": 165.361264
   },
+  "controle_ajoute_apres_coup": {
+    "note": "ajouté après le premier calcul, hors plan : les coupons construits face aux taux d'Eurostat du même mois",
+    "taux_eurostat_pct": {
+      "FR": 4.89,
+      "DE": 3.416
+    }
+  },
   "positions": {
     "A_oat_seule": {
       "valeur_depart_meur": 100.0,

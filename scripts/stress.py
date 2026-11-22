@@ -117,6 +117,9 @@ def main() -> None:
         "chocs": {c: {"libelle": s["libelle"], "ecart_10_ans_pb": s["ecart_10_ans_pb"], "aaa_10_ans_pb": s["aaa_10_ans_pb"]}
                   for c, s in chocs.items()},
         "entrees": {"part_propre_pb": x_propre, "b": b, "variation_P_G8_2011_06_2011_11_pb": dP_2011},
+        "controle_ajoute_apres_coup": {
+            "note": "ajouté après le premier calcul, hors plan : les coupons construits face aux taux d'Eurostat du même mois",
+            "taux_eurostat_pct": {p: float(donnees.lire_taux_longs().loc[analyse.FIN, p]) for p in ("FR", "DE")}},
         "positions": sortie_positions,
     }
     (RESULTATS / "stress.json").write_text(json.dumps(analyse.arrondir(resultats), indent=2, ensure_ascii=False))
@@ -147,7 +150,8 @@ def main() -> None:
     ax.set_xticks(x, etiquettes, fontsize=8)
     ax.axhline(0, color=style.ENCRE_2, lw=0.7)
     ax.set_ylabel("variation de valeur (M€)")
-    ax.set_title(f"Chocs instantanés, courbe AAA moyenne d'octobre 2026 et écart OAT-Bund de {_fr(ecart, 0)} pb", loc="left")
+    ax.set_title(f"Chocs instantanés ; départ : courbe AAA et écart OAT-Bund ({_fr(ecart, 0)} pb) en moyenne d'octobre 2026",
+                 loc="left")
     ax.legend(loc="lower left", fontsize=8)
     style.virgule(ax, decimales=0)
     fig.text(0.01, -0.06, "Réévaluation complète, sans portage. OAT = courbe AAA + écart constant ; Bund = courbe AAA. "

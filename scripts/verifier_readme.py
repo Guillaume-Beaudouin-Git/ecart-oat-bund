@@ -59,11 +59,13 @@ def attendus(r: dict) -> dict[str, str]:
     e["part commune"] = f"la part commune de l'écart français est de {fr(p['part_commune_pb'])} pb"
     xs = sorted(round(v["part_propre_pb"]) for v in var.values())
     e["variantes"] = f"donnent toutes {xs[0]} ou {xs[-1]} pb"
-    e["147"] = f"écart OAT-Bund ({fr(f['ecart_fin_pb'])} pb) est au plus haut depuis {mois_fr(f['plus_haut_depuis'])}"
+    e["147"] = (f"l'écart OAT-Bund ({fr(f['ecart_fin_pb'])} pb en moyenne\nmensuelle) est au plus haut depuis "
+                f"{mois_fr(f['plus_haut_depuis'])}")
     fi = f["france_au_dessus_de_l_italie"]
     nombres = {6: "sixième"}
-    e["italie"] = (f"pour le {nombres[fi['nombre_de_mois']]} mois depuis {mois_fr(fi['premier_mois_depuis_1999'])}, "
+    e["italie"] = (f"pour le {nombres[fi['nombre_de_mois']]} mois\ndepuis {mois_fr(fi['premier_mois_depuis_1999'])}, "
                    "une première depuis 1999")
+    e["part propre dépasse"] = "la part propre dépasse donc la hausse observée" if p["part_commune_pb"] < 0 else "?"
     chemin_avant = {m: v for m, v in ch.items() if m <= "2026-08"}
     bas = min(chemin_avant.items(), key=lambda kv: kv[1]["propre"])
     haut = max(chemin_avant.items(), key=lambda kv: kv[1]["propre"])
@@ -72,7 +74,8 @@ def attendus(r: dict) -> dict[str, str]:
     e["chemin, septembre"] = f"à {fr(ch['2026-09']['propre'])} pb en septembre"
     e5 = ep["E5"]
     e["automne"] = f"{fr(e5['part_propre_pb'])} pb\n  {ic(e5['ic95_pb'])} en deux mois"
-    e["b"] = f"(b = {fr(est['coefficients']['P'], 2)})"
+    e["b"] = (f"b = {fr(est['coefficients']['P'], 2)} ({fr(est['coefficients']['P'], 2)} pb d'écart français par pb "
+              "d'écart moyen des pairs)")
     francais_contre = {k: v["variation_pb"] for k, v in sm.items() if k not in ("G8",)}
     mini = min(francais_contre, key=francais_contre.get)
     maxi = max(francais_contre, key=francais_contre.get)
@@ -85,7 +88,9 @@ def attendus(r: dict) -> dict[str, str]:
     e1, e2 = ep["E1"], ep["E2"]
     e["E1 note"] = f"{fr(e1['part_propre_pb'])} pb {ic(e1['ic95_pb'])} de juin à novembre 2011"
     e["E2 note"] = f"({fr(e2['part_propre_pb'])} pb, {ic(e2['ic95_pb'])})"
-    e["DV01 note"] = f"chaque pb d'écart vaut {fr(A['dv01_taux_keur_par_pb'])} k€ (DV01)"
+    assert round(A["dv01_taux_keur_par_pb"]) == round(A["sensibilite_ecart_keur_par_pb"])
+    e["DV01 note"] = (f"la DV01 et la sensibilité à l'écart valent toutes deux {fr(A['dv01_taux_keur_par_pb'])} k€ "
+                      "par pb")
     e["C1 note"] = f"rapporterait {fr(A['chocs']['C1_prime_resorbee']['variation_meur'], 1)} M€"
     e["C2 note"] = f"coûterait {fr(-A['chocs']['C2_choc_commun_2011']['variation_meur'], 1)} M€"
     obs = abe["ecart_observe_moyenne_annuelle_pb"]
@@ -101,8 +106,9 @@ def attendus(r: dict) -> dict[str, str]:
     e["anglais 5"] = f"EUR {fr(ref['plan']['nominal_oat_meur'])}m of {ref['plan']['maturite_ans']}-year OATs"
     e["anglais 6"] = f"worth\n> EUR {fr(A['dv01_taux_keur_par_pb'])}k"
     # Section 2
-    e["s2 147"] = f"l'écart OAT-Bund est de {fr(f['ecart_fin_pb'])} pb, contre {fr(f['ecart_mai_2024_pb'])} pb en mai 2024"
-    e["s2 2011"] = f"novembre 2011\n  ({fr(f['ecart_au_plus_haut_depuis_pb'])} pb)"
+    e["s2 147"] = (f"l'écart OAT-Bund est de {fr(f['ecart_fin_pb'])} pb en moyenne mensuelle, contre "
+                   f"{fr(f['ecart_mai_2024_pb'])} pb en mai 2024")
+    e["s2 2011"] = f"à novembre 2011 ({fr(f['ecart_au_plus_haut_depuis_pb'])} pb)"
     e["s2 italie"] = f"six mois, et aucun avant décembre 2025 depuis janvier 1999"
     e["s2 italie niveaux"] = (f"il était {fr(-sm['IT']['base_pb'])} pb en dessous ; en octobre\n  2026, il est "
                               f"{fr(sm['IT']['fin_pb'])} pb au-dessus")
@@ -244,7 +250,11 @@ def attendus(r: dict) -> dict[str, str]:
                          f"{fr(cd['eurostat_moyenne_2024_pct']['DE'], 2)} % chez Eurostat")
     e["abe suivi"] = (f"{fr(obs['2025'])} pb en 2025 pour {fr(ea['central_2025'])} dans le\n  scénario central et "
                       f"{fr(ea['adverse_2025'])} dans l'adverse")
-    e["abe octobre"] = f"Le niveau d'octobre 2026 ({fr(f['ecart_fin_pb'])} pb) approche l'adverse de 2025"
+    e["abe octobre"] = (f"Le niveau d'octobre 2026 ({fr(f['ecart_fin_pb'])} pb en moyenne mensuelle) approche\n  "
+                        "l'adverse de 2025")
+    ca2 = st["controle_ajoute_apres_coup"]["taux_eurostat_pct"]
+    e["contrôle coupons"] = (f"Eurostat donne {fr(ca2['FR'], 2)} % pour la France et {fr(ca2['DE'], 2)} % pour\n  "
+                             "l'Allemagne en octobre 2026")
     cm = abe["choc_de_marche_10_ans_pb"]
     e["abe marché"] = (f"monte le swap en euro de {fr(cm['swap_eur'])} pb, l'écart souverain français\n  contre swap de "
                        f"{fr(cm['france_contre_swap'])} pb et l'allemand de {fr(cm['allemagne_contre_swap'])} pb : "

@@ -5,17 +5,20 @@
 **Sur 96 pb de hausse de l'écart de taux à 10 ans entre la France et l'Allemagne, de mai 2024 à octobre 2026 et en
 moyenne mensuelle, 100 pb [73 ; 126] sont propres à la France** (intervalle à 95 %). Les huit pays pairs ne
 l'expliquent pas : leur écart moyen à l'Allemagne, pondéré par le PIB de 2019, a baissé de 8 pb sur la période, et
-la part commune de l'écart français est de −3 pb. Les cinq variantes fixées d'avance donnent toutes 99 ou 100 pb.
-En octobre 2026, l'écart OAT-Bund (147 pb) est au plus haut depuis novembre 2011, et le taux français dépasse
-l'italien pour le sixième mois depuis décembre 2025, une première depuis 1999.
+la part commune de l'écart français est de −3 pb ; la part propre dépasse donc la hausse observée. Les cinq
+variantes fixées d'avance donnent toutes 99 ou 100 pb. En octobre 2026, l'écart OAT-Bund (147 pb en moyenne
+mensuelle) est au plus haut depuis novembre 2011, et le taux français dépasse l'italien pour le sixième mois
+depuis décembre 2025, une première depuis 1999.
 
 - **Quand.** La part propre apparaît dès juin 2024 (12 pb), reste entre 12 et 43 pb jusqu'en août 2026, puis passe
   à 57 pb en septembre et à 100 pb en octobre 2026. L'épisode de l'automne 2026 en fait plus de la moitié : 56 pb
   [49 ; 64] en deux mois. Faute de source primaire sur ses causes, ce projet ne les date pas.
 - **Ce que mesure le chiffre.** L'écart entre l'OAT-Bund observé et celui qu'aurait donné une France suivant ses
-  pairs (Italie, Espagne, Pays-Bas, Belgique, Autriche, Portugal, Finlande, Irlande) avec la sensibilité estimée
-  sur les 60 mois avant mai 2024 (b = 0,40). La « juste valeur » est relative aux pairs. L'écart n'est pas un pur
-  risque de défaut : il contient aussi la liquidité et la rareté relative du Bund.
+  pairs (Italie, Espagne, Pays-Bas, Belgique, Autriche, Portugal, Finlande, Irlande). Leur écart moyen à l'Allemagne
+  sert de facteur commun ; la sensibilité de la France à ce facteur, estimée sur les 60 mois avant mai 2024, est
+  b = 0,40 (0,40 pb d'écart français par pb d'écart moyen des pairs). La part propre est une prime de risque
+  souveraine relative aux pairs : la « juste valeur » qu'elle suppose est relative, et l'écart n'est pas un pur
+  risque de défaut, il contient aussi la liquidité et la rareté relative du Bund.
 - **Pourquoi les variantes s'accordent.** L'écart moyen des pairs a peu bougé en net : quel que soit b, la part
   commune reste petite. Le chiffre repose donc surtout sur l'hypothèse qu'en l'absence de choc propre, la France
   aurait suivi ses pairs. Sans modèle, l'écart de la France s'est creusé contre chacun des neuf pays, de 54 pb
@@ -27,14 +30,15 @@ l'italien pour le sixième mois depuis décembre 2025, une première depuis 1999
   commune, comme le plan l'attendait, et trouve une part propre de 37 pb [19 ; 55] de juin à novembre 2011. Elle ne
   détecte pas l'élection présidentielle de 2017 (10 pb, [−19 ; 39]), que le plan attendait : sur des moyennes
   mensuelles, un épisode court et modéré lui échappe.
-- **Stress.** Pour 100 M€ d'OAT à 10 ans, chaque pb d'écart vaut 81 k€ (DV01). La résorption de la prime
-  rapporterait 8,4 M€ ; le choc commun de 2011, transposé, coûterait 5,2 M€. Couverte contre le Bund en DV01, la
-  position ne garde que le risque d'écart, mais elle le garde en entier.
+- **Stress.** Pour 100 M€ d'OAT à 10 ans, la DV01 et la sensibilité à l'écart valent toutes deux 81 k€ par pb. La
+  résorption de la prime rapporterait 8,4 M€ ; le choc commun de 2011, transposé, coûterait 5,2 M€. Couverte contre
+  le Bund en DV01, la position ne garde que le risque d'écart, mais elle le garde en entier.
 - **ABE 2025.** En moyenne annuelle, l'écart observé a suivi le scénario central de l'ABE (76 pb en 2025, comme le
   scénario) ; le niveau d'octobre 2026, 147 pb sur un mois, approche celui du scénario adverse pour 2025, 157 pb en
   moyenne annuelle.
 
-C'est une mesure, ni une prévision ni une recommandation de position. Le plan a été commité avant tout calcul
+Sources : Eurostat, BCE, CERS ; calculs de l'auteur. C'est une mesure, ni une prévision ni une recommandation de
+position. Le plan a été commité avant tout calcul
 (`PLAN.md`, commit `f938339`), le code de la décomposition avant les résultats. Le code a été écrit et relu par des
 agents de programmation IA (Claude Code) sous la direction de l'auteur ; il fixe l'objectif et les règles de
 validation, et décide de ce qui est gardé.
@@ -54,9 +58,10 @@ validation, et décide de ce qui est gardé.
 - Les taux sont les taux longs du critère de convergence publiés par Eurostat : rendements du marché secondaire
   d'obligations d'État de durée résiduelle proche de 10 ans, en moyenne mensuelle. Ils ne sont pas à maturité
   constante : les titres retenus sont remplacés à mesure qu'ils vieillissent.
-- En octobre 2026, l'écart OAT-Bund est de 147 pb, contre 51 pb en mai 2024. Il faut remonter à novembre 2011
-  (154 pb) pour trouver un mois plus haut.
-- Le taux français dépasse le taux italien en décembre 2025, janvier et février 2026, puis d'août à octobre 2026 :
+- En octobre 2026, l'écart OAT-Bund est de 147 pb en moyenne mensuelle, contre 51 pb en mai 2024. Il faut remonter
+  à novembre 2011 (154 pb) pour trouver un mois plus haut.
+- En moyenne mensuelle, le taux français dépasse l'italien en décembre 2025, janvier et février 2026, puis d'août
+  à octobre 2026 :
   six mois, et aucun avant décembre 2025 depuis janvier 1999. En mai 2024, il était 81 pb en dessous ; en octobre
   2026, il est 21 pb au-dessus.
 - Les pairs pèsent selon leur PIB de 2019 : Italie 32 %, Espagne 22 %, Pays-Bas 15 %, Belgique 9 %, Autriche 7 %,
@@ -128,8 +133,8 @@ mensuelle :
 | moyenne des huit pairs (PIB de 2019) | −29 | 75 | +104 |
 
 La France s'écarte de tous. La Belgique fait exception par l'ampleur : son propre écart au Bund a monté pendant la
-période, ce qui réduit celui de la France contre elle à 54 pb. Un choc propre au Bund déplace tous ces écarts
-ensemble ; l'écart contre les pairs n'en dépend pas.
+période, ce qui réduit celui de la France contre elle à 54 pb. Seule la ligne de l'Allemagne dépend d'un choc
+propre au Bund ; les autres comparent la France à un pair, sans passer par le Bund.
 
 ## 4. Les épisodes
 
@@ -156,8 +161,8 @@ modèle principal sert.
   mois, la méthode n'a pas la précision de séparer un épisode de cette taille. Le résultat de 2024-2026, dix fois
   plus grand, n'est pas dans ce cas, mais la validation de la méthode sur le passé reste partielle.
 - **E1** : la part commune domine (+63 pb sur +100), et la France a aussi sa part propre (+37 pb), significative.
-- **E5** : 56 pb propres en deux mois. L'écart moyen des pairs monte aussi de 24 pb ; si c'est de la contagion venue
-  de France, la part propre est sous-estimée.
+- **E5** : 56 pb propres en deux mois, en moyenne mensuelle. L'écart moyen des pairs monte aussi de 24 pb ; si c'est
+  de la contagion venue de France, la part propre est sous-estimée.
 - **Le SovCISS de la France**, indicateur quotidien de tension souveraine de la BCE, sert à dater faute de taux
   français quotidien ouvert. Dans chaque épisode, il culmine le 1er novembre 2011 (0,72), le 16 mars 2017 (0,44), le
   2 avril 2020 (0,45), le 19 octobre 2022 (0,54) et le 21 octobre 2026 (0,27). En juin 2024, sa plus forte hausse sur
@@ -172,10 +177,12 @@ Hypothèses (`PLAN.md`, section 10 ; `src/ecart_oat_bund/stress.py`) :
 
 - **Courbes.** La courbe AAA de la BCE en moyenne d'octobre 2026 (moyenne des courbes de Svensson publiées les 22
   jours ouvrés du mois ; 3,45 % à 10 ans en zéro-coupon) tient lieu de courbe du Bund. La courbe des OAT est la courbe
-  AAA plus l'écart d'octobre 2026, 147 pb, à toutes les maturités.
+  AAA plus l'écart d'octobre 2026, 147 pb en moyenne mensuelle, à toutes les maturités.
 - **Positions.** (A) 100 M€ de nominal d'une OAT à 10 ans émise au pair (coupon 5,00 %, duration 8,1 ans) ; (B) la
   même OAT contre la vente de 94,1 M€ de Bund à 10 ans au pair (coupon 3,48 %, duration 8,6 ans), montant qui annule
-  la DV01 de taux.
+  la DV01 de taux. Contrôle ajouté après le premier calcul : Eurostat donne 4,89 % pour la France et 3,42 % pour
+  l'Allemagne en octobre 2026 ; les coupons construits sont un peu plus hauts, car la courbe AAA n'est pas celle du
+  Bund seul et un coupon au pair n'est pas un taux zéro-coupon.
 - **Sensibilités.** A : DV01 de taux 81 k€ par pb, sensibilité à l'écart 81 k€ par pb. B : DV01 de taux nulle,
   sensibilité à l'écart 81 k€ par pb.
 - **Chocs instantanés**, réévaluation complète, sans portage :
@@ -187,7 +194,7 @@ Hypothèses (`PLAN.md`, section 10 ; `src/ecart_oat_bund/stress.py`) :
   - C4, rejeu des trois facteurs de 2022 (niveau +218 pb, pente +4 pb, courbure +361 pb) : +268 pb à 10 ans ;
   - C5, choc de marché de l'ABE 2025 : écart OAT-Bund +81 pb et Bund +110 pb à 10 ans (section 6).
 
-| choc | écart à 10 ans | AAA à 10 ans | A : OAT seule | B : OAT contre Bund |
+| choc | écart à 10 ans | courbe AAA (Bund) à 10 ans | A : OAT seule | B : OAT contre Bund |
 |---|---|---|---|---|
 | C1 prime française résorbée | −100 pb | | **+8,4 M€** | **+8,4 M€** |
 | C2 choc commun de 2011 | +66 pb | | −5,2 M€ | −5,2 M€ |
@@ -220,8 +227,8 @@ le scénario de marché a été mis à jour le 12 février 2025. Écart France-A
 - Les taux longs de l'ABE sont très proches de ceux d'Eurostat : la moyenne 2024 qu'elle retient est de 2,98 % pour
   la France et 2,34 % pour l'Allemagne, contre 2,97 % et 2,32 % chez Eurostat.
 - **En moyenne annuelle, l'écart a suivi le scénario central**, pas l'adverse : 76 pb en 2025 pour 76 dans le
-  scénario central et 157 dans l'adverse. Le niveau d'octobre 2026 (147 pb) approche l'adverse de 2025, mais c'est
-  un mois contre une moyenne annuelle.
+  scénario central et 157 dans l'adverse. Le niveau d'octobre 2026 (147 pb en moyenne mensuelle) approche
+  l'adverse de 2025, mais c'est un mois contre une moyenne annuelle.
 - **Le choc de marché de l'ABE** (instantané, à 10 ans) monte le swap en euro de 79 pb, l'écart souverain français
   contre swap de 112 pb et l'allemand de 31 pb : +191 pb pour le taux français, +110 pb pour l'allemand, +81 pb pour
   l'écart OAT-Bund. Ces écarts sont mesurés contre swap, pas contre le Bund ; seule leur différence se compare à
@@ -244,7 +251,8 @@ le scénario de marché a été mis à jour le 12 février 2025. Écart France-A
   pas le résultat.
 - **Ce que contient l'écart.** Risque de crédit et de notation, liquidité, offre de titres, demande de Bund comme
   actif sûr : la décomposition ne les sépare pas. Ni CDS, ni décisions des agences de notation dans les données.
-- **Pondération.** Le PIB de 2019 surpondère l'Irlande, dont le PIB est gonflé par les multinationales.
+- **Pondération.** Les pairs sont pondérés par le PIB de 2019, pas par l'encours de dette négociable ; ce PIB
+  surpondère l'Irlande, gonflé par les multinationales.
 - **Stress.** La courbe AAA de la BCE, estimée sur les titres d'État notés AAA, tient lieu de courbe du Bund ; écart
   constant à toutes les maturités ; écart de rendements ajouté à des taux zéro-coupon en composition continue ;
   chocs instantanés, sans portage ni probabilité. Ce sont des scénarios, pas des prévisions.
