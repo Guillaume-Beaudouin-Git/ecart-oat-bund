@@ -306,6 +306,8 @@ déplacerait un peu les poids.
   Banque de France ne sont ni téléchargés ni utilisés : ce sont des indices d'Euronext, qui « ne peuvent être
   redistribuées, sous-licenciées ou utilisées à des fins commerciales […] sans l'autorisation écrite préalable
   d'Euronext Paris ».
+- **Licence.** Le code est sous licence MIT (fichier `LICENSE`) ; elle ne couvre pas les données, qui restent
+  soumises aux conditions de leurs producteurs, ci-dessus.
 - **Contrôles.** La moyenne mensuelle du 10 ans zéro-coupon de la Bundesbank suit la série allemande d'Eurostat
   (corrélation des variations mensuelles 0,991) ; elle est plus haute de 12,5 pb en moyenne, car un taux zéro-coupon
   n'est pas le rendement d'un titre à coupon. Celle du 10 ans du Banco de España redonne la série espagnole à
