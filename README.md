@@ -40,9 +40,10 @@ depuis 1999.
 - **Prévision** (section 8, ajoutée le 23 novembre 2026). Un AR(1) ne prévoit pas le niveau du Bund à 10 ans mieux
   que le dernier taux connu ; l'amplitude de ses variations, elle, se prévoit. À un trimestre, une GARCH réduit
   l'erreur de prévision de la volatilité de 39 % face à la volatilité historique d'un an (perte QLIKE, p = 0,029),
-  sans battre de façon significative une moyenne sur 63 jours. L'outil en tire des bandes de variation sur quatre
-  trimestres (± 67 pb à un trimestre, au 30 octobre 2026) et un choc à 99 % : +80 pb, soit 6,5 M€ pour 100 M€
-  d'OAT à 10 ans. Il ne prévoit ni le sens des variations, ni l'écart OAT-Bund.
+  sans battre de façon significative une moyenne sur 63 jours ni l'EWMA ; trois années (2015, 2020, 2022) font
+  87 % du gain. L'outil en tire des bandes de variation sur quatre trimestres (± 67 pb à un trimestre, au
+  30 octobre 2026) et un choc à 99 % : +80 pb, soit 6,5 M€ pour 100 M€ d'OAT à 10 ans. Il ne prévoit ni le sens
+  des variations, ni l'écart OAT-Bund.
 
 Sources : Eurostat, BCE, CERS, Bundesbank ; calculs de l'auteur. La décomposition est une mesure, ni une prévision
 ni une recommandation de position ; la section 8, ajoutée ensuite, prévoit l'amplitude des variations du Bund, pas
@@ -62,10 +63,11 @@ de validation, et décide de ce qui est gardé.
 > The plan was committed before the decomposition (raw spreads already seen: PLAN.md, section 0): a commitment, not
 > a proof. Section 8, added on 23 November 2026 under a second plan committed before any estimation on the data,
 > forecasts the size of 10-year Bund yield moves, not their direction: one quarter ahead, a GARCH(1,1) cuts the
-> volatility forecast loss (QLIKE) by 39% against one-year historical volatility (Diebold-Mariano p = 0.029), while
-> the random walk is not beaten on the level. The plan (its "I" is the agent), the code and this note were written
-> and reviewed by AI agents (Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the
-> validation rules, and decides what is kept.
+> volatility forecast loss (QLIKE) by 39% against one-year historical volatility (Diebold-Mariano p = 0.029), but
+> not significantly against a 63-day average or an EWMA, with 87% of the gain from 2015, 2020 and 2022; the random
+> walk is not beaten on the level. The plan (its "I" is the agent), the code and this note were written and reviewed
+> by AI agents (Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation
+> rules, and decides what is kept.
 
 ## 2. L'écart depuis 1999
 
@@ -281,11 +283,14 @@ par l'auteur à partir des taux du scénario macrofinancier du CERS :
 
 ## 8. Prévoir : le niveau ou l'amplitude ?
 
-**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur de 39 % face à la volatilité
-historique d'un an.** L'erreur est la perte QLIKE moyenne, celle du test fixé d'avance : 0,133 pour la GARCH(1,1),
-0,218 pour la référence (test de Diebold-Mariano, p = 0,029, 260 prévisions). En pb, l'erreur quadratique moyenne
-sur la volatilité du trimestre passe de 11,6 à 9,6 pb, soit encore plus du quart d'une volatilité réalisée de
-35 pb en moyenne. Le niveau du taux, lui, n'est pas mieux prévu par un AR(1) que par le dernier taux connu.
+**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur (perte QLIKE) de 39 % face à
+la volatilité historique d'un an.** Cette perte, celle du test fixé d'avance, vaut en moyenne 0,133 pour la
+GARCH(1,1) et 0,218 pour la référence (test de Diebold-Mariano, p = 0,029, 260 prévisions). En pb, l'erreur
+quadratique moyenne sur la volatilité du trimestre passe de 11,6 à 9,6 pb, soit encore plus du quart d'une
+volatilité réalisée de 35 pb en moyenne. Le résultat est fragile sur deux points : la GARCH ne bat de façon
+significative ni une moyenne des 63 derniers jours (gain de 14 %, p = 0,291) ni l'EWMA (21 %, p = 0,097), qui
+captent chacune plus de la moitié du gain ; et trois années, 2015, 2020 et 2022, font 87 % de l'écart de perte
+cumulé. Le niveau du taux, lui, n'est pas mieux prévu par un AR(1) que par le dernier taux connu.
 
 Section ajoutée le 23 novembre 2026, après les sections 1 à 7, qu'elle ne modifie pas. Elle suit un second plan,
 commité seul avant toute estimation sur les données (`PLAN_PREVISION.md`, commit `999b7cc` ; ce qui avait été vu
@@ -342,11 +347,18 @@ dit que la règle prévoit trop) :
   mieux qu'elle à un trimestre (39 %) comme à un mois (32 %, p = 0,004).
 - **Ce qu'il ne montre pas.** Que la GARCH batte les deux autres règles simples. À un trimestre, son gain est de
   14 % face à la volatilité sur 63 jours (p = 0,291) et de 21 % face à l'EWMA (p = 0,097) : ni l'un ni l'autre
-  n'est significatif. Une moyenne des 63 derniers jours capte déjà l'essentiel du gain.
+  n'est significatif. Une moyenne des 63 derniers jours capte déjà l'essentiel du gain : 74 % de l'écart de perte
+  entre la référence et la GARCH ; l'EWMA, 60 %.
 - **Le gain vient de peu d'épisodes.** 260 prévisions mensuelles ne font que 86 trimestres sans chevauchement.
   Trois années, 2015, 2020 et 2022, font 87 % de l'écart de perte cumulé (figure, panneau du bas), dont 49 % pour
   2022 seule. Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à 26 % ; sans celles de 2008 et 2009,
   il reste de 38 %. La GARCH fait mieux que la référence 15 années sur 22.
+- **Hors plan, ajouté après l'audit indépendant.** L'audit a refait le test principal en retirant une seule de ces
+  trois années (les cibles qui y finissent) : p = 0,064 sans 2015, 0,055 sans 2020, 0,079 sans 2022. Le gain reste
+  positif (35 %, 37 % et 26 %), mais aucune des trois versions ne passe le seuil de 5 % : le résultat a besoin des
+  trois épisodes. Avec l'erreur au carré sur la variance à la place de la QLIKE, le gain est de 32 % (p = 0,039).
+  Ces quatre calculs ne sont pas dans le plan et ne changent pas la décision. Ils reprennent les mêmes prévisions,
+  sans nouvelle estimation ; quand une année est retirée, le test traite comme voisins les mois de part et d'autre.
 - **La GARCH prévoit un peu trop.** Son biais est de +2,3 pb à un trimestre, et de +5,0 pb sur 2015-2021 (voir la
   robustesse).
 
@@ -377,9 +389,10 @@ dit que la règle prévoit trop) :
 | cibles qui finissent en 2015-2021 | 85 | 33 % | 0,207 | 32 % | 0,093 |
 | cibles qui finissent en 2022-2026 | 58 | 62 % | 0,099 | 51 % | 0,037 |
 
-- **Le signe tient partout, la significativité une fois sur deux.** Les 16 comparaisons du tableau donnent un gain
-  positif ; 8 passent le seuil de 5 %, aucune ne donne une perte significative. Le plan compte 48 tests sur la
-  volatilité, dont un seul décide ; tous sont dans `resultats/prevision.json`.
+- **Le signe tient partout, sur des comparaisons qui ne sont pas indépendantes ; la significativité, une fois sur
+  deux.** Les 16 comparaisons du tableau donnent un gain positif, mais elles portent sur les mêmes années et, pour
+  la plupart, sur la même série ; 8 passent le seuil de 5 %, aucune ne donne une perte significative. Le plan
+  compte 48 tests sur la volatilité, dont un seul décide ; tous sont dans `resultats/prevision.json`.
 - **Bund à 2 ans.** Gain du même ordre, non significatif. Les pertes y sont plus de deux fois plus élevées (0,316
   pour la GARCH, 0,506 pour la référence, à un trimestre) ; une cible plus bruitée l'expliquerait, ce qui n'est pas
   testé ici.
@@ -406,8 +419,8 @@ bande (dernier taux ± 1,96 fois l'écart-type prévu).
 | 189 jours | 28 | 95,3 % | 91,7 % |
 | 252 jours | 20 | 94,4 % | 90,8 % |
 
-- Les bandes de la GARCH sont un peu trop larges jusqu'à un trimestre, proches de 95 % au-delà. Celles de la
-  référence sont justes à un trimestre, trop étroites au-delà.
+- Les bandes des deux règles sont proches de 95 % ; les écarts sont dans le bruit de 20 à 86 fenêtres
+  indépendantes (262 à un mois).
 - **Queues.** Un quantile de loi normale sous-estime en général les queues. Ici, à un trimestre, la variation a
   dépassé 2,326 écarts-types prévus par la GARCH 4 fois sur 260 (3 hausses, 1 baisse), pour 5 attendues sous une loi
   normale, et 9 fois avec la référence. Mais le plus grand écart, 3,3 écarts-types, vient de la prévision de fin
@@ -417,7 +430,7 @@ bande (dernier taux ± 1,96 fois l'écart-type prévu).
 **La sortie de l'outil.** `uv run python scripts/prevision.py` affiche les bandes de variation du Bund à 10 ans
 sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-coupon est de 3,40 % :
 
-| horizon | bande à 95 %, GARCH | soit | bande à 95 %, volatilité historique sur 252 jours |
+| horizon | bande à 95 %, GARCH | intervalle autour du taux du 30 octobre, sans sens prévu | bande à 95 %, volatilité historique sur 252 jours |
 |---|---|---|---|
 | 1 trimestre (63 jours) | ± 67 pb | de 2,73 % à 4,07 % | ± 59 pb |
 | 2 trimestres (126 jours) | ± 98 pb | de 2,42 % à 4,38 % | ± 84 pb |
@@ -460,9 +473,12 @@ sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-co
   ou d'une institution.
 - **Écarts au plan.** Quelques descriptifs cités ici ne sont pas listés par le plan, mais le script les calculait
   déjà quand il a été commité, avant le calcul : le plus grand écart standardisé, la volatilité d'un an à la fin de
-  2014 et de 2021, la demi-vie de la GARCH. Aucun n'est un test. Après le calcul, le script n'a changé que pour la
-  mise en page des deux figures et pour une note qui liste ces descriptifs dans `resultats/prevision.json` ; aucun
-  chiffre n'a changé.
+  2014 et de 2021, la demi-vie de la GARCH. Aucun n'est un test. Après le calcul, le script a changé trois fois sans
+  qu'aucun chiffre du plan ne bouge : pour la mise en page des deux figures, pour une note qui liste ces descriptifs
+  dans `resultats/prevision.json`, puis, après l'audit indépendant, pour les quatre calculs hors plan signalés plus
+  haut. Après l'audit aussi, le titre a été retouché : le plan écrivait « réduit l'erreur de X % » et demandait que
+  la phrase du titre nomme la perte ; « (perte QLIKE) » est désormais dans le titre lui-même, et le premier
+  paragraphe dit les deux fragilités avant le détail.
 
 ## 9. Reproduire
 

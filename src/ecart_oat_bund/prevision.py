@@ -333,3 +333,22 @@ def comparer_niveau(mensuel: pd.Series, h: int, premiere_origine: str = PREMIERE
             "derniere_origine": ma["origine"].iloc[-1].strftime("%Y-%m-%d"),
             "rmse_marche_aleatoire_pb": rmse_ma, "rmse_ar1_pb": rmse_ar, "rapport": rmse_ar / rmse_ma,
             **diebold_mariano((e_ma ** 2 - e_ar ** 2).to_numpy(), 2 * h)}
+
+
+# --- Ajouté après l'audit indépendant, hors plan -------------------------------------------------------------------
+# Deux lectures que l'audit a calculées pour mesurer la fragilité du test principal. Elles ne sont pas dans
+# PLAN_PREVISION.md, ne décident de rien et sont signalées comme telles dans le README et dans prevision.json.
+
+def sans_annee(p: pd.DataFrame, annee: int) -> pd.DataFrame:
+    """Les origines dont la cible ne finit pas dans l'année civile `annee` (la convention du plan : date de fin de
+    cible). Les mois de part et d'autre de l'année retirée deviennent voisins dans le test de Newey-West."""
+    return p[p["fin_cible"].dt.year != annee]
+
+
+def comparer_erreur_quadratique(p: pd.DataFrame, modele: str, reference: str, h: int) -> dict:
+    """La même comparaison que `comparer`, avec l'erreur au carré sur la variance, (RV − F)², à la place de QLIKE."""
+    perte_ref = (p["rv"] - p[reference]) ** 2
+    perte_mod = (p["rv"] - p[modele]) ** 2
+    return {"eqm_reference": float(perte_ref.mean()), "eqm_modele": float(perte_mod.mean()),
+            "gain_pct": float(100 * (1 - perte_mod.mean() / perte_ref.mean())),
+            **diebold_mariano((perte_ref - perte_mod).to_numpy(), retards_hac(h))}

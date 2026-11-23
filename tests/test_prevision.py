@@ -4,12 +4,13 @@ import pandas as pd
 import pytest
 from arch import arch_model
 
-from ecart_oat_bund.prevision import (Z_95, ajuster_garch, bandes, comparer, comparer_niveau, couverture,
-                                      decision_du_titre, diebold_mariano, erreur_vol_pb, etats, fin_de_mois,
-                                      gain_significatif, origines, perte_premier_ordre_meur, positions_fin_de_mois,
-                                      prevoir, prevoir_niveau, qlike, restreindre, retards_hac,
-                                      somme_variances_garch, variance_historique, variance_realisee,
-                                      variances_ewma, variations_pb, variations_standardisees)
+from ecart_oat_bund.prevision import (Z_95, ajuster_garch, bandes, comparer, comparer_erreur_quadratique,
+                                      comparer_niveau, couverture, decision_du_titre, diebold_mariano,
+                                      erreur_vol_pb, etats, fin_de_mois, gain_significatif, origines,
+                                      perte_premier_ordre_meur, positions_fin_de_mois, prevoir, prevoir_niveau,
+                                      qlike, restreindre, retards_hac, sans_annee, somme_variances_garch,
+                                      variance_historique, variance_realisee, variances_ewma, variations_pb,
+                                      variations_standardisees)
 
 
 def _garch_simulee(n, omega=0.5, alpha=0.08, beta=0.90, graine=0):
@@ -260,3 +261,18 @@ def test_fin_de_mois_garde_la_date_reelle():
     jours = pd.to_datetime(["2024-03-27", "2024-03-28", "2024-04-29", "2024-04-30"])
     m = fin_de_mois(pd.Series([1.0, 2.0, 3.0, 4.0], index=jours))
     assert m.index.tolist() == pd.to_datetime(["2024-03-28", "2024-04-30"]).tolist() and m.tolist() == [2.0, 4.0]
+
+
+def test_lectures_ajoutees_apres_l_audit_a_la_main():
+    # hors plan : retirer une année de fin de cible, et comparer avec l'erreur au carré sur la variance
+    origines_ = pd.to_datetime(["2014-10-31", "2014-11-28", "2015-10-30", "2015-11-30"])
+    fins = pd.to_datetime(["2015-01-30", "2015-02-27", "2016-01-29", "2016-02-29"])
+    p = pd.DataFrame({"fin_cible": fins, "rv": [100.0, 100.0, 100.0, 100.0], "garch": [100.0, 80.0, 100.0, 120.0],
+                      "hv252": [150.0, 100.0, 50.0, 100.0]}, index=origines_)
+    # les deux premières cibles finissent en 2015 : il en reste deux, celles de 2016, quelle que soit l'année d'origine
+    assert sans_annee(p, 2015)["fin_cible"].tolist() == fins[2:].tolist()
+    assert len(sans_annee(p, 2014)) == 4 and len(sans_annee(p, 2016)) == 2
+    # erreurs au carré : référence (2500 + 0 + 2500 + 0) / 4 = 1250 ; GARCH (0 + 400 + 0 + 400) / 4 = 200
+    c = comparer_erreur_quadratique(p, "garch", "hv252", 63)
+    assert c["eqm_reference"] == pytest.approx(1250.0) and c["eqm_modele"] == pytest.approx(200.0)
+    assert c["gain_pct"] == pytest.approx(84.0) and c["d_moyen"] == pytest.approx(1050.0) and c["retards"] == 6

@@ -1309,6 +1309,56 @@
       "p": 0.015121
     }
   },
+  "hors_plan_apres_audit": {
+    "note": "Hors plan, ajouté après l'audit indépendant : ces calculs ne sont pas dans PLAN_PREVISION.md et ne changent pas la décision. Ils reprennent les prévisions du calcul principal, sans nouvelle estimation ; quand une année est retirée, les mois de part et d'autre deviennent voisins dans le test de Newey-West.",
+    "serie": "bund_10_ans",
+    "horizon_jours": 63,
+    "sans_une_annee_de_fin_de_cible": {
+      "2015": {
+        "origines": 247,
+        "qlike_reference": 0.194601,
+        "qlike_modele": 0.126336,
+        "gain_pct": 35.0797,
+        "n": 247,
+        "retards": 6,
+        "d_moyen": 0.068265,
+        "t": 1.855603,
+        "p": 0.06351
+      },
+      "2020": {
+        "origines": 247,
+        "qlike_reference": 0.205472,
+        "qlike_modele": 0.128617,
+        "gain_pct": 37.404328,
+        "n": 247,
+        "retards": 6,
+        "d_moyen": 0.076855,
+        "t": 1.917652,
+        "p": 0.055155
+      },
+      "2022": {
+        "origines": 248,
+        "qlike_reference": 0.173644,
+        "qlike_modele": 0.127763,
+        "gain_pct": 26.422278,
+        "n": 248,
+        "retards": 6,
+        "d_moyen": 0.045881,
+        "t": 1.756782,
+        "p": 0.078955
+      }
+    },
+    "erreur_au_carre_sur_la_variance": {
+      "eqm_reference": 1003281.801442,
+      "eqm_modele": 681594.102768,
+      "gain_pct": 32.063544,
+      "n": 260,
+      "retards": 6,
+      "d_moyen": 321687.698674,
+      "t": 2.064066,
+      "p": 0.039011
+    }
+  },
   "garch_bund_10_ans": {
     "premiere_origine": {
       "date": "2004-12-30",

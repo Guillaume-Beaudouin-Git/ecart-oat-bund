@@ -340,10 +340,12 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     X = fr(t63["gain_pct"])
     g, q = h63["regles"], h21["regles"]
     c63, c21 = h63["comparaisons"], h21["comparaisons"]
-    e["p8 titre"] = (f"**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur de {X} % "
-                     "face à la volatilité historique d'un an.**")
-    e["p8 qlike"] = (f"{fr(t63['qlike_modele'], 3)} pour la GARCH(1,1), {fr(t63['qlike_reference'], 3)} pour la "
-                     f"référence (test de Diebold-Mariano, p = {fr(t63['p'], 3)}, {t63['n']} prévisions)")
+    # Depuis l'audit, le titre nomme la perte : le plan le demandait pour la phrase qui porte le titre
+    e["p8 titre"] = (f"**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur (perte "
+                     f"QLIKE) de {X} % face à la volatilité historique d'un an.**")
+    e["p8 qlike"] = (f"vaut en moyenne {fr(t63['qlike_modele'], 3)} pour la GARCH(1,1) et "
+                     f"{fr(t63['qlike_reference'], 3)} pour la référence (test de Diebold-Mariano, p = {fr(t63['p'], 3)}, "
+                     f"{t63['n']} prévisions)")
     assert g["garch"]["rmse_vol_pb"] / h63["vol_realisee_moyenne_pb"] > 0.25
     e["p8 rmse"] = (f"passe de {fr(g['hv252']['rmse_vol_pb'], 1)} à {fr(g['garch']['rmse_vol_pb'], 1)} pb, soit encore "
                     f"plus du quart d'une volatilité réalisée de {fr(h63['vol_realisee_moyenne_pb'])} pb en moyenne")
@@ -392,9 +394,13 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     e["p8 montre"] = (f"à un trimestre ({X} %) comme à un mois ({fr(t21['gain_pct'])} %, p = {fr(t21['p'], 3)})")
     a63, w63 = c63["garch_contre_hv63"], c63["garch_contre_ewma"]
     assert a63["p"] > cst["seuil"] and w63["p"] > cst["seuil"] and a63["gain_pct"] > 0 and w63["gain_pct"] > 0
-    # « une moyenne des 63 derniers jours capte déjà l'essentiel du gain » : plus de la moitié de l'écart de QLIKE
-    assert (g["hv252"]["qlike"] - g["hv63"]["qlike"]) / (g["hv252"]["qlike"] - g["garch"]["qlike"]) > 0.5
-    e["p8 essentiel"] = f"Une moyenne des {n_court} derniers jours capte déjà l'essentiel du gain"
+    # La part de l'écart de QLIKE entre la référence et la GARCH que capte chacune des deux règles réactives
+    capte = {k: (g["hv252"]["qlike"] - g[k]["qlike"]) / (g["hv252"]["qlike"] - g["garch"]["qlike"])
+             for k in ("hv63", "ewma")}
+    assert capte["hv63"] > 2 / 3 and capte["ewma"] > 0.5
+    e["p8 essentiel"] = (f"Une moyenne des {n_court} derniers jours capte déjà l'essentiel du gain : "
+                         f"{fr(100 * capte['hv63'])} % de l'écart de perte entre la référence et la GARCH ; l'EWMA, "
+                         f"{fr(100 * capte['ewma'])} %")
     e["p8 ne montre pas"] = (f"son gain est de {fr(a63['gain_pct'])} % face à la volatilité sur {n_court} jours "
                              f"(p = {fr(a63['p'], 3)}) et de {fr(w63['gain_pct'])} % face à l'EWMA (p = {fr(w63['p'], 3)}) : "
                              "ni l'un ni l'autre n'est significatif")
@@ -408,6 +414,27 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     assert sorted(trois) == ["2015", "2020", "2022"] and trois[0] == "2022"
     e["p8 trois années"] = (f"Trois années, 2015, 2020 et 2022, font {fr(sum(parts[a] for a in trois))} % de l'écart de "
                             f"perte cumulé (figure, panneau du bas), dont {fr(parts['2022'])} % pour 2022 seule")
+    # Les deux fragilités, dites dès le premier paragraphe (correction de l'audit)
+    e["p8 fragile"] = (f"Le résultat est fragile sur deux points : la GARCH ne bat de façon significative ni une moyenne "
+                       f"des {n_court} derniers jours (gain de {fr(a63['gain_pct'])} %, p = {fr(a63['p'], 3)}) ni l'EWMA "
+                       f"({fr(w63['gain_pct'])} %, p = {fr(w63['p'], 3)}), qui captent chacune plus de la moitié du gain ; "
+                       f"et trois années, 2015, 2020 et 2022, font {fr(sum(parts[a] for a in trois))} % de l'écart de "
+                       "perte cumulé")
+    # Hors plan, ajouté après l'audit : le test sans une seule des trois années, puis en erreur au carré
+    audit = pv["hors_plan_apres_audit"]
+    retire = audit["sans_une_annee_de_fin_de_cible"]
+    assert sorted(retire) == sorted(trois) and audit["horizon_jours"] == H
+    assert all(v["gain_pct"] > 0 and v["p"] > cst["seuil"] for v in retire.values())
+    e["p8 audit années"] = (f"p = {fr(retire['2015']['p'], 3)} sans 2015, {fr(retire['2020']['p'], 3)} sans 2020, "
+                            f"{fr(retire['2022']['p'], 3)} sans 2022. Le gain reste positif "
+                            f"({fr(retire['2015']['gain_pct'])} %, {fr(retire['2020']['gain_pct'])} % et "
+                            f"{fr(retire['2022']['gain_pct'])} %), mais aucune des trois versions ne passe le seuil de "
+                            f"{seuil} %")
+    eq = audit["erreur_au_carre_sur_la_variance"]
+    assert eq["n"] == h63["origines"] and eq["retards"] == t63["retards"]
+    e["p8 audit erreur au carré"] = (f"Avec l'erreur au carré sur la variance à la place de la QLIKE, le gain est de "
+                                     f"{fr(eq['gain_pct'])} % (p = {fr(eq['p'], 3)})")
+    e["p8 audit marque"] = "**Hors plan, ajouté après l'audit indépendant.**"
     e["p8 sans épisodes"] = (f"Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à "
                              f"{fr(conc['sans_2022_2023']['gain_pct'])} % ; sans celles de 2008 et 2009, il reste de "
                              f"{fr(conc['sans_2008_2009']['gain_pct'])} %")
@@ -453,8 +480,9 @@ def attendus_prevision(r: dict) -> dict[str, str]:
         dc["garch_contre_reference"]["comparaisons"], dc["garch_contre_reference"]["gain_positif"],
         dc["garch_contre_reference"]["gain_significatif"], dc["garch_contre_reference"]["perte_significative"])
     assert positifs == len(tests) and pertes == 0
-    e["p8 décompte"] = (f"Les {len(tests)} comparaisons du tableau donnent un gain positif ; {significatifs} passent le "
-                        f"seuil de {seuil} %, aucune ne donne une perte significative")
+    e["p8 décompte"] = (f"Les {len(tests)} comparaisons du tableau donnent un gain positif, mais elles portent sur les "
+                        f"mêmes années et, pour la plupart, sur la même série ; {significatifs} passent le seuil de "
+                        f"{seuil} %, aucune ne donne une perte significative")
     assert dc["tests_de_diebold_mariano_sur_la_volatilite"] == plan["nombre_de_tests_sur_la_volatilite"]
     e["p8 tests"] = f"Le plan compte {dc['tests_de_diebold_mariano_sur_la_volatilite']} tests sur la volatilité, dont un seul décide"
     deux = R["bund_2_ans"][f"h{H}"]
@@ -493,9 +521,14 @@ def attendus_prevision(r: dict) -> dict[str, str]:
         c = couv[f"h{h}"]
         e[f"p8 couverture {h}"] = (f"| {h} jours | {c['trimestres_ou_mois_sans_chevauchement']} | {fr(100 * c['garch'], 1)} % | "
                                    f"{fr(100 * c['hv252'], 1)} % |")
-    lointains = [couv[f"h{h}"] for h in cst["horizons_des_bandes_jours"][1:]]
-    assert all(abs(c["garch"] - 0.95) < 0.01 for c in lointains) and all(c["hv252"] < 0.93 for c in lointains)
-    assert couv[f"h{H}"]["garch"] > 0.96 and couv[f"h{H21}"]["garch"] > 0.96 and abs(couv[f"h{H}"]["hv252"] - 0.95) < 0.005
+    # « dans le bruit » : chaque couverture est à moins de deux écarts-types binomiaux de 95 %, l'écart-type étant
+    # compté sur les seules fenêtres sans chevauchement
+    for c in couv.values():
+        ecart_type = math.sqrt(0.95 * 0.05 / c["trimestres_ou_mois_sans_chevauchement"])
+        assert abs(c["garch"] - 0.95) < 2 * ecart_type and abs(c["hv252"] - 0.95) < 2 * ecart_type
+    independantes = [couv[f"h{h}"]["trimestres_ou_mois_sans_chevauchement"] for h in cst["horizons_des_bandes_jours"]]
+    e["p8 couverture lecture"] = (f"les écarts sont dans le bruit de {min(independantes)} à {max(independantes)} fenêtres "
+                                  f"indépendantes ({couv[f'h{H21}']['trimestres_ou_mois_sans_chevauchement']} à un mois)")
     zq = pv["queues_a_63_jours"]
     hausses, baisses = zq["garch"]["nombre_a_la_hausse"], zq["garch"]["nombre_a_la_baisse"]
     assert baisses == 1 and hausses > 1
@@ -509,6 +542,7 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     # La sortie de l'outil
     e["p8 outil date"] = (f"Au {jour_fr(o['date'])}, dernier jour retenu, le taux zéro-coupon est de "
                           f"{fr(o['niveau_pct'], 2)} %")
+    e["p8 bandes en-tête"] = (f"| intervalle autour du taux du {jour_fr(o['date']).rsplit(' ', 1)[0]}, sans sens prévu |")
     for k, h in enumerate(cst["horizons_des_bandes_jours"], start=1):
         bg, br = b_garch[str(h)], b_ref[str(h)]
         e[f"p8 bande {h}"] = (f"| {k} trimestre{'s' if k > 1 else ''} ({h} jours) | ± {fr(bg['demi_largeur_pb'])} pb | de "
@@ -541,7 +575,8 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     # La puce de la note et la phrase en anglais
     e["note prévision"] = (f"À un trimestre, une GARCH réduit l'erreur de prévision de la volatilité de {X} % face à la "
                            f"volatilité historique d'un an (perte QLIKE, p = {fr(t63['p'], 3)}), sans battre de façon "
-                           f"significative une moyenne sur {n_court} jours")
+                           f"significative une moyenne sur {n_court} jours ni l'EWMA ; trois années (2015, 2020, 2022) "
+                           f"font {fr(sum(parts[a] for a in trois))} % du gain")
     e["note outil"] = (f"(± {fr(b_garch[str(H)]['demi_largeur_pb'])} pb à un trimestre, au {jour_fr(o['date'])}) et un choc "
                        f"à 99 % : {signe(choc['choc_retenu_pb'])} pb, soit {fr(choc['perte_position_A_meur'], 1)} M€ pour "
                        f"{fr(ref['plan']['nominal_oat_meur'])} M€ d'OAT à {ref['plan']['maturite_ans']} ans")
@@ -555,7 +590,9 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     e["anglais prévision 1"] = (f"Section 8, added on {jour} {mois_anglais} {plan['date'][:4]} under a second plan committed "
                                 "before any estimation on the data")
     e["anglais prévision 2"] = (f"a GARCH(1,1) cuts the volatility forecast loss (QLIKE) by {X}% against one-year "
-                                f"historical volatility (Diebold-Mariano p = {t63['p']:.3f})")
+                                f"historical volatility (Diebold-Mariano p = {t63['p']:.3f}), but not significantly "
+                                f"against a {n_court}-day average or an EWMA, with {fr(sum(parts[a] for a in trois))}% of "
+                                "the gain from 2015, 2020 and 2022; the random walk is not beaten on the level")
     e["reproduire dates"] = (f"téléchargées le 22 novembre 2026, et le {jour_fr(pv['telechargement']).rsplit(' ', 1)[0]} "
                              "pour les séries de la Bundesbank depuis 1997")
     return e

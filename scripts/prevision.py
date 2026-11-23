@@ -131,6 +131,25 @@ def outil(taux: pd.Series, e: pd.DataFrame, quantile_empirique: float, dv01_keur
     }
 
 
+ANNEES_DE_L_AUDIT = (2015, 2020, 2022)      # les trois années qui font l'essentiel de l'écart de perte
+
+
+def apres_audit(p: pd.DataFrame, h: int) -> dict:
+    """Hors plan, ajouté après l'audit indépendant : le test principal refait sans une seule des trois années qui
+    portent le gain (cibles qui y finissent), puis avec l'erreur au carré sur la variance à la place de QLIKE."""
+    sortie = {"note": "Hors plan, ajouté après l'audit indépendant : ces calculs ne sont pas dans PLAN_PREVISION.md "
+                      "et ne changent pas la décision. Ils reprennent les prévisions du calcul principal, sans "
+                      "nouvelle estimation ; quand une année est retirée, les mois de part et d'autre deviennent "
+                      "voisins dans le test de Newey-West.",
+              "serie": "bund_10_ans", "horizon_jours": h, "sans_une_annee_de_fin_de_cible": {}}
+    for annee in ANNEES_DE_L_AUDIT:
+        reste = pv.sans_annee(p, annee)
+        sortie["sans_une_annee_de_fin_de_cible"][str(annee)] = {
+            "origines": int(len(reste)), **pv.comparer(reste, pv.PRINCIPAL, pv.REFERENCE, h)}
+    sortie["erreur_au_carre_sur_la_variance"] = pv.comparer_erreur_quadratique(p, pv.PRINCIPAL, pv.REFERENCE, h)
+    return sortie
+
+
 def figure_volatilite(p: pd.DataFrame, h: int) -> None:
     vol, garch, hv = np.sqrt(p["rv"]), np.sqrt(p[pv.PRINCIPAL]), np.sqrt(p[pv.REFERENCE])
     d = pv.qlike(p["rv"], p[pv.REFERENCE]) - pv.qlike(p["rv"], p[pv.PRINCIPAL])
@@ -302,6 +321,7 @@ def main() -> None:
         "couverture_des_bandes_95": couverture,
         "queues_a_63_jours": queues_63,
         "niveau": niveau,
+        "hors_plan_apres_audit": apres_audit(p10[63], 63),
         "garch_bund_10_ans": {
             "premiere_origine": {"date": _jour(e10.index[0]), "omega": float(e10["omega"].iloc[0]),
                                  "alpha": float(e10["alpha"].iloc[0]), "beta": float(e10["beta"].iloc[0])},
