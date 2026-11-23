@@ -138,7 +138,7 @@ def figure_volatilite(p: pd.DataFrame, h: int) -> None:
     ax1.plot(p.index, vol, color=style.ENCRE, lw=1.1, label=f"réalisée sur les {h} jours suivants")
     ax1.plot(p.index, hv, color=style.ORANGE, lw=1.8, label="prévue par la volatilité historique d'un an (référence)")
     ax1.plot(p.index, garch, color=style.BLEU, lw=1.8, label="prévue par la GARCH(1,1), réestimée sur le seul passé")
-    ax1.set_ylim(0, None)
+    ax1.set_ylim(0, 1.25 * max(vol.max(), garch.max(), hv.max()))     # de la place pour la légende
     ax1.set_ylabel("pb sur un trimestre" if h == 63 else "pb sur un mois")
     ax1.set_title(f"Volatilité du Bund à 10 ans sur {h} jours, à la date de la prévision", loc="left")
     ax1.legend(loc="upper left", fontsize=8.5)
@@ -178,7 +178,7 @@ def figure_bandes(taux: pd.Series, o: dict) -> None:
             ax.plot(x, bas, color=couleur, lw=1.8, marker="o", ms=4)
             for xi, h in zip(x[1:], pv.HORIZONS_BANDES):
                 ax.annotate(f"± {_fr(b[str(h)]['demi_largeur_pb'], 0)} pb", (xi, b[str(h)]["haut_pct"]),
-                            textcoords="offset points", xytext=(0, 7), ha="center", fontsize=8.5, color=style.ENCRE)
+                            textcoords="offset points", xytext=(-7, 7), ha="right", fontsize=8.5, color=style.ENCRE)
         else:
             ax.plot(x, haut, color=couleur, lw=1.5, ls="--", label=etiquette)
             ax.plot(x, bas, color=couleur, lw=1.5, ls="--")
@@ -186,7 +186,8 @@ def figure_bandes(taux: pd.Series, o: dict) -> None:
     ax.set_ylabel("%")
     ax.set_title(f"Bandes de variation du Bund à 10 ans sur quatre trimestres, au {date:%d/%m/%Y} "
                  f"({_fr(niveau, 2)} %)", loc="left")
-    ax.legend(loc="lower left", fontsize=8.5)
+    ax.set_ylim(top=ax.get_ylim()[1] + 0.25 * (ax.get_ylim()[1] - ax.get_ylim()[0]))   # la légende au-dessus des courbes
+    ax.legend(loc="upper left", fontsize=8.5, ncols=2)
     style.virgule(ax, decimales=1)
     ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=(1, 7)))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%m/%Y"))
