@@ -455,14 +455,17 @@ sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-co
 - **Pas l'écart OAT-Bund**, faute de taux OAT quotidien ouvert ; l'outil ne couvre que le risque de taux.
 - **Une seule forme de GARCH**, symétrique et à loi normale. **Aucune comparaison** avec les prévisions d'une banque
   ou d'une institution.
-- Après le calcul, seule la mise en page des deux figures a été retouchée ; `resultats/prevision.json` n'a pas
-  changé.
+- **Écarts au plan.** Quelques descriptifs cités ici ne sont pas listés par le plan, mais le script les calculait
+  déjà quand il a été commité, avant le calcul : le plus grand écart standardisé, la volatilité d'un an à la fin de
+  2014 et de 2021, la demi-vie de la GARCH. Aucun n'est un test. Après le calcul, le script n'a changé que pour la
+  mise en page des deux figures et pour une note qui liste ces descriptifs dans `resultats/prevision.json` ; aucun
+  chiffre n'a changé.
 
 ## 9. Reproduire
 
 ```
 uv sync --group dev
-uv run python scripts/tout.py                 # télécharge, calcule, prévoit, trace et vérifie le README ; moins d'une minute
+uv run python scripts/tout.py                 # télécharge, calcule, prévoit, trace et vérifie le README ; une à deux minutes
 uv run python scripts/prevision.py            # la prévision seule : bandes sur quatre trimestres et choc à 99 %
 uv run pytest                                 # tests sur des cas calculables à la main ou simulés
 ```

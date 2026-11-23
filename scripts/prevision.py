@@ -277,6 +277,14 @@ def main() -> None:
         "source": "Deutsche Bundesbank (taux zéro-coupon à 10 ans et à 2 ans des titres fédéraux) ; ECB statistics "
                   "(courbe AAA, 10 ans). Calculs de l'auteur.",
         "plan": "PLAN_PREVISION.md, commit 999b7cc ; calcul fait une fois, selon le plan",
+        "hors_plan": "Descriptifs que le plan ne liste pas, mais que ce script calculait déjà quand il a été commité "
+                     "(f6dcfed, avant le calcul) : la description des séries (« donnees ») ; dans « queues_a_63_jours », "
+                     "le plus grand écart standardisé, son origine, l'écart-type des z et les mêmes mesures pour la "
+                     "référence ; dans « garch_bund_10_ans », la volatilité sur 252 jours à la fin de 2014 et de 2021 et "
+                     "la persistance en fenêtre glissante ; dans « outil », la demi-vie, l'écart-type du lendemain, la "
+                     "volatilité sur 252 jours et les dates approchées ; les décomptes dérivés (années où la GARCH fait "
+                     "mieux, comparaisons positives ou significatives). Aucun n'est un test, aucun n'entre dans la "
+                     "décision. Note ajoutée après le calcul, sans changer aucun chiffre.",
         "telechargement": TELECHARGEMENT,
         "constantes": {"horizons_jours": list(pv.HORIZONS), "horizons_des_bandes_jours": list(pv.HORIZONS_BANDES),
                        "premiere_origine": pv.PREMIERE_ORIGINE, "variations_minimales_a_la_premiere_origine": pv.MIN_VARIATIONS,
