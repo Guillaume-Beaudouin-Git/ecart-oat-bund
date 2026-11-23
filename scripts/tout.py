@@ -1,4 +1,4 @@
-"""Tout le projet en une commande : téléchargement, calculs, figures, puis vérification du README.
+"""Tout le projet en une commande : téléchargement, calculs, prévision, figures, puis vérification du README.
 
     uv run python scripts/tout.py                          # fenêtre figée : janvier 1999 à octobre 2026
     uv run python scripts/tout.py --dernier-mois 2026-11   # mise à jour : prolonge la fenêtre
@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 
-ETAPES = ["decomposition.py", "stress.py", "abe.py", "controles.py", "verifier_readme.py"]
+ETAPES = ["decomposition.py", "stress.py", "abe.py", "controles.py", "prevision.py", "verifier_readme.py"]
 
 
 def main() -> int:
@@ -27,7 +27,8 @@ def main() -> int:
     for etape in etapes:
         print(f"== {etape}", flush=True)
         code = subprocess.call([sys.executable, f"scripts/{etape}"], env=env,
-                               stdout=None if etape in ("telecharger.py", "verifier_readme.py") else subprocess.DEVNULL)
+                               stdout=None if etape in ("telecharger.py", "prevision.py", "verifier_readme.py")
+                               else subprocess.DEVNULL)
         if code != 0:
             print(f"échec de {etape} (code {code})")
             return code

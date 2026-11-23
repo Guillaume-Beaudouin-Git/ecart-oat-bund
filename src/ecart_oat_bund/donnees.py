@@ -9,8 +9,10 @@
 - BCE, jeu CISS : l'indicateur composite de tension souveraine (SovCISS) de la France, quotidien, qui date les
   épisodes.
 - CERS (ESRB) : les scénarios macrofinancier et de marché du test de résistance de l'ABE de 2025.
-- En contrôle seulement : le 10 ans zéro-coupon allemand de la Bundesbank et le 10 ans espagnol du Banco de
-  España, quotidiens.
+- Bundesbank : les taux zéro-coupon à 10 ans et à 2 ans des titres fédéraux, quotidiens depuis août 1997. Le
+  10 ans sert de contrôle de la série allemande d'Eurostat et, avec le 2 ans, à la prévision de volatilité
+  (PLAN_PREVISION.md).
+- En contrôle seulement : le 10 ans espagnol du Banco de España, quotidien.
 
 Les TEC de la Banque de France (indices Euronext, redistribution interdite) ne sont ni téléchargés ni utilisés.
 
@@ -70,6 +72,8 @@ CLE_SOVCISS = "CISS/D.FR.Z0Z.4F.EC.SOV_CIN.IDX"
 FICHIER_CERS_MACRO = "esrb.stress_test250120.macrofinancialscenario~1071d75da3.en.xlsx"
 FICHIER_CERS_MARCHE = "esrb.stress_test250120.Marketriskscenario~c70aade892.en.xlsx"
 CLE_BUND = "BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A"
+CLE_BUND_2_ANS = "BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R02XX.R.A.A._Z._Z.A"
+DEBUT_BUND = "1997-08-01"              # les taux zéro-coupon quotidiens de la Bundesbank commencent en août 1997
 SERIE_ESPAGNE = "D_G0B1F0ZP"           # 10 ans, marché secondaire, obligations d'État non démembrées
 
 FICHIERS = {
@@ -80,6 +84,7 @@ FICHIERS = {
     "cers_macro": "cers_scenario_macrofinancier_2025.xlsx",
     "cers_marche": "cers_scenario_marche_2025.xlsx",
     "bund": "bundesbank_bund_10_ans.csv",
+    "bund_2_ans": "bundesbank_bund_2_ans.csv",
     "espagne": "banco_de_espana_taux_quotidiens.csv",
 }
 
@@ -121,6 +126,14 @@ def _telecharger(url: str, chemin: Path, essais: int = 3, pause_s: float = 5.0) 
     raise RuntimeError(f"téléchargement impossible : {url}") from derniere_erreur
 
 
+def telecharger_prevision(dossier: Path = DOSSIER, dernier_mois: str = DERNIER_MOIS) -> None:
+    """Les deux séries de la Bundesbank, depuis août 1997 : le 10 ans (contrôle et prévision) et le 2 ans
+    (prévision). La courbe AAA de la BCE, qui sert aussi à la prévision, vient avec `telecharger_tout`."""
+    fin = fin_quotidienne(dernier_mois)
+    _telecharger(url_bundesbank(CLE_BUND, DEBUT_BUND, fin), dossier / FICHIERS["bund"])
+    _telecharger(url_bundesbank(CLE_BUND_2_ANS, DEBUT_BUND, fin), dossier / FICHIERS["bund_2_ans"])
+
+
 def telecharger_tout(dossier: Path = DOSSIER, dernier_mois: str = DERNIER_MOIS) -> None:
     """Toutes les sources, en neuf requêtes ; quelques secondes."""
     fin = fin_quotidienne(dernier_mois)
@@ -132,7 +145,7 @@ def telecharger_tout(dossier: Path = DOSSIER, dernier_mois: str = DERNIER_MOIS) 
     _telecharger(url_bce(CLE_SOVCISS, None, DEBUT_SOVCISS, fin), dossier / FICHIERS["sovciss"])
     _telecharger(f"{CERS}/{FICHIER_CERS_MACRO}", dossier / FICHIERS["cers_macro"])
     _telecharger(f"{CERS}/{FICHIER_CERS_MARCHE}", dossier / FICHIERS["cers_marche"])
-    _telecharger(url_bundesbank(CLE_BUND, "1999-01-01", fin), dossier / FICHIERS["bund"])
+    telecharger_prevision(dossier, dernier_mois)
     _telecharger(BANCO_DE_ESPANA, dossier / FICHIERS["espagne"])
 
 
@@ -308,11 +321,12 @@ def lire_cers_chocs_marche(dossier: Path = DOSSIER) -> dict:
     return {"ecarts_souverains_contre_swap_pb": ecarts, "swap_eur_pb": swap}
 
 
-# --- Contrôles : Bundesbank et Banco de España --------------------------------------------------------------------
+# --- Bundesbank (contrôle et prévision) et Banco de España (contrôle) ---------------------------------------------
 
-def lire_bund_bundesbank(dossier: Path = DOSSIER) -> pd.Series:
-    """10 ans zéro-coupon des titres fédéraux (méthode de Svensson, Bundesbank), en %, chaque jour publié."""
-    lignes = _exiger(dossier / FICHIERS["bund"]).read_text(encoding="utf-8-sig").splitlines()
+def lire_bund_bundesbank(dossier: Path = DOSSIER, fichier: str = "bund") -> pd.Series:
+    """Taux zéro-coupon des titres fédéraux (méthode de Svensson, Bundesbank), en %, chaque jour publié : le 10 ans
+    (`fichier="bund"`) ou le 2 ans (`fichier="bund_2_ans"`). Les lignes sans valeur (jours fériés) sont ignorées."""
+    lignes = _exiger(dossier / FICHIERS[fichier]).read_text(encoding="utf-8-sig").splitlines()
     dates, valeurs = [], []
     for ligne in lignes:
         morceaux = ligne.split(",")
@@ -322,7 +336,8 @@ def lire_bund_bundesbank(dossier: Path = DOSSIER) -> pd.Series:
             except ValueError:
                 continue
             dates.append(pd.Timestamp(morceaux[0]))
-    return pd.Series(valeurs, index=pd.DatetimeIndex(dates), name="bund_10_ans_zero_coupon").sort_index()
+    nom = {"bund": "bund_10_ans_zero_coupon", "bund_2_ans": "bund_2_ans_zero_coupon"}[fichier]
+    return pd.Series(valeurs, index=pd.DatetimeIndex(dates), name=nom).sort_index()
 
 
 MOIS_ESPAGNOLS = {"ENE": 1, "FEB": 2, "MAR": 3, "ABR": 4, "MAY": 5, "JUN": 6, "JUL": 7, "AGO": 8, "SEP": 9,
