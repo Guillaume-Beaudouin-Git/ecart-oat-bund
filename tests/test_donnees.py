@@ -84,6 +84,27 @@ def test_lecture_json_stat_et_taux_longs(tmp_path, monkeypatch):
         lire_taux_longs(tmp_path, pays=("FR", "DE"), premier_mois="1999-01", dernier_mois="1999-03")
 
 
+def test_lecture_des_fichiers_de_la_bundesbank(tmp_path):
+    # la mise en page des fichiers de la Bundesbank : neuf lignes d'en-tête, puis « date,valeur,commentaire » ;
+    # un jour sans valeur porte un point et un commentaire
+    entete = ('"",BBSIS.D.I.ZST.ZI.EUR.S1311.B.A604.R02XX.R.A.A._Z._Z.A,BBSIS.D.I.ZST.ZI.EUR.S1311.B.A604.R02XX.R.A.A._Z._Z.A_FLAGS\n'
+              '"",Term structure of interest rates on listed Federal securities (method by Svensson) / residual maturity of '
+              '2.0 years / daily data,\nComment (in english),,\nDecimals,2,\nTime format code,P1D,\ncategory,ZRZS,\n'
+              'unit,Prozent,\nunit multiplier,One,\nlast update,2026-11-23 12:41:43,\n')
+    lignes = ("1997-08-06,.,No value available\n1997-08-07,4.05,\n1997-08-08,4.11,\n1997-08-09,.,No value available\n"
+              "1997-08-11,4.09,\n")
+    (tmp_path / donnees.FICHIERS["bund_2_ans"]).write_text("\ufeff" + entete + lignes, encoding="utf-8")
+    serie = donnees.lire_bund_bundesbank(tmp_path, fichier="bund_2_ans")
+    assert serie.index.tolist() == pd.to_datetime(["1997-08-07", "1997-08-08", "1997-08-11"]).tolist()
+    assert serie.tolist() == [4.05, 4.11, 4.09] and serie.name == "bund_2_ans_zero_coupon"
+    # les variations en pb sautent le jour sans valeur : +6 pb, puis −2 pb du vendredi au lundi
+    from ecart_oat_bund.prevision import variations_pb
+    assert variations_pb(serie).tolist() == pytest.approx([6.0, -2.0])
+    assert donnees.url_bundesbank(donnees.CLE_BUND_2_ANS, donnees.DEBUT_BUND, "2026-10-31") == (
+        "https://api.statistiken.bundesbank.de/rest/data/BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R02XX.R.A.A._Z._Z.A"
+        "?format=csv&lang=en&startPeriod=1997-08-01&endPeriod=2026-10-31")
+
+
 def test_dates_du_banco_de_espana():
     assert date_espagnole('"02 ENE 1979"') == pd.Timestamp("1979-01-02")
     assert date_espagnole("31 DIC 2025") == pd.Timestamp("2025-12-31")

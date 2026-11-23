@@ -40,6 +40,12 @@ def mois_fr(m: str) -> str:
     return f"{NOMS_MOIS[int(mois)]} {annee}"
 
 
+def jour_fr(d: str) -> str:
+    """« 2026-10-30 » -> « 30 octobre 2026 » ; le premier du mois s'écrit « 1er »."""
+    annee, mois, jour = d.split("-")
+    return f"{'1er' if int(jour) == 1 else int(jour)} {NOMS_MOIS[int(mois)]} {annee}"
+
+
 def attendus(r: dict) -> dict[str, str]:
     dec, st, abe, ctl, ref = r["decomposition"], r["stress"], r["abe_2025"], r["controles"], r["references"]
     p = dec["modele_principal"]
@@ -296,12 +302,13 @@ def attendus(r: dict) -> dict[str, str]:
     e["contrôle DE niveau"] = f"plus haute de {fr(al['ecart_moyen_pb'], 1)} pb en moyenne"
     e["contrôle ES"] = (f"à\n  {fr(es['ecart_moyen_pb'], 2)} pb près en moyenne (corrélation "
                         f"{fr(es['correlation_des_variations_mensuelles'], 3)})")
-    # Annexe
+    # Le travail voisin, cité dans la section 8 (l'ancienne annexe)
     an = ref["annexe_prevision"]
     h = an["horizons_mois"]
     rm = an["rmse_superieure_a_la_marche_aleatoire_pct"]
     e["annexe"] = (f"plus élevée de {rm[str(h[0])]} %, {rm[str(h[1])]} % et {rm[str(h[2])]} % à {h[0]}, {h[1]} et "
                    f"{h[2]} mois")
+    e.update(attendus_prevision(r))
     # Constantes du plan citées dans le texte
     pl = ref["plan"]
     e["plan 60"] = f"sur les {pl['fenetre_principale_variations']} mois avant mai 2024"
@@ -309,6 +316,243 @@ def attendus(r: dict) -> dict[str, str]:
     e["plan 120"] = f"fenêtre de {pl['fenetre_longue_variations']} mois"
     e["plan 304"] = f"{pl['fenetre_depuis_1999_variations']} mois"
     e["plan 22 jours"] = f"{ca['jours']}\n  jours"
+    return e
+
+
+def attendus_prevision(r: dict) -> dict[str, str]:
+    """Les chiffres de la section 8 (PLAN_PREVISION.md), de sa puce dans la note et de sa phrase en anglais : tous
+    viennent de resultats/prevision.json, sauf la DV01 (stress.json) et les références (references.json)."""
+    pv, st, ref = r["prevision"], r["stress"], r["references"]
+    cst, dec, P, R = pv["constantes"], pv["decision"], pv["principal"], pv["robustesse"]
+    h63, h21 = P["h63"], P["h21"]
+    t63, t21 = dec["test_principal"], dec["test_de_repli"]
+    o, bib, plan = pv["outil"], ref["bibliographie"], ref["plan_prevision"]
+    choc = o["choc_99_a_63_jours"]
+    b_garch, b_ref = o["bandes_95"]["garch"], o["bandes_95"]["hv252"]
+    H, H21 = cst["horizons_jours"][1], cst["horizons_jours"][0]
+    n_long, n_court = cst["fenetres_historiques_jours"]["hv252"], cst["fenetres_historiques_jours"]["hv63"]
+    seuil = fr(100 * cst["seuil"])
+    A = st["positions"]["A_oat_seule"]
+    e = {}
+    # Le titre est celui que la table de décision du plan autorise
+    assert dec["titre"] == f"{H} jours" and t63["significatif"] and t63["horizon_jours"] == H
+    assert round(100 * cst["seuil"]) == 5 and plan["nombre_de_tests_sur_la_volatilite"] == 48
+    X = fr(t63["gain_pct"])
+    g, q = h63["regles"], h21["regles"]
+    c63, c21 = h63["comparaisons"], h21["comparaisons"]
+    e["p8 titre"] = (f"**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur de {X} % "
+                     "face à la volatilité historique d'un an.**")
+    e["p8 qlike"] = (f"{fr(t63['qlike_modele'], 3)} pour la GARCH(1,1), {fr(t63['qlike_reference'], 3)} pour la "
+                     f"référence (test de Diebold-Mariano, p = {fr(t63['p'], 3)}, {t63['n']} prévisions)")
+    assert g["garch"]["rmse_vol_pb"] / h63["vol_realisee_moyenne_pb"] > 0.25
+    e["p8 rmse"] = (f"passe de {fr(g['hv252']['rmse_vol_pb'], 1)} à {fr(g['garch']['rmse_vol_pb'], 1)} pb, soit encore "
+                    f"plus du quart d'une volatilité réalisée de {fr(h63['vol_realisee_moyenne_pb'])} pb en moyenne")
+    e["p8 ajout"] = f"Section ajoutée le {jour_fr(plan['date'])}, après les sections 1 à 7, qu'elle ne modifie pas"
+    e["p8 plan"] = ("Elle suit un second plan, commité seul avant toute estimation sur les données (`PLAN_PREVISION.md`, "
+                    f"commit `{plan['commit']}` ; ce qui avait été vu est dans sa section 0) ; c'est un engagement, pas "
+                    "une preuve")
+    e["p8 non prévu"] = "aucun taux OAT quotidien n'est ouvert (section 7)"
+    # Protocole
+    d10 = pv["donnees"]["bund_10_ans"]
+    e["p8 série"] = (f"du {jour_fr(d10['premier_jour'])} au {jour_fr(d10['dernier_jour'])} ({fr(d10['jours_publies'])} "
+                     "jours)")
+    e["p8 origines"] = f"Une prévision chaque fin de mois depuis {mois_fr(cst['premiere_origine'])}"
+    assert d10["premiere_origine"][:7] == cst["premiere_origine"]
+    e["p8 cible"] = (f"des {H} jours publiés suivants (un trimestre) ou des {H21} suivants (un mois)")
+    assert d10["non_convergences_garch"] == 0
+    e["p8 garch"] = (f"Une GARCH(1,1) à moyenne nulle (Bollerslev, {bib['bollerslev']['annee']}), réestimée à chaque "
+                     f"origine sur tout le passé (paquet `arch` ; {d10['ajustements_garch']} ajustements, tous convergés)")
+    e["p8 règles simples"] = (f"la volatilité historique sur {n_long} jours, qui sert de référence ; la volatilité "
+                              f"historique sur {n_court} jours ; une moyenne exponentielle de paramètre "
+                              f"{fr(cst['lambda_ewma'], 2)} (EWMA ; RiskMetrics, {bib['riskmetrics']['annee']})")
+    e["p8 patton"] = f"(Patton, {bib['patton']['annee']})"
+    e["p8 test"] = (f"Diebold et Mariano ({bib['diebold_mariano']['annee']}), erreurs-types de Newey-West à "
+                    f"{cst['retards_newey_west'][f'h{H}']} retards à un trimestre et "
+                    f"{cst['retards_newey_west'][f'h{H21}']} retards à un mois")
+    assert t63["retards"] == cst["retards_newey_west"][f"h{H}"] and t21["retards"] == cst["retards_newey_west"][f"h{H21}"]
+    e["p8 décision"] = (f"Un seul test décide du titre : 10 ans, {H} jours, GARCH contre référence, seuil de {seuil} %. "
+                        f"En cas d'échec, le titre aurait porté sur {H21} jours")
+    e["p8 repli"] = "Le test passe : le repli ne joue pas"
+    # Tableau des quatre règles et tableau des gains
+    libelles = {"garch": "GARCH(1,1)", "hv252": f"volatilité historique, {n_long} jours (référence)",
+                "hv63": f"volatilité historique, {n_court} jours", "ewma": f"EWMA {fr(cst['lambda_ewma'], 2)}"}
+    for regle, lib in libelles.items():
+        gras = "**" if regle in ("garch", "hv252") else ""
+        a, b = g[regle], q[regle]
+        e[f"p8 règle {regle}"] = (f"| {lib} | {gras}{fr(a['qlike'], 3)}{gras} | {fr(a['rmse_vol_pb'], 1)} | "
+                                  f"{signe(a['biais_vol_pb'], 1)} | {fr(b['qlike'], 3)} | {fr(b['rmse_vol_pb'], 1)} | "
+                                  f"{signe(b['biais_vol_pb'], 1)} |")
+    faces = {"hv252": f"la volatilité historique, {n_long} jours", "hv63": f"la volatilité historique, {n_court} jours",
+             "ewma": f"l'EWMA {fr(cst['lambda_ewma'], 2)}"}
+    for regle, lib in faces.items():
+        a, b = c63[f"garch_contre_{regle}"], c21[f"garch_contre_{regle}"]
+        gras = "**" if regle == "hv252" else ""
+        e[f"p8 gain {regle}"] = (f"| {lib} | {gras}{fr(a['gain_pct'])} %{gras} | {gras}{fr(a['p'], 3)}{gras} | "
+                                 f"{fr(b['gain_pct'])} % | {fr(b['p'], 3)} |")
+    e["p8 montre"] = (f"à un trimestre ({X} %) comme à un mois ({fr(t21['gain_pct'])} %, p = {fr(t21['p'], 3)})")
+    a63, w63 = c63["garch_contre_hv63"], c63["garch_contre_ewma"]
+    assert a63["p"] > cst["seuil"] and w63["p"] > cst["seuil"] and a63["gain_pct"] > 0 and w63["gain_pct"] > 0
+    e["p8 ne montre pas"] = (f"son gain est de {fr(a63['gain_pct'])} % face à la volatilité sur {n_court} jours "
+                             f"(p = {fr(a63['p'], 3)}) et de {fr(w63['gain_pct'])} % face à l'EWMA (p = {fr(w63['p'], 3)}) : "
+                             "ni l'un ni l'autre n'est significatif")
+    # Concentration
+    sans = h63["origines"] // 3
+    assert sans == pv["couverture_des_bandes_95"]["bund_10_ans"][f"h{H}"]["trimestres_ou_mois_sans_chevauchement"]
+    e["p8 trimestres"] = f"{h63['origines']} prévisions mensuelles ne font que {sans} trimestres sans chevauchement"
+    conc = pv["concentration"][f"h{H}"]
+    parts = conc["part_par_annee_de_fin_de_cible_pct"]
+    trois = sorted(parts, key=parts.get, reverse=True)[:3]
+    assert sorted(trois) == ["2015", "2020", "2022"] and trois[0] == "2022"
+    e["p8 trois années"] = (f"Trois années, 2015, 2020 et 2022, font {fr(sum(parts[a] for a in trois))} % de l'écart de "
+                            f"perte cumulé (figure, panneau du bas), dont {fr(parts['2022'])} % pour 2022 seule")
+    e["p8 sans épisodes"] = (f"Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à "
+                             f"{fr(conc['sans_2022_2023']['gain_pct'])} % ; sans celles de 2008 et 2009, il reste de "
+                             f"{fr(conc['sans_2008_2009']['gain_pct'])} %")
+    e["p8 années"] = (f"La GARCH fait mieux que la référence {conc['annees_ou_la_garch_fait_mieux']} années sur "
+                      f"{conc['annees']}")
+    sp = R["sous_periodes"]
+    creux = sp["2015-2021"][f"h{H}"]
+    e["p8 biais"] = (f"Son biais est de {signe(g['garch']['biais_vol_pb'], 1)} pb à un trimestre, et de "
+                     f"{signe(creux['regles']['garch']['biais_vol_pb'], 1)} pb sur 2015-2021")
+    # Le niveau
+    niv = pv["niveau"]
+    for h in cst["horizons_du_niveau_mois"]:
+        n = niv[f"h{h}"]
+        assert n["rapport"] > 1 and n["d_moyen"] < 0
+        e[f"p8 niveau {h}"] = (f"| {h} mois | {n['previsions']} | {fr(n['rmse_marche_aleatoire_pb'])} pb | "
+                               f"{fr(n['rmse_ar1_pb'])} pb | {fr(n['rapport'], 2)} | {fr(n['p'], 3)} |")
+    e["p8 niveau lecture"] = "La marche aléatoire n'est pas battue, et l'AR(1) fait moins bien aux deux horizons"
+    e["p8 niveau ordre"] = (f"L'erreur de la marche aléatoire à 3 mois, {fr(niv['h3']['rmse_marche_aleatoire_pb'])} pb, "
+                            f"est du même ordre que la volatilité d'un trimestre ({fr(h63['vol_realisee_moyenne_pb'])} pb "
+                            "en moyenne)")
+    # Robustesse
+    aaa = R["aaa_10_ans"]
+    variantes = [("**calcul principal** : Bund à 10 ans", P, True), ("Bund à 2 ans", R["bund_2_ans"], False),
+                 (f"10 ans de la courbe AAA de la BCE (origines depuis "
+                  f"{mois_fr(pv['donnees']['aaa_10_ans']['premiere_origine'])})", aaa, False),
+                 ("Bund à 10 ans, mêmes origines que la courbe AAA", R["bund_10_ans_aux_origines_de_la_courbe_aaa"], False),
+                 ("GARCH en fenêtre glissante de 10 ans", R["fenetre_glissante"], False)]
+    variantes += [(f"cibles qui finissent en {nom}", cellule, False) for nom, cellule in sp.items()]
+    assert cst["fenetre_glissante_jours"] == 10 * n_long
+    tests = []
+    for lib, cellule, gras in variantes:
+        a = cellule[f"h{H}"]["comparaisons"]["garch_contre_hv252"]
+        b = cellule[f"h{H21}"]["comparaisons"]["garch_contre_hv252"]
+        tests += [a, b]
+        m = "**" if gras else ""
+        e[f"p8 variante {lib}"] = (f"| {lib} | {cellule[f'h{H}']['origines']} | {m}{fr(a['gain_pct'])} %{m} | "
+                                   f"{m}{fr(a['p'], 3)}{m} | {fr(b['gain_pct'])} % | {fr(b['p'], 3)} |")
+    dc = pv["decompte"]
+    positifs = sum(t["gain_pct"] > 0 for t in tests)
+    significatifs = sum(t["d_moyen"] > 0 and t["p"] < cst["seuil"] for t in tests)
+    pertes = sum(t["d_moyen"] < 0 and t["p"] < cst["seuil"] for t in tests)
+    assert (len(tests), positifs, significatifs, pertes) == (
+        dc["garch_contre_reference"]["comparaisons"], dc["garch_contre_reference"]["gain_positif"],
+        dc["garch_contre_reference"]["gain_significatif"], dc["garch_contre_reference"]["perte_significative"])
+    assert positifs == len(tests) and pertes == 0
+    e["p8 décompte"] = (f"Les {len(tests)} comparaisons du tableau donnent un gain positif ; {significatifs} passent le "
+                        f"seuil de {seuil} %, aucune ne donne une perte significative")
+    assert dc["tests_de_diebold_mariano_sur_la_volatilite"] == plan["nombre_de_tests_sur_la_volatilite"]
+    e["p8 tests"] = f"Le plan compte {dc['tests_de_diebold_mariano_sur_la_volatilite']} tests sur la volatilité, dont un seul décide"
+    deux = R["bund_2_ans"][f"h{H}"]
+    assert deux["regles"]["garch"]["qlike"] > 2 * g["garch"]["qlike"] and deux["regles"]["hv252"]["qlike"] > 2 * g["hv252"]["qlike"]
+    assert deux["comparaisons"]["garch_contre_hv252"]["p"] > cst["seuil"]
+    e["p8 deux ans"] = (f"({fr(deux['regles']['garch']['qlike'], 3)} pour la GARCH, {fr(deux['regles']['hv252']['qlike'], 3)} "
+                        "pour la référence, à un trimestre)")
+    p_aaa = aaa[f"h{H}"]["comparaisons"]["garch_contre_hv252"]["p"]
+    assert p_aaa > cst["seuil"]
+    e["p8 aaa"] = f"À un trimestre, p = {fr(p_aaa, 4)} : juste au-dessus du seuil"
+    memes = R["bund_10_ans_aux_origines_de_la_courbe_aaa"][f"h{H}"]["comparaisons"]["garch_contre_hv252"]
+    e["p8 aaa bund"] = f"le Bund donne {fr(memes['gain_pct'])} % (p = {fr(memes['p'], 3)})"
+    gl = R["fenetre_glissante"][f"h{H}"]["regles"]
+    assert 0.4 < gl["garch"]["biais_vol_pb"] / g["garch"]["biais_vol_pb"] < 0.6
+    assert fr(gl["garch"]["qlike"], 3) == fr(g["hv63"]["qlike"], 3)
+    e["p8 glissante"] = (f"({signe(gl['garch']['biais_vol_pb'], 1)} pb à un trimestre), mais sa perte monte à "
+                         f"{fr(gl['garch']['qlike'], 3)}, au niveau de la volatilité sur {n_court} jours")
+    for cellule in sp.values():
+        t = cellule[f"h{H}"]["comparaisons"]["garch_contre_hv252"]
+        assert t["gain_pct"] > 0 and t["p"] > cst["seuil"]
+    e["p8 sous-périodes"] = "Le gain est positif dans les trois ; à un trimestre, il n'est significatif dans aucune"
+    e["p8 creux"] = (f"tombe à {fr(creux['vol_realisee_moyenne_pb'])} pb par trimestre en moyenne, et la GARCH prévoit "
+                     f"{fr(creux['regles']['garch']['biais_vol_pb'], 1)} pb de trop, contre "
+                     f"{fr(creux['regles']['hv252']['biais_vol_pb'], 1)} pour la référence")
+    lt, hv = (pv["garch_bund_10_ans"][k] for k in ("ecart_type_de_long_terme_pb_par_jour", "ecart_type_hv252_pb_par_jour"))
+    e["p8 long terme"] = (f"volatilité de long terme de {fr(lt['fin_2014'], 1)} pb par jour à la fin de 2014 et de "
+                          f"{fr(lt['fin_2021'], 1)} à la fin de 2021, quand la volatilité d'un an est de "
+                          f"{fr(hv['fin_2014'], 1)} puis de {fr(hv['fin_2021'], 1)} pb par jour")
+    e["p8 creux qlike"] = (f"({fr(creux['regles']['garch']['qlike'], 3)} contre {fr(creux['regles']['hv252']['qlike'], 3)})")
+    # Couverture et queues
+    e["p8 bande"] = f"(dernier taux ± {fr(cst['quantile_bande_95'], 2)} fois l'écart-type prévu)"
+    couv = pv["couverture_des_bandes_95"]["bund_10_ans"]
+    for h in [H21] + cst["horizons_des_bandes_jours"]:
+        c = couv[f"h{h}"]
+        e[f"p8 couverture {h}"] = (f"| {h} jours | {c['trimestres_ou_mois_sans_chevauchement']} | {fr(100 * c['garch'], 1)} % | "
+                                   f"{fr(100 * c['hv252'], 1)} % |")
+    lointains = [couv[f"h{h}"] for h in cst["horizons_des_bandes_jours"][1:]]
+    assert all(abs(c["garch"] - 0.95) < 0.01 for c in lointains) and all(c["hv252"] < 0.93 for c in lointains)
+    assert couv[f"h{H}"]["garch"] > 0.96 and couv[f"h{H21}"]["garch"] > 0.96 and abs(couv[f"h{H}"]["hv252"] - 0.95) < 0.005
+    zq = pv["queues_a_63_jours"]
+    hausses, baisses = zq["garch"]["nombre_a_la_hausse"], zq["garch"]["nombre_a_la_baisse"]
+    assert baisses == 1 and hausses > 1
+    e["p8 queues"] = (f"dépassé {fr(cst['quantile_choc_99'], 3)} écarts-types prévus par la GARCH {hausses + baisses} fois "
+                      f"sur {h63['origines']} ({hausses} hausses, {baisses} baisse), pour {fr(0.02 * h63['origines'])} "
+                      f"attendues sous une loi normale, et {zq['hv252']['nombre_a_la_hausse'] + zq['hv252']['nombre_a_la_baisse']} "
+                      "fois avec la référence")
+    e["p8 plus grand z"] = (f"Mais le plus grand écart, {fr(zq['garch']['plus_grand_z_absolu'], 1)} écarts-types, vient de "
+                            f"la prévision de fin {mois_fr(zq['garch']['origine_du_plus_grand_z'])}")
+    e["p8 quantile"] = f"{sans} trimestres ne suffisent pas à estimer un quantile à 99 %"
+    # La sortie de l'outil
+    e["p8 outil date"] = (f"Au {jour_fr(o['date'])}, dernier jour retenu, le taux zéro-coupon est de "
+                          f"{fr(o['niveau_pct'], 2)} %")
+    for k, h in enumerate(cst["horizons_des_bandes_jours"], start=1):
+        bg, br = b_garch[str(h)], b_ref[str(h)]
+        e[f"p8 bande {h}"] = (f"| {k} trimestre{'s' if k > 1 else ''} ({h} jours) | ± {fr(bg['demi_largeur_pb'])} pb | de "
+                              f"{fr(bg['bas_pct'], 2)} % à {fr(bg['haut_pct'], 2)} % | ± {fr(br['demi_largeur_pb'])} pb |")
+        assert bg["demi_largeur_pb"] > br["demi_largeur_pb"]
+    og = o["garch"]
+    e["p8 mécanisme"] = (f"un écart-type de {fr(og['ecart_type_du_lendemain_pb'], 1)} pb pour le lendemain, puis revient "
+                         f"vers son niveau de long terme, {fr(og['ecart_type_de_long_terme_pb_par_jour'], 1)} pb par jour "
+                         f"(α + β = {fr(og['persistance'], 3)}, soit une demi-vie de {fr(og['demi_vie_jours'])} jours). La "
+                         f"volatilité d'un an est de {fr(o['ecart_type_hv252_pb_par_jour'], 1)} pb par jour")
+    e["p8 choc"] = (f"**Choc à 99 % sur un trimestre : {signe(choc['choc_retenu_pb'])} pb**, soit "
+                    f"{fr(choc['quantile_normal'], 3)} fois l'écart-type prévu ({fr(choc['ecart_type_63_jours_pb'])} pb)")
+    assert abs(choc["dv01_keur_par_pb"] - A["dv01_taux_keur_par_pb"]) < 1e-6
+    e["p8 perte"] = (f"({fr(choc['dv01_keur_par_pb'])} k€ par pb pour {fr(ref['plan']['nominal_oat_meur'])} M€ d'OAT à "
+                     f"{ref['plan']['maturite_ans']} ans), il coûte {fr(choc['perte_position_A_meur'], 1)} M€ au premier ordre")
+    abe = st["chocs"]["C5_abe_2025_marche"]["aaa_10_ans_pb"]
+    assert abe > choc["choc_retenu_pb"]
+    e["p8 échelle"] = f"le choc de marché de l'ABE 2025 monte le Bund de {fr(abe)} pb (section 5)"
+    assert choc["quantile_retenu"] == "normal"
+    e["p8 quantiles"] = (f"celui de la loi normale ({fr(choc['quantile_normal'], 3)}) et le quantile empirique des "
+                         f"variations standardisées du back test ({fr(choc['quantile_empirique_98_de_z_absolu'], 2)}). Le "
+                         "quantile normal l'emporte")
+    # Limites
+    e["p8 limite cible"] = f"{H} carrés de variations quotidiennes mesurent la variance avec bruit"
+    e["p8 limite épisodes"] = (f"{sans} trimestres sans chevauchement, et trois années qui font "
+                               f"{fr(sum(parts[a] for a in trois))} % du gain : la valeur p de {fr(t63['p'], 3)} repose sur eux")
+    e["p8 limite queues"] = f"que {sans} trimestres ne peuvent ni valider ni réfuter"
+    fenetres = [couv[f"h{h}"]["trimestres_ou_mois_sans_chevauchement"] for h in cst["horizons_des_bandes_jours"][1:]]
+    e["p8 limite bandes"] = f"mesurée que sur {min(fenetres)} à {max(fenetres)} fenêtres sans chevauchement"
+    # La puce de la note et la phrase en anglais
+    e["note prévision"] = (f"À un trimestre, une GARCH réduit l'erreur de prévision de la volatilité de {X} % face à la "
+                           f"volatilité historique d'un an (perte QLIKE, p = {fr(t63['p'], 3)}), sans battre de façon "
+                           f"significative une moyenne sur {n_court} jours")
+    e["note outil"] = (f"(± {fr(b_garch[str(H)]['demi_largeur_pb'])} pb à un trimestre, au {jour_fr(o['date'])}) et un choc "
+                       f"à 99 % : {signe(choc['choc_retenu_pb'])} pb, soit {fr(choc['perte_position_A_meur'], 1)} M€ pour "
+                       f"{fr(ref['plan']['nominal_oat_meur'])} M€ d'OAT à {ref['plan']['maturite_ans']} ans")
+    e["note section 8"] = f"**Prévision** (section 8, ajoutée le {jour_fr(plan['date'])})"
+    e["note mesure"] = ("La décomposition est une mesure, ni une prévision ni une recommandation de position ; la section "
+                        "8, ajoutée ensuite, prévoit l'amplitude des variations du Bund, pas leur sens, et ne recommande "
+                        "rien non plus")
+    e["note second plan"] = ("La section 8 suit un second plan, commité seul avant toute estimation sur les données "
+                             f"(`PLAN_PREVISION.md`, commit `{plan['commit']}`)")
+    jour, mois_anglais = int(plan["date"][8:]), {11: "November"}[int(plan["date"][5:7])]
+    e["anglais prévision 1"] = (f"Section 8, added on {jour} {mois_anglais} {plan['date'][:4]} under a second plan committed "
+                                "before any estimation on the data")
+    e["anglais prévision 2"] = (f"a GARCH(1,1) cuts the volatility forecast loss (QLIKE) by {X}% against one-year "
+                                f"historical volatility (Diebold-Mariano p = {t63['p']:.3f})")
+    e["reproduire dates"] = (f"téléchargées le 22 novembre 2026, et le {jour_fr(pv['telechargement']).rsplit(' ', 1)[0]} "
+                             "pour les séries de la Bundesbank depuis 1997")
     return e
 
 
@@ -325,7 +569,7 @@ def normaliser(texte: str) -> str:
 
 
 def charger() -> dict:
-    noms = ["decomposition", "stress", "abe_2025", "controles", "references"]
+    noms = ["decomposition", "stress", "abe_2025", "controles", "prevision", "references"]
     return {n: json.loads((RESULTATS / f"{n}.json").read_text(encoding="utf-8")) for n in noms}
 
 

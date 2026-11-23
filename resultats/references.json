@@ -1,5 +1,5 @@
 {
-  "note": "Fichier écrit à la main, le seul de resultats/ : les constantes fixées par le plan (PLAN.md, commit f938339), les événements cités dans le README avec leur source primaire, et les chiffres d'un autre travail repris en annexe. Tous les autres fichiers de resultats/ sont écrits par les scripts.",
+  "note": "Fichier écrit à la main, le seul de resultats/ : les constantes fixées par le plan (PLAN.md, commit f938339), les événements cités dans le README avec leur source primaire, les chiffres d'un autre travail repris dans la section 8, le commit du plan de la prévision (PLAN_PREVISION.md) et les références bibliographiques de la section 8. Tous les autres fichiers de resultats/ sont écrits par les scripts.",
   "plan": {
     "commit": "f938339",
     "mois_de_base": "2024-05",
@@ -25,6 +25,16 @@
     "lambda_diebold_li_par_mois": 0.0609,
     "demi_pas_des_differences_centrees_pb": 0.5,
     "annee_des_poids_pib": 2019
+  },
+  "plan_prevision": {
+    "fichier": "PLAN_PREVISION.md",
+    "commit": "999b7cc",
+    "date": "2026-11-23",
+    "commit_du_code": "f6dcfed",
+    "test_qui_decide": "Bund à 10 ans, 63 jours, GARCH(1,1) contre volatilité historique sur 252 jours, QLIKE, Diebold-Mariano à 6 retards, seuil de 5 %",
+    "repli": "titre sur 21 jours si le gain n'est pas significatif à 63 jours ; section non publiée s'il ne l'est à aucun des deux horizons",
+    "nombre_de_tests_sur_la_volatilite": 48,
+    "nombre_de_tests_sur_le_niveau": 2
   },
   "evenements": [
     {
@@ -110,5 +120,31 @@
     "grece_mois_sans_valeur": "2015-07",
     "source": "Eurostat, métadonnées de irt_lt_mcby (ESMS) : taux harmonisé du Luxembourg à partir de la mi-mai 2010 ; pas de donnée pour la Grèce en juillet 2015, marché fermé",
     "url": "https://ec.europa.eu/eurostat/cache/metadata/en/irt_lt_mcby_esms.htm"
+  },
+  "bibliographie": {
+    "bollerslev": {
+      "auteurs": "T. Bollerslev",
+      "annee": 1986,
+      "titre": "Generalized autoregressive conditional heteroskedasticity",
+      "revue": "Journal of Econometrics, vol. 31, n° 3, p. 307 à 327"
+    },
+    "diebold_mariano": {
+      "auteurs": "F. X. Diebold et R. S. Mariano",
+      "annee": 1995,
+      "titre": "Comparing predictive accuracy",
+      "revue": "Journal of Business & Economic Statistics, vol. 13, n° 3, p. 253 à 263"
+    },
+    "riskmetrics": {
+      "auteurs": "J.P. Morgan et Reuters",
+      "annee": 1996,
+      "titre": "RiskMetrics, Technical Document, 4e édition",
+      "note": "paramètre de lissage de 0,94 pour des données quotidiennes"
+    },
+    "patton": {
+      "auteurs": "A. J. Patton",
+      "annee": 2011,
+      "titre": "Volatility forecast comparison using imperfect volatility proxies",
+      "revue": "Journal of Econometrics, vol. 160, n° 1, p. 246 à 256"
+    }
   }
 }

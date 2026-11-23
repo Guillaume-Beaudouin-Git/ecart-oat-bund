@@ -37,12 +37,21 @@ depuis 1999.
 - **ABE 2025.** En moyenne annuelle, l'écart observé a suivi le scénario central de l'ABE (76 pb en 2025, comme le
   scénario). Le niveau d'octobre 2026, 147 pb sur un mois, approche l'écart adverse de 2025 (157 pb) et dépasse celui
   de 2026 (135 pb) ; mais l'ABE raisonne en moyenne annuelle.
+- **Prévision** (section 8, ajoutée le 23 novembre 2026). Un AR(1) ne prévoit pas le niveau du Bund à 10 ans mieux
+  que le dernier taux connu ; l'amplitude de ses variations, elle, se prévoit. À un trimestre, une GARCH réduit
+  l'erreur de prévision de la volatilité de 39 % face à la volatilité historique d'un an (perte QLIKE, p = 0,029),
+  sans battre de façon significative une moyenne sur 63 jours. L'outil en tire des bandes de variation sur quatre
+  trimestres (± 67 pb à un trimestre, au 30 octobre 2026) et un choc à 99 % : +80 pb, soit 6,5 M€ pour 100 M€
+  d'OAT à 10 ans. Il ne prévoit ni le sens des variations, ni l'écart OAT-Bund.
 
-Sources : Eurostat, BCE, CERS ; calculs de l'auteur. C'est une mesure, ni une prévision ni une recommandation de
-position. Le plan a été commité avant la décomposition (écarts bruts déjà vus : `PLAN.md`, section 0 ; commit
-`f938339`) ; c'est un engagement, pas une preuve. Le code de la décomposition a été commité avant les résultats. Le
-plan (son « je » est l'agent), le code et cette note ont été rédigés et relus par des agents d'IA (Claude Code), sous
-la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles de validation, et décide de ce qui est gardé.
+Sources : Eurostat, BCE, CERS, Bundesbank ; calculs de l'auteur. La décomposition est une mesure, ni une prévision
+ni une recommandation de position ; la section 8, ajoutée ensuite, prévoit l'amplitude des variations du Bund, pas
+leur sens, et ne recommande rien non plus. Le plan a été commité avant la décomposition (écarts bruts déjà vus :
+`PLAN.md`, section 0 ; commit `f938339`) ; c'est un engagement, pas une preuve. Le code de la décomposition a été
+commité avant les résultats. La section 8 suit un second plan, commité seul avant toute estimation sur les données
+(`PLAN_PREVISION.md`, commit `999b7cc`). Le plan (son « je » est l'agent), le code et cette note ont été rédigés et
+relus par des agents d'IA (Claude Code), sous la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles
+de validation, et décide de ce qui est gardé.
 
 > **In English.** The whole 96 bp rise in the 10-year OAT-Bund spread between May 2024 and October 2026 (from 51 to
 > 147 bp, monthly averages) is France-specific: 100 bp [73; 126]; had France followed its peers, the spread would
@@ -51,9 +60,12 @@ la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles de valid
 > French part came in September and October 2026. It is a lower bound if French stress spilled over to the peers,
 > and it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth EUR 81k.
 > The plan was committed before the decomposition (raw spreads already seen: PLAN.md, section 0): a commitment, not
-> a proof. The plan (its "I" is the agent), the code and this note were written and reviewed by AI agents (Claude
-> Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation rules, and decides what
-> is kept.
+> a proof. Section 8, added on 23 November 2026 under a second plan committed before any estimation on the data,
+> forecasts the size of 10-year Bund yield moves, not their direction: one quarter ahead, a GARCH(1,1) cuts the
+> volatility forecast loss (QLIKE) by 39% against one-year historical volatility (Diebold-Mariano p = 0.029), while
+> the random walk is not beaten on the level. The plan (its "I" is the agent), the code and this note were written
+> and reviewed by AI agents (Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the
+> validation rules, and decides what is kept.
 
 ## 2. L'écart depuis 1999
 
@@ -267,39 +279,222 @@ par l'auteur à partir des taux du scénario macrofinancier du CERS :
 - **Pas de marché primaire, pas de coût budgétaire** : le programme de financement de l'AFT n'a pas pu être lu par
   script, et aucun chiffre n'en est repris.
 
-## 8. Reproduire
+## 8. Prévoir : le niveau ou l'amplitude ?
+
+**À un trimestre, la volatilité du Bund à 10 ans se prévoit : la GARCH réduit l'erreur de 39 % face à la volatilité
+historique d'un an.** L'erreur est la perte QLIKE moyenne, celle du test fixé d'avance : 0,133 pour la GARCH(1,1),
+0,218 pour la référence (test de Diebold-Mariano, p = 0,029, 260 prévisions). En pb, l'erreur quadratique moyenne
+sur la volatilité du trimestre passe de 11,6 à 9,6 pb, soit encore plus du quart d'une volatilité réalisée de
+35 pb en moyenne. Le niveau du taux, lui, n'est pas mieux prévu par un AR(1) que par le dernier taux connu.
+
+Section ajoutée le 23 novembre 2026, après les sections 1 à 7, qu'elle ne modifie pas. Elle suit un second plan,
+commité seul avant toute estimation sur les données (`PLAN_PREVISION.md`, commit `999b7cc` ; ce qui avait été vu
+est dans sa section 0) ; c'est un engagement, pas une preuve. Ce plan, le code et le texte de la section ont été
+rédigés et relus comme le reste de la page (section 1).
+
+- **La question.** Pour un exercice trimestriel de prévision et de stress, que prévoit-on mieux qu'une règle simple
+  sur le Bund : le niveau, ou l'amplitude de ses variations ?
+- **Ce qui n'est pas prévu.** Le sens des variations : une amplitude ne dit pas si le taux monte ou baisse. Et
+  l'amplitude de l'écart OAT-Bund : aucun taux OAT quotidien n'est ouvert (section 7).
+
+**Protocole** (`PLAN_PREVISION.md` ; `src/ecart_oat_bund/prevision.py`).
+
+- **Série.** Le taux zéro-coupon à 10 ans des titres fédéraux, publié chaque jour par la Bundesbank, du 7 août 1997
+  au 30 octobre 2026 (7 421 jours). Les variations quotidiennes sont en pb. Le taux est publié à deux décimales :
+  chaque variation est un nombre entier de pb.
+- **Origines et cible.** Une prévision chaque fin de mois depuis décembre 2004, avec les seules données connues ce
+  jour-là. La cible est la somme des carrés des variations des 63 jours publiés suivants (un trimestre) ou des 21
+  suivants (un mois) ; sa racine est la volatilité de l'horizon, en pb.
+- **Quatre règles.** Une GARCH(1,1) à moyenne nulle (Bollerslev, 1986), réestimée à chaque origine sur tout le
+  passé (paquet `arch` ; 263 ajustements, tous convergés) ; la volatilité historique sur 252 jours, qui sert de
+  référence ; la volatilité historique sur 63 jours ; une moyenne exponentielle de paramètre 0,94 (EWMA ;
+  RiskMetrics, 1996).
+- **Perte.** QLIKE = RV/F − ln(RV/F) − 1, où RV est la variance réalisée et F la prévision ; elle vaut zéro quand
+  F = RV. Elle classe les règles correctement même si RV mesure la variance avec bruit (Patton, 2011), et une
+  prévision trop basse y coûte plus qu'une prévision trop haute.
+- **Test.** Diebold et Mariano (1995), erreurs-types de Newey-West à 6 retards à un trimestre et 2 retards à un
+  mois : les origines sont mensuelles et les cibles se chevauchent.
+- **Décision fixée d'avance.** Un seul test décide du titre : 10 ans, 63 jours, GARCH contre référence, seuil de
+  5 %. En cas d'échec, le titre aurait porté sur 21 jours ; en cas de double échec, la section n'aurait pas été
+  publiée. Le test passe : le repli ne joue pas.
+
+**Résultats sur le Bund à 10 ans** (QLIKE moyenne ; RMSE et biais de la volatilité prévue, en pb ; un biais positif
+dit que la règle prévoit trop) :
+
+| règle | QLIKE, 63 jours | RMSE | biais | QLIKE, 21 jours | RMSE | biais |
+|---|---|---|---|---|---|---|
+| GARCH(1,1) | **0,133** | 9,6 | +2,3 | 0,172 | 6,3 | +1,1 |
+| volatilité historique, 252 jours (référence) | **0,218** | 11,6 | +0,8 | 0,254 | 7,4 | +0,7 |
+| volatilité historique, 63 jours | 0,155 | 10,0 | −0,1 | 0,201 | 6,7 | +0,2 |
+| EWMA 0,94 | 0,167 | 10,1 | −0,8 | 0,200 | 6,4 | −0,2 |
+
+| gain de la GARCH (QLIKE) face à | 63 jours | p | 21 jours | p |
+|---|---|---|---|---|
+| la volatilité historique, 252 jours | **39 %** | **0,029** | 32 % | 0,004 |
+| la volatilité historique, 63 jours | 14 % | 0,291 | 15 % | 0,050 |
+| l'EWMA 0,94 | 21 % | 0,097 | 14 % | 0,025 |
+
+![Volatilité réalisée du Bund à 10 ans sur 63 jours, prévisions de la GARCH et de la volatilité historique d'un an, et écart de perte cumulé, 2004-2026](figures/5_prevision_volatilite.png)
+
+- **Ce que le test montre.** Une moyenne sur un an réagit trop lentement quand la volatilité change. La GARCH fait
+  mieux qu'elle à un trimestre (39 %) comme à un mois (32 %, p = 0,004).
+- **Ce qu'il ne montre pas.** Que la GARCH batte les deux autres règles simples. À un trimestre, son gain est de
+  14 % face à la volatilité sur 63 jours (p = 0,291) et de 21 % face à l'EWMA (p = 0,097) : ni l'un ni l'autre
+  n'est significatif. Une moyenne des 63 derniers jours capte déjà l'essentiel du gain.
+- **Le gain vient de peu d'épisodes.** 260 prévisions mensuelles ne font que 86 trimestres sans chevauchement.
+  Trois années, 2015, 2020 et 2022, font 87 % de l'écart de perte cumulé (figure, panneau du bas), dont 49 % pour
+  2022 seule. Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à 26 % ; sans celles de 2008 et 2009,
+  il reste de 38 %. La GARCH fait mieux que la référence 15 années sur 22.
+- **La GARCH prévoit un peu trop.** Son biais est de +2,3 pb à un trimestre, et de +5,0 pb sur 2015-2021 (voir la
+  robustesse).
+
+**Le niveau** : marche aléatoire contre AR(1), Bund à 10 ans en fin de mois, mêmes origines.
+
+| horizon | prévisions | RMSE, marche aléatoire | RMSE, AR(1) | rapport | p |
+|---|---|---|---|---|---|
+| 3 mois | 260 | 34 pb | 35 pb | 1,04 | 0,049 |
+| 12 mois | 251 | 75 pb | 87 pb | 1,15 | 0,015 |
+
+- La marche aléatoire n'est pas battue, et l'AR(1) fait moins bien aux deux horizons. Le plan l'attendait
+  (sa section 0) : dans un autre travail, non publié, un modèle de Nelson-Siegel dynamique n'avait pas battu non plus
+  la marche aléatoire sur la courbe AAA ; sa RMSE était plus élevée de 19 %, 21 % et 30 % à 1, 6 et 12 mois.
+- L'erreur de la marche aléatoire à 3 mois, 34 pb, est du même ordre que la volatilité d'un trimestre (35 pb en
+  moyenne). On ne sait pas dire où ira le taux ; on sait dire de combien il peut bouger, et c'est cette amplitude
+  qui se prévoit.
+
+**Robustesse** : gain de la GARCH face à la volatilité historique sur 252 jours, variantes fixées d'avance.
+
+| variante | prévisions à 63 jours | gain à 63 jours | p | gain à 21 jours | p |
+|---|---|---|---|---|---|
+| **calcul principal** : Bund à 10 ans | 260 | **39 %** | **0,029** | 32 % | 0,004 |
+| Bund à 2 ans | 260 | 38 % | 0,233 | 27 % | 0,182 |
+| 10 ans de la courbe AAA de la BCE (origines depuis juillet 2008) | 217 | 31 % | 0,050 | 29 % | 0,004 |
+| Bund à 10 ans, mêmes origines que la courbe AAA | 217 | 41 % | 0,030 | 33 % | 0,005 |
+| GARCH en fenêtre glissante de 10 ans | 260 | 29 % | 0,045 | 29 % | 0,006 |
+| cibles qui finissent en 2005-2014 | 117 | 17 % | 0,225 | 14 % | 0,116 |
+| cibles qui finissent en 2015-2021 | 85 | 33 % | 0,207 | 32 % | 0,093 |
+| cibles qui finissent en 2022-2026 | 58 | 62 % | 0,099 | 51 % | 0,037 |
+
+- **Le signe tient partout, la significativité une fois sur deux.** Les 16 comparaisons du tableau donnent un gain
+  positif ; 8 passent le seuil de 5 %, aucune ne donne une perte significative. Le plan compte 48 tests sur la
+  volatilité, dont un seul décide ; tous sont dans `resultats/prevision.json`.
+- **Bund à 2 ans.** Gain du même ordre, non significatif. Les pertes y sont plus de deux fois plus élevées (0,316
+  pour la GARCH, 0,506 pour la référence, à un trimestre) ; une cible plus bruitée l'expliquerait, ce qui n'est pas
+  testé ici.
+- **Courbe AAA.** À un trimestre, p = 0,0501 : juste au-dessus du seuil, donc non significatif selon la règle. Aux
+  mêmes origines, le Bund donne 41 % (p = 0,030) : une courbe estimée à part, par la BCE, donne un gain voisin, un
+  peu plus faible.
+- **Fenêtre glissante.** Le biais de la GARCH est réduit de moitié (+1,2 pb à un trimestre), mais sa perte monte à
+  0,155, au niveau de la volatilité sur 63 jours.
+- **Sous-périodes.** Le gain est positif dans les trois ; à un trimestre, il n'est significatif dans aucune.
+- **2015-2021, la volatilité écrasée.** La volatilité réalisée tombe à 27 pb par trimestre en moyenne, et la GARCH
+  prévoit 5,0 pb de trop, contre 0,8 pour la référence. Estimée sur une fenêtre croissante, elle garde une
+  volatilité de long terme de 5,1 pb par jour à la fin de 2014 et de 4,8 à la fin de 2021, quand la volatilité d'un
+  an est de 3,0 puis de 2,7 pb par jour. Sa perte reste plus faible que celle de la référence (0,177 contre 0,263),
+  sans que l'écart soit significatif.
+
+**Les bandes à 95 % dans le back test** : part des origines où la variation réalisée du taux est restée dans la
+bande (dernier taux ± 1,96 fois l'écart-type prévu).
+
+| horizon | fenêtres sans chevauchement | GARCH | volatilité historique, 252 jours |
+|---|---|---|---|
+| 21 jours | 262 | 97,3 % | 94,7 % |
+| 63 jours | 86 | 96,2 % | 95,0 % |
+| 126 jours | 42 | 94,6 % | 91,8 % |
+| 189 jours | 28 | 95,3 % | 91,7 % |
+| 252 jours | 20 | 94,4 % | 90,8 % |
+
+- Les bandes de la GARCH sont un peu trop larges jusqu'à un trimestre, proches de 95 % au-delà. Celles de la
+  référence sont justes à un trimestre, trop étroites au-delà.
+- **Queues.** Un quantile de loi normale sous-estime en général les queues. Ici, à un trimestre, la variation a
+  dépassé 2,326 écarts-types prévus par la GARCH 4 fois sur 260 (3 hausses, 1 baisse), pour 5 attendues sous une loi
+  normale, et 9 fois avec la référence. Mais le plus grand écart, 3,3 écarts-types, vient de la prévision de fin
+  janvier 2022 : il serait très rare sous une loi normale, et 86 trimestres ne suffisent pas à estimer un quantile à
+  99 %.
+
+**La sortie de l'outil.** `uv run python scripts/prevision.py` affiche les bandes de variation du Bund à 10 ans
+sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-coupon est de 3,40 % :
+
+| horizon | bande à 95 %, GARCH | soit | bande à 95 %, volatilité historique sur 252 jours |
+|---|---|---|---|
+| 1 trimestre (63 jours) | ± 67 pb | de 2,73 % à 4,07 % | ± 59 pb |
+| 2 trimestres (126 jours) | ± 98 pb | de 2,42 % à 4,38 % | ± 84 pb |
+| 3 trimestres (189 jours) | ± 123 pb | de 2,17 % à 4,63 % | ± 102 pb |
+| 4 trimestres (252 jours) | ± 144 pb | de 1,96 % à 4,84 % | ± 118 pb |
+
+![Bund à 10 ans depuis trois ans et bandes de variation à 95 % sur quatre trimestres, GARCH et volatilité historique d'un an](figures/6_bandes.png)
+
+- **Pourquoi la GARCH donne des bandes plus larges.** Fin octobre 2026, elle prévoit un écart-type de 4,1 pb pour
+  le lendemain, puis revient vers son niveau de long terme, 5,0 pb par jour (α + β = 0,992, soit une demi-vie de
+  90 jours). La volatilité d'un an est de 3,8 pb par jour. C'est le mécanisme du biais de 2015-2021 : si la
+  volatilité reste basse, ces bandes sont trop larges.
+- **Choc à 99 % sur un trimestre : +80 pb**, soit 2,326 fois l'écart-type prévu (34 pb). Appliqué à la DV01 de la
+  section 5 (81 k€ par pb pour 100 M€ d'OAT à 10 ans), il coûte 6,5 M€ au premier ordre, écart OAT-Bund inchangé.
+  La position B, neutre en DV01, n'y est pas exposée : son risque est l'écart, que l'outil ne prévoit pas. À titre
+  d'échelle, le choc de marché de l'ABE 2025 monte le Bund de 110 pb (section 5).
+- Le plan retenait le plus grand de deux quantiles : celui de la loi normale (2,326) et le quantile empirique des
+  variations standardisées du back test (2,24). Le quantile normal l'emporte.
+
+**Limites propres à cette section.**
+
+- **Une amplitude, pas un sens.** Les bandes sont symétriques autour du dernier taux ; elles ne disent pas s'il
+  montera.
+- **Un taux lissé.** Le zéro-coupon de la Bundesbank est estimé par la méthode de Svensson et publié à deux
+  décimales : ce n'est pas le rendement d'un titre négocié, et ses variations quotidiennes sont arrondies au pb.
+- **Une cible bruitée.** 63 carrés de variations quotidiennes mesurent la variance avec bruit. Le classement par
+  QLIKE y résiste en espérance ; le niveau des pertes, non.
+- **Peu d'épisodes indépendants.** 86 trimestres sans chevauchement, et trois années qui font 87 % du gain : la
+  valeur p de 0,029 repose sur eux.
+- **Une seule référence battue.** Le titre porte sur la volatilité d'un an. Face à une moyenne sur 63 jours ou à
+  l'EWMA, le gain de la GARCH n'est pas significatif à un trimestre.
+- **Un biais vers le haut** quand la volatilité reste basse longtemps, comme en 2015-2021.
+- **Des queues mal connues.** Le choc à 99 % repose sur un quantile normal, que 86 trimestres ne peuvent ni valider
+  ni réfuter.
+- **Au-delà d'un trimestre**, les bandes prolongent le même modèle ; leur couverture n'est mesurée que sur 20 à
+  42 fenêtres sans chevauchement.
+- **Pas l'écart OAT-Bund**, faute de taux OAT quotidien ouvert ; l'outil ne couvre que le risque de taux.
+- **Une seule forme de GARCH**, symétrique et à loi normale. **Aucune comparaison** avec les prévisions d'une banque
+  ou d'une institution.
+- Après le calcul, seule la mise en page des deux figures a été retouchée ; `resultats/prevision.json` n'a pas
+  changé.
+
+## 9. Reproduire
 
 ```
 uv sync --group dev
-uv run python scripts/tout.py                 # télécharge, calcule, trace et vérifie le README ; moins d'une minute
-uv run pytest                                 # tests sur des cas calculables à la main
+uv run python scripts/tout.py                 # télécharge, calcule, prévoit, trace et vérifie le README ; moins d'une minute
+uv run python scripts/prevision.py            # la prévision seule : bandes sur quatre trimestres et choc à 99 %
+uv run pytest                                 # tests sur des cas calculables à la main ou simulés
 ```
 
-`scripts/tout.py` enchaîne `telecharger.py`, `decomposition.py`, `stress.py`, `abe.py`, `controles.py` et
-`verifier_readme.py`. Ce dernier recalcule chaque chiffre de cette page depuis les JSON de `resultats/` et signale
-tout nombre qui n'en sort pas. **Mise à jour en une commande :** `uv run python scripts/tout.py --dernier-mois
-2026-11` prolonge la fenêtre d'un mois ; la vérification dira alors quels chiffres de la page ont changé. Les chiffres
-de cette page viennent des données téléchargées le 22 novembre 2026 ; Eurostat peut réviser le PIB, ce qui
-déplacerait un peu les poids.
+`scripts/tout.py` enchaîne `telecharger.py`, `decomposition.py`, `stress.py`, `abe.py`, `controles.py`,
+`prevision.py` et `verifier_readme.py`. Ce dernier recalcule chaque chiffre de cette page depuis les JSON de
+`resultats/` et signale tout nombre qui n'en sort pas. **Mise à jour en une commande :** `uv run python
+scripts/tout.py --dernier-mois 2026-11` prolonge la fenêtre d'un mois ; la vérification dira alors quels chiffres de
+la page ont changé. Les chiffres de cette page viennent des données téléchargées le 22 novembre 2026, et le
+23 novembre pour les séries de la Bundesbank depuis 1997 ; Eurostat peut réviser le PIB, ce qui déplacerait un peu
+les poids.
 
 | fichier | |
 |---|---|
 | `PLAN.md` | le plan, commité avant la décomposition (écarts bruts déjà vus : section 0) ; un engagement, pas une preuve |
+| `PLAN_PREVISION.md` | le plan de la section 8, commité seul avant toute estimation sur les données (ce qui avait été vu : section 0) ; un engagement, pas une preuve |
 | `src/ecart_oat_bund/donnees.py` | téléchargement et lecture des sources |
 | `src/ecart_oat_bund/decomposition.py` | estimation, part propre, intervalle de Newey-West, tableau sans modèle |
 | `src/ecart_oat_bund/analyse.py` | le plan traduit en constantes : fenêtres, groupes, variantes, épisodes |
 | `src/ecart_oat_bund/stress.py` | prix, duration, DV01, courbe des OAT, position neutre en DV01, chocs |
 | `src/ecart_oat_bund/nelson_siegel.py` | courbe de Svensson de la BCE et facteurs de Nelson-Siegel (rejeu de 2022) |
-| `resultats/*.json` | tous les chiffres ; `references.json`, écrit à la main, donne les constantes du plan et les sources des événements |
+| `src/ecart_oat_bund/prevision.py` | variations quotidiennes, origines, GARCH(1,1) et règles simples, QLIKE, Diebold-Mariano, bandes, niveau |
+| `resultats/*.json` | tous les chiffres ; `references.json`, écrit à la main, donne les constantes du plan et les sources des événements ; `prevision_par_origine.csv` détaille la section 8, origine par origine |
 
-## 9. Les données et leurs conditions de réutilisation
+## 10. Les données et leurs conditions de réutilisation
 
 | source | séries | conditions |
 |---|---|---|
 | Eurostat | `irt_lt_mcby_m` (taux longs du critère de convergence, collectés par la BCE auprès des banques centrales nationales), `nama_10_gdp` (PIB de 2019) | réutilisation libre, commerciale ou non, « à condition de mentionner la source » ([avis de droit d'auteur](https://ec.europa.eu/eurostat/fr/help/copyright-notice)) |
 | BCE | courbe AAA `YC/B.U2.EUR.4F.G_N_A.SV_C_YM`, SovCISS de la France `CISS/D.FR.Z0Z.4F.EC.SOV_CIN.IDX` | réutilisation gratuite « on the condition that the source is quoted (e.g. "Source: ECB statistics.") and that the statistics (including metadata) are not modified » ([politique du SEBC](https://www.ecb.europa.eu/stats/ecb_statistics/governance_and_quality_framework/html/usage_policy.en.html)) |
 | CERS (ESRB) | scénarios macrofinancier et de marché de l'ABE 2025 | libre usage, à condition de citer le CERS et de signaler toute transformation ([avis juridique](https://www.esrb.europa.eu/services/disclaimer/html/index.en.html)) |
-| Bundesbank | 10 ans zéro-coupon des titres fédéraux, `BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A` (contrôle) | politique du SEBC, comme la BCE |
+| Bundesbank | 10 ans et 2 ans zéro-coupon des titres fédéraux, `BBSIS/D.I.ZST.ZI.EUR.S1311.B.A604.R10XX.R.A.A._Z._Z.A` et `…R02XX…`, quotidiens depuis août 1997 (section 8 ; le 10 ans sert aussi de contrôle) | politique du SEBC, comme la BCE |
 | Banco de España | 10 ans espagnol du marché secondaire, série `D_G0B1F0ZP` (contrôle) | réutilisation libre en citant « Banco de España » et en signalant le traitement ([conditions](https://www.bde.es/wbe/es/estadisticas/recursos/terminos/terminos-de-uso.html)) |
 
 - Les données brutes ne sont pas versionnées : `scripts/telecharger.py` les recrée dans `data/`. Les TEC de la
@@ -314,9 +509,3 @@ déplacerait un peu les poids.
   0,05 pb près en moyenne (corrélation 0,999).
 - Sources des événements : Légifrance, Assemblée nationale, Conseil constitutionnel, BCE, ABE (liens dans le texte
   et dans `resultats/references.json`).
-
-## Annexe : une prévision qui ne battait pas la marche aléatoire
-
-Dans un autre travail, non publié, l'auteur a testé la prévision de la courbe AAA par le modèle de Nelson-Siegel
-dynamique contre la marche aléatoire, selon un plan commité avant les résultats. La marche aléatoire n'a été battue
-à aucun horizon : la RMSE du modèle était plus élevée de 19 %, 21 % et 30 % à 1, 6 et 12 mois.
