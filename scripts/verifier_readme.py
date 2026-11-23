@@ -392,6 +392,9 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     e["p8 montre"] = (f"à un trimestre ({X} %) comme à un mois ({fr(t21['gain_pct'])} %, p = {fr(t21['p'], 3)})")
     a63, w63 = c63["garch_contre_hv63"], c63["garch_contre_ewma"]
     assert a63["p"] > cst["seuil"] and w63["p"] > cst["seuil"] and a63["gain_pct"] > 0 and w63["gain_pct"] > 0
+    # « une moyenne des 63 derniers jours capte déjà l'essentiel du gain » : plus de la moitié de l'écart de QLIKE
+    assert (g["hv252"]["qlike"] - g["hv63"]["qlike"]) / (g["hv252"]["qlike"] - g["garch"]["qlike"]) > 0.5
+    e["p8 essentiel"] = f"Une moyenne des {n_court} derniers jours capte déjà l'essentiel du gain"
     e["p8 ne montre pas"] = (f"son gain est de {fr(a63['gain_pct'])} % face à la volatilité sur {n_court} jours "
                              f"(p = {fr(a63['p'], 3)}) et de {fr(w63['gain_pct'])} % face à l'EWMA (p = {fr(w63['p'], 3)}) : "
                              "ni l'un ni l'autre n'est significatif")
@@ -463,7 +466,9 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     assert p_aaa > cst["seuil"]
     e["p8 aaa"] = f"À un trimestre, p = {fr(p_aaa, 4)} : juste au-dessus du seuil"
     memes = R["bund_10_ans_aux_origines_de_la_courbe_aaa"][f"h{H}"]["comparaisons"]["garch_contre_hv252"]
-    e["p8 aaa bund"] = f"le Bund donne {fr(memes['gain_pct'])} % (p = {fr(memes['p'], 3)})"
+    assert 0 < aaa[f"h{H}"]["comparaisons"]["garch_contre_hv252"]["gain_pct"] < memes["gain_pct"]
+    e["p8 aaa bund"] = (f"le Bund donne {fr(memes['gain_pct'])} % (p = {fr(memes['p'], 3)}) : sur une courbe estimée à "
+                        "part, par la BCE, le gain est de même signe mais plus faible")
     gl = R["fenetre_glissante"][f"h{H}"]["regles"]
     assert 0.4 < gl["garch"]["biais_vol_pb"] / g["garch"]["biais_vol_pb"] < 0.6
     assert fr(gl["garch"]["qlike"], 3) == fr(g["hv63"]["qlike"], 3)
@@ -514,7 +519,7 @@ def attendus_prevision(r: dict) -> dict[str, str]:
                          f"vers son niveau de long terme, {fr(og['ecart_type_de_long_terme_pb_par_jour'], 1)} pb par jour "
                          f"(α + β = {fr(og['persistance'], 3)}, soit une demi-vie de {fr(og['demi_vie_jours'])} jours). La "
                          f"volatilité d'un an est de {fr(o['ecart_type_hv252_pb_par_jour'], 1)} pb par jour")
-    e["p8 choc"] = (f"**Choc à 99 % sur un trimestre : {signe(choc['choc_retenu_pb'])} pb**, soit "
+    e["p8 choc"] = (f"**Choc à 99 % sur un trimestre : {signe(choc['choc_retenu_pb'])} pb**, à la hausse, soit "
                     f"{fr(choc['quantile_normal'], 3)} fois l'écart-type prévu ({fr(choc['ecart_type_63_jours_pb'])} pb)")
     assert abs(choc["dv01_keur_par_pb"] - A["dv01_taux_keur_par_pb"]) < 1e-6
     e["p8 perte"] = (f"({fr(choc['dv01_keur_par_pb'])} k€ par pb pour {fr(ref['plan']['nominal_oat_meur'])} M€ d'OAT à "

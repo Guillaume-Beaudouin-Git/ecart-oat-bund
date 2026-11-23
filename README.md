@@ -296,6 +296,8 @@ rédigés et relus comme le reste de la page (section 1).
   sur le Bund : le niveau, ou l'amplitude de ses variations ?
 - **Ce qui n'est pas prévu.** Le sens des variations : une amplitude ne dit pas si le taux monte ou baisse. Et
   l'amplitude de l'écart OAT-Bund : aucun taux OAT quotidien n'est ouvert (section 7).
+- **Le lien avec le reste de la page.** Une OAT porte deux risques, le taux et l'écart. Les sections 3 à 6 mesurent
+  et choquent l'écart ; celle-ci donne l'amplitude attendue du taux.
 
 **Protocole** (`PLAN_PREVISION.md` ; `src/ecart_oat_bund/prevision.py`).
 
@@ -382,8 +384,8 @@ dit que la règle prévoit trop) :
   pour la GARCH, 0,506 pour la référence, à un trimestre) ; une cible plus bruitée l'expliquerait, ce qui n'est pas
   testé ici.
 - **Courbe AAA.** À un trimestre, p = 0,0501 : juste au-dessus du seuil, donc non significatif selon la règle. Aux
-  mêmes origines, le Bund donne 41 % (p = 0,030) : une courbe estimée à part, par la BCE, donne un gain voisin, un
-  peu plus faible.
+  mêmes origines, le Bund donne 41 % (p = 0,030) : sur une courbe estimée à part, par la BCE, le gain est de même
+  signe mais plus faible.
 - **Fenêtre glissante.** Le biais de la GARCH est réduit de moitié (+1,2 pb à un trimestre), mais sa perte monte à
   0,155, au niveau de la volatilité sur 63 jours.
 - **Sous-périodes.** Le gain est positif dans les trois ; à un trimestre, il n'est significatif dans aucune.
@@ -428,8 +430,9 @@ sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-co
   le lendemain, puis revient vers son niveau de long terme, 5,0 pb par jour (α + β = 0,992, soit une demi-vie de
   90 jours). La volatilité d'un an est de 3,8 pb par jour. C'est le mécanisme du biais de 2015-2021 : si la
   volatilité reste basse, ces bandes sont trop larges.
-- **Choc à 99 % sur un trimestre : +80 pb**, soit 2,326 fois l'écart-type prévu (34 pb). Appliqué à la DV01 de la
-  section 5 (81 k€ par pb pour 100 M€ d'OAT à 10 ans), il coûte 6,5 M€ au premier ordre, écart OAT-Bund inchangé.
+- **Choc à 99 % sur un trimestre : +80 pb**, à la hausse, soit 2,326 fois l'écart-type prévu (34 pb). Appliqué à la
+  DV01 de la section 5 (81 k€ par pb pour 100 M€ d'OAT à 10 ans), il coûte 6,5 M€ au premier ordre, écart OAT-Bund
+  inchangé.
   La position B, neutre en DV01, n'y est pas exposée : son risque est l'écart, que l'outil ne prévoit pas. À titre
   d'échelle, le choc de marché de l'ABE 2025 monte le Bund de 110 pb (section 5).
 - Le plan retenait le plus grand de deux quantiles : celui de la loi normale (2,326) et le quantile empirique des
