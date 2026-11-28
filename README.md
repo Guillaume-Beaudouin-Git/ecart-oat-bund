@@ -56,9 +56,9 @@ ni une recommandation de position ; la section 8, ajoutée ensuite, prévoit l'a
 leur sens, et ne recommande rien non plus. Le plan a été commité avant la décomposition (écarts bruts déjà vus :
 `PLAN.md`, section 0 ; commit `f938339`) ; c'est un engagement, pas une preuve. Le code de la décomposition a été
 commité avant les résultats. La section 8 suit un second plan, commité seul avant toute estimation sur les données
-(`PLAN_PREVISION.md`, commit `999b7cc`). Le plan (son « je » est l'agent), le code et cette note ont été rédigés et
-relus par des agents d'IA (Claude Code), sous la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles
-de validation, et décide de ce qui est gardé.
+(`PLAN_PREVISION.md`, commit `999b7cc`). Je crée et gère des agents de programmation IA qui écrivent et relisent
+le code ; je fixe l'objectif et les règles de validation, et je décide de ce qui est retenu. Ces agents (Claude Code)
+ont aussi rédigé et relu les deux plans et cette note ; le « je » des plans est l'agent.
 
 > **In English.** The whole 96 bp rise in the 10-year OAT-Bund spread between May 2024 and October 2026 (from 51 to
 > 147 bp, monthly averages) is France-specific: 100 bp [73; 126]; had France followed its peers, the spread would
@@ -76,9 +76,9 @@ de validation, et décide de ce qui est gardé.
 > forecasts the size of 10-year Bund yield moves, not their direction: one quarter ahead, a GARCH(1,1) cuts the
 > volatility forecast loss (QLIKE) by 39% against one-year historical volatility (Diebold-Mariano p = 0.029), but
 > not significantly against a 63-day average or an EWMA, with 87% of the gain from 2015, 2020 and 2022; the random
-> walk is not beaten on the level. The plan (its "I" is the agent), the code and this note were written and reviewed
-> by AI agents (Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation
-> rules, and decides what is kept.
+> walk is not beaten on the level. I create and manage AI coding agents that write and review the code; I set the
+> objective and the validation rules, and decide what is kept. These agents (Claude Code) also wrote and reviewed the
+> two plans and this note; the plans' "I" is the agent.
 
 ## 2. L'écart depuis 1999
 
@@ -91,8 +91,8 @@ de validation, et décide de ce qui est gardé.
   à novembre 2011 (154 pb) pour trouver un mois plus haut.
 - En moyenne mensuelle, le taux français dépasse l'italien en décembre 2025, janvier et février 2026, puis d'août à
   octobre 2026 : six mois, et aucun avant décembre 2025 depuis janvier 1999. L'écart est faible jusqu'en août 2026
-  (de 0,8 à 3,8 pb), puis de 7,8 pb en septembre et de 21 pb en octobre (écarts ajoutés après l'audit). En mai 2024,
-  le taux français était 81 pb en dessous de l'italien.
+  (de 0,8 à 3,8 pb), puis de 7,8 pb en septembre et de 21 pb en octobre (écarts ajoutés après l'audit d'une session
+  de relecture distincte, par IA). En mai 2024, le taux français était 81 pb en dessous de l'italien.
 - Les pairs pèsent selon leur PIB de 2019 : Italie 32 %, Espagne 22 %, Pays-Bas 15 %, Belgique 9 %, Autriche 7 %,
   Irlande 7 %, Finlande 4 %, Portugal 4 %. Leur écart moyen à l'Allemagne passe de 80 pb en mai 2024 à 72 pb en
   octobre 2026.
@@ -266,9 +266,9 @@ par l'auteur à partir des taux du scénario macrofinancier du CERS :
 
 ## 7. Les limites
 
-- **Le niveau d'octobre 2026 n'est pas confronté à une source de marché quotidienne.** L'audit indépendant n'a pas pu
-  le vérifier sur des prix quotidiens ouverts, et le SovCISS de la France n'en confirme pas l'ampleur (0,27 au plus
-  pendant l'automne 2026, contre 0,72 en 2011).
+- **Le niveau d'octobre 2026 n'est pas confronté à une source de marché quotidienne.** L'audit, fait par une
+  session de relecture distincte, par IA, n'a pas pu le vérifier sur des prix quotidiens ouverts, et le SovCISS de
+  la France n'en confirme pas l'ampleur (0,27 au plus pendant l'automne 2026, contre 0,72 en 2011).
 - **Moyennes mensuelles.** Pas de taux français quotidien ouvert : la Banque de France publie les TEC, mais ce sont
   des indices d'Euronext qu'on ne peut redistribuer ; l'API Webstat exige un compte ; le site de l'AFT refuse les
   scripts. Un épisode de quelques jours se dilue dans la moyenne du mois (section 4, E2).
@@ -364,10 +364,11 @@ dit que la règle prévoit trop) :
   Trois années, 2015, 2020 et 2022, font 87 % de l'écart de perte cumulé (figure, panneau du bas), dont 49 % pour
   2022 seule. Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à 26 % ; sans celles de 2008 et 2009,
   il reste de 38 %. La GARCH fait mieux que la référence 15 années sur 22.
-- **Hors plan, ajouté après l'audit indépendant.** L'audit a refait le test principal en retirant une seule de ces
-  trois années (les cibles qui y finissent) : p = 0,064 sans 2015, 0,055 sans 2020, 0,079 sans 2022. Le gain reste
-  positif (35 %, 37 % et 26 %), mais aucune des trois versions ne passe le seuil de 5 % : le résultat a besoin des
-  trois épisodes. Avec l'erreur au carré sur la variance à la place de la QLIKE, le gain est de 32 % (p = 0,039).
+- **Hors plan, ajouté après l'audit d'une session de relecture distincte, par IA.** L'audit a refait le test
+  principal en retirant une seule de ces trois années (les cibles qui y finissent) : p = 0,064 sans 2015, 0,055
+  sans 2020, 0,079 sans 2022. Le gain reste positif (35 %, 37 % et 26 %), mais aucune des trois versions ne passe le
+  seuil de 5 % : le résultat a besoin des trois épisodes. Avec l'erreur au carré sur la variance à la place de la
+  QLIKE, le gain est de 32 % (p = 0,039).
   Ces quatre calculs ne sont pas dans le plan et ne changent pas la décision. Ils reprennent les mêmes prévisions,
   sans nouvelle estimation ; quand une année est retirée, le test traite comme voisins les mois de part et d'autre.
 - **La GARCH prévoit un peu trop.** Son biais est de +2,3 pb à un trimestre, et de +5,0 pb sur 2015-2021 (voir la
@@ -486,7 +487,7 @@ sur quatre trimestres. Au 30 octobre 2026, dernier jour retenu, le taux zéro-co
   déjà quand il a été commité, avant le calcul : le plus grand écart standardisé, la volatilité d'un an à la fin de
   2014 et de 2021, la demi-vie de la GARCH. Aucun n'est un test. Après le calcul, le script a changé trois fois sans
   qu'aucun chiffre du plan ne bouge : pour la mise en page des deux figures, pour une note qui liste ces descriptifs
-  dans `resultats/prevision.json`, puis, après l'audit indépendant, pour les quatre calculs hors plan signalés plus
+  dans `resultats/prevision.json`, puis, après cet audit, pour les quatre calculs hors plan signalés plus
   haut. Après l'audit aussi, le titre a été retouché : le plan écrivait « réduit l'erreur de X % » et demandait que
   la phrase du titre nomme la perte ; « (perte QLIKE) » est désormais dans le titre lui-même, et le premier
   paragraphe dit les deux fragilités avant le détail.

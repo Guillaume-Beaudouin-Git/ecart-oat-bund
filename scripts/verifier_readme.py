@@ -132,7 +132,7 @@ def attendus(r: dict) -> dict[str, str]:
     e["s2 italie niveaux"] = f"le taux français était {fr(-sm['IT']['base_pb'])} pb en dessous de l'italien"
     e["s2 italie écarts"] = (f"L'écart est faible jusqu'en août 2026 (de {fr(min(avant_sept), 1)} à {fr(max(avant_sept), 1)} pb), "
                              f"puis de {fr(gaps['2026-09'], 1)} pb en septembre et de {fr(gaps['2026-10'])} pb en octobre "
-                             "(écarts ajoutés après l'audit)")
+                             "(écarts ajoutés après l'audit d'une session de relecture distincte, par IA)")
     w = dec["poids_pib_2019"]["G8"]
     e["poids"] = (f"Italie {fr(100 * w['IT'])} %, Espagne {fr(100 * w['ES'])} %, Pays-Bas {fr(100 * w['NL'])} %, "
                   f"Belgique {fr(100 * w['BE'])} %, Autriche {fr(100 * w['AT'])} %,\n  Irlande {fr(100 * w['IE'])} %, "
@@ -289,12 +289,14 @@ def attendus(r: dict) -> dict[str, str]:
                              f"contre {fr(sov['E1']['maximum'], 2)} en 2011)")
     e["plan avant décomposition"] = ("Le plan a été commité avant la décomposition (écarts bruts déjà vus : `PLAN.md`, "
                                      "section 0 ; commit `" + ref["plan"]["commit"] + "`) ; c'est un engagement, pas une preuve")
-    e["IA"] = ("Le plan (son « je » est l'agent), le code et cette note ont été rédigés et relus par des agents d'IA "
-               "(Claude Code), sous la direction de Guillaume Beaudouin ; il fixe l'objectif et les règles de validation, "
-               "et décide de ce qui est gardé")
-    e["IA anglais"] = ("The plan (its \"I\" is the agent), the code and this note were written and reviewed by AI agents "
-                       "(Claude Code) under the direction of Guillaume Beaudouin; he sets the objective and the validation "
-                       "rules, and decides what is kept")
+    # Le rôle de l'IA : la phrase du profil, traduite (décision du 28 novembre 2026), puis ce qu'elle ne dit pas.
+    e["IA"] = ("Je crée et gère des agents de programmation IA qui écrivent et relisent le code ; je fixe "
+               "l'objectif et les règles de validation, et je décide de ce qui est retenu. Ces agents (Claude Code) "
+               "ont aussi rédigé et "
+               "relu les deux plans et cette note ; le « je » des plans est l'agent")
+    e["IA anglais"] = ("I create and manage AI coding agents that write and review the code; I set the objective and "
+                       "the validation rules, and decide what is kept. These agents (Claude Code) also wrote and "
+                       "reviewed the two plans and this note; the plans' \"I\" is the agent")
     e["limite contagion"] = f"(par exemple de {fr(e5['variation_P_G8_pb'])} pb à l'automne 2026)"
     # Section 9
     al, es = ctl["allemagne_bundesbank_moins_eurostat"], ctl["espagne_banco_de_espana_moins_eurostat"]
@@ -434,7 +436,7 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     assert eq["n"] == h63["origines"] and eq["retards"] == t63["retards"]
     e["p8 audit erreur au carré"] = (f"Avec l'erreur au carré sur la variance à la place de la QLIKE, le gain est de "
                                      f"{fr(eq['gain_pct'])} % (p = {fr(eq['p'], 3)})")
-    e["p8 audit marque"] = "**Hors plan, ajouté après l'audit indépendant.**"
+    e["p8 audit marque"] = "**Hors plan, ajouté après l'audit d'une session de relecture distincte, par IA.**"
     e["p8 sans épisodes"] = (f"Sans les cibles qui finissent en 2022 ou 2023, le gain tombe à "
                              f"{fr(conc['sans_2022_2023']['gain_pct'])} % ; sans celles de 2008 et 2009, il reste de "
                              f"{fr(conc['sans_2008_2009']['gain_pct'])} %")
@@ -598,8 +600,12 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     return e
 
 
-# Formulations corrigées par l'audit indépendant : elles ne doivent pas revenir.
-INTERDITES = ["avant tout calcul", "before any computation", "CC BY", "d'indiquer les modifications", "bien connu",
+# Formulations corrigées après les audits : elles ne doivent pas revenir. « Indépendant » désignait des agents
+# d'IA (décision du 28 novembre 2026), comme l'ancienne phrase sur leur rôle.
+INTERDITES = ["audit indépendant", "relecture indépendante", "independent audit", "independent review",
+              "independent pass", "sous la direction de Guillaume Beaudouin",
+              "under the direction of Guillaume Beaudouin",
+              "avant tout calcul", "before any computation", "CC BY", "d'indiquer les modifications", "bien connu",
               "sont propres à la France", "are specific to France"]
 
 

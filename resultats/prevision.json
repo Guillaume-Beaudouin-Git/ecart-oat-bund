@@ -1310,7 +1310,7 @@
     }
   },
   "hors_plan_apres_audit": {
-    "note": "Hors plan, ajouté après l'audit indépendant : ces calculs ne sont pas dans PLAN_PREVISION.md et ne changent pas la décision. Ils reprennent les prévisions du calcul principal, sans nouvelle estimation ; quand une année est retirée, les mois de part et d'autre deviennent voisins dans le test de Newey-West.",
+    "note": "Hors plan, ajouté après l'audit d'une session de relecture distincte, par IA : ces calculs ne sont pas dans PLAN_PREVISION.md et ne changent pas la décision. Ils reprennent les prévisions du calcul principal, sans nouvelle estimation ; quand une année est retirée, les mois de part et d'autre deviennent voisins dans le test de Newey-West.",
     "serie": "bund_10_ans",
     "horizon_jours": 63,
     "sans_une_annee_de_fin_de_cible": {

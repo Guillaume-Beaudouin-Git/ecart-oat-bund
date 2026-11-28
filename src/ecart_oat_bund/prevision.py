@@ -335,7 +335,7 @@ def comparer_niveau(mensuel: pd.Series, h: int, premiere_origine: str = PREMIERE
             **diebold_mariano((e_ma ** 2 - e_ar ** 2).to_numpy(), 2 * h)}
 
 
-# --- Ajouté après l'audit indépendant, hors plan -------------------------------------------------------------------
+# --- Ajouté après l'audit d'une session de relecture distincte, par IA, hors plan --------------------------------
 # Deux lectures que l'audit a calculées pour mesurer la fragilité du test principal. Elles ne sont pas dans
 # PLAN_PREVISION.md, ne décident de rien et sont signalées comme telles dans le README et dans prevision.json.
 

@@ -135,9 +135,11 @@ ANNEES_DE_L_AUDIT = (2015, 2020, 2022)      # les trois années qui font l'essen
 
 
 def apres_audit(p: pd.DataFrame, h: int) -> dict:
-    """Hors plan, ajouté après l'audit indépendant : le test principal refait sans une seule des trois années qui
-    portent le gain (cibles qui y finissent), puis avec l'erreur au carré sur la variance à la place de QLIKE."""
-    sortie = {"note": "Hors plan, ajouté après l'audit indépendant : ces calculs ne sont pas dans PLAN_PREVISION.md "
+    """Hors plan, ajouté après l'audit d'une session de relecture distincte, par IA : le test principal refait
+    sans une seule des trois années qui portent le gain (cibles qui y finissent), puis avec l'erreur au carré sur la
+    variance à la place de QLIKE."""
+    sortie = {"note": "Hors plan, ajouté après l'audit d'une session de relecture distincte, par IA : ces calculs "
+                      "ne sont pas dans PLAN_PREVISION.md "
                       "et ne changent pas la décision. Ils reprennent les prévisions du calcul principal, sans "
                       "nouvelle estimation ; quand une année est retirée, les mois de part et d'autre deviennent "
                       "voisins dans le test de Newey-West.",
