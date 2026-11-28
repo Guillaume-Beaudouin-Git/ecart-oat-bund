@@ -8,7 +8,9 @@ propre à la France : 100 pb [73 ; 126] ; en suivant ses pairs, l'écart aurait 
 nominal, que les fenêtres d'estimation plus longues élargissent à [59 ; 140] et [52 ; 147] (section 3). Les arrondis
 expliquent que 100 − 3 ne fasse pas 96 : la part propre vaut 99,6 pb, la part commune −3,2 pb et
 la hausse 96,4 pb. L'écart moyen des huit pays pairs à l'Allemagne, pondéré par le PIB de 2019, a baissé de 8 pb sur
-la période. Les cinq variantes fixées d'avance donnent toutes 99 ou 100 pb. En octobre 2026, l'écart OAT-Bund
+la période. Les cinq variantes fixées d'avance donnent toutes 99 ou 100 pb, mais cet accord prouve peu : il tient
+surtout à ce que l'écart moyen des pairs a peu bougé, et aucune variante n'éprouve l'hypothèse centrale, que la
+France aurait suivi ses pairs (section 7). En octobre 2026, l'écart OAT-Bund
 (147 pb en moyenne mensuelle) est au plus haut depuis novembre 2011, et, en moyenne mensuelle, le taux français
 dépasse l'italien pour le sixième mois depuis décembre 2025 (de moins de 4 pb avant septembre 2026), une première
 depuis 1999.
@@ -61,7 +63,9 @@ de validation, et décide de ce qui est gardé.
 > have fallen by 3 bp (100 − 3 differs from 96 by rounding). The interval is nominal: 95% under the model's
 > assumptions, including a constant residual variance, that of 2019-2024; longer estimation windows widen it to
 > [59; 140] and [52; 147]. The GDP-weighted spread of eight euro-area peers to
-> Germany fell by 8 bp, and all five robustness variants fixed in the plan give 99 or 100 bp. More than half of the
+> Germany fell by 8 bp, and all five robustness variants fixed in the plan give 99 or 100 bp, which proves little: the
+> agreement mostly reflects how little the peers' average spread moved, and no variant tests the central assumption
+> that France would have followed its peers. More than half of the
 > French part came in September and October 2026. It is a lower bound if French stress spilled over to the peers,
 > and it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth EUR 81k.
 > The plan was committed before the decomposition (raw spreads already seen: PLAN.md, section 0): a commitment, not
