@@ -17,7 +17,9 @@ depuis 1999.
 
 - **Quand.** La part propre apparaît dès juin 2024 (12 pb), reste entre 12 et 43 pb jusqu'en août 2026, puis passe
   à 57 pb en septembre et à 100 pb en octobre 2026. L'épisode de l'automne 2026 en fait plus de la moitié : 56 pb
-  [49 ; 64] en deux mois. Faute de source primaire sur ses causes, ce projet ne les date pas.
+  [49 ; 64] en deux mois. Faute de source primaire sur ses causes, ce projet ne les date pas. Le taux français
+  d'octobre 2026, qui porte l'essentiel de ce saut, n'a pas été recoupé avec une source quotidienne, faute de taux
+  français quotidien ouvert (section 7).
 - **Ce que mesure le chiffre.** L'écart entre l'OAT-Bund observé et celui qu'aurait donné une France suivant ses
   pairs (Italie, Espagne, Pays-Bas, Belgique, Autriche, Portugal, Finlande, Irlande). Leur écart moyen à l'Allemagne
   sert de facteur commun ; la sensibilité de la France à ce facteur, estimée sur les 60 mois avant mai 2024, est
@@ -66,7 +68,8 @@ de validation, et décide de ce qui est gardé.
 > Germany fell by 8 bp, and all five robustness variants fixed in the plan give 99 or 100 bp, which proves little: the
 > agreement mostly reflects how little the peers' average spread moved, and no variant tests the central assumption
 > that France would have followed its peers. More than half of the
-> French part came in September and October 2026. It is a lower bound if French stress spilled over to the peers,
+> French part came in September and October 2026, and the October French yield has not been checked against a daily
+> source, as no daily French yield is openly available. It is a lower bound if French stress spilled over to the peers,
 > and it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth EUR 81k.
 > The plan was committed before the decomposition (raw spreads already seen: PLAN.md, section 0): a commitment, not
 > a proof. Section 8, added on 23 November 2026 under a second plan committed before any estimation on the data,
