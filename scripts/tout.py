@@ -12,7 +12,7 @@ import os
 import subprocess
 import sys
 
-ETAPES = ["decomposition.py", "stress.py", "abe.py", "controles.py", "prevision.py", "verifier_readme.py"]
+ETAPES = ["decomposition.py", "placebo.py", "stress.py", "abe.py", "controles.py", "prevision.py", "verifier_readme.py"]
 
 
 def main() -> int:

@@ -165,6 +165,63 @@ La France s'écarte de tous. La Belgique fait exception par l'ampleur : son prop
 période, ce qui réduit celui de la France contre elle à 54 pb. Seule la ligne de l'Allemagne dépend d'un choc
 propre au Bund ; les autres comparent la France à un pair, sans passer par le Bund.
 
+### Placebos : d'autres pays, d'autres dates (hors plan, ajouté le 28 novembre 2026)
+
+**Cette sous-section est hors du plan d'origine et a été ajoutée après coup**, une fois tous les résultats connus.
+Une session de relecture distincte, par IA, a d'abord fait ces calculs avec son propre script ; ils entrent dans le
+dépôt avec `scripts/placebo.py`, qui écrit `resultats/placebo.json`. Ils reprennent la méthode du modèle principal
+sans rien y changer (b sur les 60 variations qui finissent au mois de base, intervalle de Newey-West) et ne
+modifient ni le titre ni les chiffres de tête. Ils disent deux choses : la part propre de 2024-2026 dépasse ce que
+la méthode trouve pour la France aux autres dates et pour les pairs sur la même période, et l'intervalle nominal est
+trop étroit.
+
+**D'autres pays.** Chaque pair contre l'écart moyen des sept autres (pondéré par le PIB de 2019, France exclue), de
+mai 2024 à octobre 2026, part propre en pb :
+
+| pays | b | part propre | intervalle |
+|---|---|---|---|
+| Italie | 2,40 | +16 | [−111 ; 144] |
+| Espagne | 0,74 | −8 | [−56 ; 40] |
+| Pays-Bas | 0,21 | −18 | [−54 ; 18] |
+| Belgique | 0,42 | **+48** | **[12 ; 83]** |
+| Autriche | 0,39 | −20 | [−53 ; 13] |
+| Portugal | 1,01 | −6 | [−66 ; 54] |
+| Finlande | 0,41 | −4 | [−35 ; 27] |
+| Irlande | 0,42 | −23 | [−72 ; 27] |
+| France (modèle principal, contre les huit pairs) | 0,40 | **+100** | **[73 ; 126]** |
+
+- Sept pairs sur huit n'ont pas de part propre dont l'intervalle nominal exclut 0. **La Belgique en a une au sens de
+  cet intervalle, moitié moins grande que celle de la France** : +48 pb [12 ; 83]. Élargi comme plus bas, de
+  l'écart-type des z de son propre placebo par dates (1,56), son intervalle devient [−7 ; 103] et contient 0.
+  « Propre à la France » se lit avec cette réserve ; le calcul ne dit pas pourquoi la Belgique s'écarte aussi de ses
+  pairs. Le tableau sans modèle le laissait voir : contre la Belgique, l'écart de la France ne monte que de 54 pb.
+- Si la France reste parmi les pairs de chaque pays, sa propre hausse entre dans leur facteur commun : la Belgique
+  tombe à +31 pb [−2 ; 63] et l'Autriche passe à −36 pb [−67 ; −4].
+
+**D'autres dates.** La France, à chaque mois de base de janvier 2004 à décembre 2021 (216 bases), avec le b des
+60 variations qui finissent à la base et une part propre cumulée sur 29 mois, comme dans le modèle principal ;
+toutes les fenêtres finissent au plus tard en mai 2024, avant la période étudiée.
+
+- **Aucune base n'atteint 100 pb.** La part propre va de −80 pb (base mars 2010) à +64 pb (base août 2012) ; en
+  valeur absolue, sa médiane est de 10 pb et son 95e centile de 52 pb. Rapportée à son écart-type estimé, la marge
+  est mince en valeur absolue : le z de 2024-2026 vaut 7,33, le plus grand z placebo 7,17 en valeur absolue (base
+  novembre 2008, un z négatif) ; du côté positif, le plus grand ne vaut que 2,14 (base septembre 2011). Sur deux
+  mois (243 bases), la plus grande part propre est de 48 pb (base septembre 2011), contre 56 pb à l'automne 2026.
+- **L'intervalle nominal exclut 0 trop souvent**, si l'on tient qu'aucune de ces fenêtres passées n'avait de part
+  propre réelle. À 95 %, il l'exclurait dans 5 % des bases ; il l'exclut dans 11 % des cas à 29 mois (24 bases,
+  dont 23 prises de décembre 2007 à avril 2010, toutes négatives : l'écart français y a moins monté que ne le
+  prévoyait le modèle) et dans 8 % à deux mois. Le rapport de la part propre à son écart-type estimé devrait avoir un
+  écart-type de 1 sur l'ensemble des bases ; il a 1,54 à 29 mois et 1,26 à deux mois. Chaque pair, traité de même
+  contre les sept autres, voit son intervalle exclure 0 dans 14 % à 26 % des bases.
+- **Élargi de l'écart-type des z du placebo (1,54), l'intervalle de tête devient [59 ; 141]**, proche de ceux des
+  fenêtres longues ([59 ; 140] et [52 ; 147]), et celui de l'automne 2026 [47 ; 66] au lieu de [49 ; 64] (le
+  placebo réestime b à chaque base ; l'automne 2026 garde le b de mai 2024). À 29 mois, cet élargissement reste trop
+  étroit : même élargi, l'intervalle exclut 0 dans 8 % des bases placebo. Avec le 95e centile des |z| du placebo,
+  4,37 au lieu de 1,96, l'intervalle de tête serait [40 ; 159]. 0 reste exclu dans tous les cas.
+- **Ce sont des ordres de grandeur, pas de nouveaux intervalles à 95 %** : les 216 fenêtres de 29 mois se
+  chevauchent, la période n'en contient que 8 sans chevauchement, et presque tous les dépassements viennent d'un
+  seul épisode. Le placebo n'éprouve pas non plus l'hypothèse centrale, que la France aurait suivi ses pairs.
+
 ## 4. Les épisodes
 
 Le plan fixe cinq épisodes de contrôle et, pour trois d'entre eux, la lecture attendue. Pour E1 à E4, b est estimé
@@ -501,7 +558,7 @@ uv run python scripts/prevision.py            # la prévision seule : bandes sur
 uv run pytest                                 # tests sur des cas calculables à la main ou simulés
 ```
 
-`scripts/tout.py` enchaîne `telecharger.py`, `decomposition.py`, `stress.py`, `abe.py`, `controles.py`,
+`scripts/tout.py` enchaîne `telecharger.py`, `decomposition.py`, `placebo.py`, `stress.py`, `abe.py`, `controles.py`,
 `prevision.py` et `verifier_readme.py`. Ce dernier recalcule chaque chiffre de cette page depuis les JSON de
 `resultats/` et signale tout nombre qui n'en sort pas. **Mise à jour en une commande :** `uv run python
 scripts/tout.py --dernier-mois 2026-11` prolonge la fenêtre d'un mois ; la vérification dira alors quels chiffres de
@@ -515,6 +572,7 @@ les poids.
 | `PLAN_PREVISION.md` | le plan de la section 8, commité seul avant toute estimation sur les données (ce qui avait été vu : section 0) ; un engagement, pas une preuve |
 | `src/ecart_oat_bund/donnees.py` | téléchargement et lecture des sources |
 | `src/ecart_oat_bund/decomposition.py` | estimation, part propre, intervalle de Newey-West, tableau sans modèle |
+| `src/ecart_oat_bund/placebo.py` | les placebos hors plan de la section 3, lancés par `scripts/placebo.py` : autres pays, autres dates |
 | `src/ecart_oat_bund/analyse.py` | le plan traduit en constantes : fenêtres, groupes, variantes, épisodes |
 | `src/ecart_oat_bund/stress.py` | prix, duration, DV01, courbe des OAT, position neutre en DV01, chocs |
 | `src/ecart_oat_bund/nelson_siegel.py` | courbe de Svensson de la BCE et facteurs de Nelson-Siegel (rejeu de 2022) |

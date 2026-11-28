@@ -311,6 +311,7 @@ def attendus(r: dict) -> dict[str, str]:
     e["annexe"] = (f"plus élevée de {rm[str(h[0])]} %, {rm[str(h[1])]} % et {rm[str(h[2])]} % à {h[0]}, {h[1]} et "
                    f"{h[2]} mois")
     e.update(attendus_prevision(r))
+    e.update(attendus_placebo(r))
     # Constantes du plan citées dans le texte
     pl = ref["plan"]
     e["plan 60"] = f"sur les {pl['fenetre_principale_variations']} mois avant mai 2024"
@@ -600,11 +601,107 @@ def attendus_prevision(r: dict) -> dict[str, str]:
     return e
 
 
+def attendus_placebo(r: dict) -> dict[str, str]:
+    """Les chiffres de la sous-section « Placebos » de la section 3 (hors plan, ajoutée le 28 novembre 2026) : tous
+    viennent de resultats/placebo.json, sauf ceux qu'elle rappelle de decomposition.json."""
+    pl, dec = r["placebo"], r["decomposition"]
+    p, var, sm, e5d = dec["modele_principal"], dec["variantes"], dec["sans_modele"], dec["episodes"]["E5"]
+    pays, avec = pl["par_pays_contre_les_sept_autres_pairs"], pl["par_pays_avec_la_france_parmi_les_pairs"]
+    h29, h2 = pl["par_dates_france"]["h29"], pl["par_dates_france"]["h2"]
+    et, et5 = pl["etalonnage"]["principal"], pl["etalonnage"]["E5"]
+    assert pl["base"] == p["base"] and pl["fin"] == p["mois"] and h29["horizon_mois"] == p["h_mois"]
+    assert h29["derniere_fin"] == p["base"]                    # les fenêtres placebo finissent avant la période
+    assert abs(et["part_propre_pb"] - p["part_propre_pb"]) < 1e-3
+    assert abs(et5["part_propre_pb"] - e5d["part_propre_pb"]) < 1e-3
+    e = {}
+    e["placebo titre"] = f"Placebos : d'autres pays, d'autres dates (hors plan, ajouté le {jour_fr(pl['date_ajout'])})"
+    e["placebo hors plan"] = ("**Cette sous-section est hors du plan d'origine et a été ajoutée après coup**, une fois "
+                              "tous les résultats connus")
+    e["placebo méthode"] = (f"(b sur les {pl['n_mois_estimation']} variations qui finissent au mois de base, intervalle "
+                            "de Newey-West)")
+    noms = {"IT": "Italie", "ES": "Espagne", "NL": "Pays-Bas", "BE": "Belgique", "AT": "Autriche", "PT": "Portugal",
+            "FI": "Finlande", "IE": "Irlande"}
+    nominaux = [c for c, v in pays.items() if v["exclut_zero"]]
+    assert nominaux == ["BE"] and len(pays) == 8
+    e["placebo sept sur huit"] = "Sept pairs sur huit n'ont pas de part propre dont l'intervalle nominal exclut 0"
+    for c, v in pays.items():
+        x, i = signe(v["part_propre_pb"]), ic(v["ic95_pb"])
+        if v["exclut_zero"]:
+            x, i = f"**{x}**", f"**{i}**"
+        e[f"placebo {c}"] = f"| {noms[c]} | {fr(v['b'], 2)} | {x} | {i} |"
+    e["placebo France"] = (f"| France (modèle principal, contre les huit pairs) | "
+                           f"{fr(p['estimation']['coefficients']['P'], 2)} | **{signe(p['part_propre_pb'])}** | "
+                           f"**{ic(p['ic95_pb'])}** |")
+    be = pays["BE"]
+    assert 0.4 < be["part_propre_pb"] / p["part_propre_pb"] < 0.6   # « moitié moins grande »
+    assert not be["exclut_zero_apres_elargissement"]
+    e["placebo Belgique"] = (f"moitié moins grande que celle de la France** : {signe(be['part_propre_pb'])} pb "
+                             f"{ic(be['ic95_pb'])}")
+    e["placebo Belgique élargie"] = (f"l'écart-type des z de son propre placebo par dates "
+                                     f"({fr(be['ecart_type_z_placebo_par_dates'], 2)}), son intervalle devient "
+                                     f"{ic(be['ic95_elargi_pb'])} et contient 0")
+    e["placebo sans modèle"] = (f"contre la Belgique, l'écart de la France ne monte que de "
+                                f"{fr(sm['BE']['variation_pb'])} pb")
+    e["placebo avec la France"] = (f"la Belgique tombe à {signe(avec['BE']['part_propre_pb'])} pb "
+                                   f"{ic(avec['BE']['ic95_pb'])} et l'Autriche passe à "
+                                   f"{signe(avec['AT']['part_propre_pb'])} pb {ic(avec['AT']['ic95_pb'])}")
+    e["placebo dates"] = (f"La France, à chaque mois de base de {mois_fr(h29['premiere_base'])} à "
+                          f"{mois_fr(h29['derniere_base'])} ({h29['bases']} bases), avec le b des "
+                          f"{pl['n_mois_estimation']} variations qui finissent à la base et une part propre cumulée "
+                          f"sur {h29['horizon_mois']} mois")
+    e["placebo fin"] = f"finissent au plus tard en {mois_fr(h29['derniere_fin'])}, avant la période étudiée"
+    assert h29["max_abs_propre_pb"] < p["part_propre_pb"] and et["bases_placebo_au_moins_aussi_grandes"] == 0
+    e["placebo 100"] = f"Aucune base n'atteint {fr(p['part_propre_pb'])} pb"
+    e["placebo plage"] = (f"La part propre va de {signe(h29['min_propre_pb'])} pb (base {mois_fr(h29['base_min'])}) à "
+                          f"{signe(h29['max_propre_pb'])} pb (base {mois_fr(h29['base_max'])}) ; en valeur absolue, "
+                          f"sa médiane est de {fr(h29['mediane_abs_propre_pb'])} pb et son 95e centile de "
+                          f"{fr(h29['centile_95_abs_propre_pb'])} pb")
+    assert et["z"] > h29["max_abs_z"]
+    assert h29["z_a_la_base_max_abs_z"] < 0 < h29["max_z_positif"]
+    e["placebo z marge"] = (f"le z de 2024-2026 vaut {fr(et['z'], 2)}, le plus grand z placebo "
+                            f"{fr(h29['max_abs_z'], 2)} en valeur absolue (base {mois_fr(h29['base_max_abs_z'])}, un z "
+                            f"négatif) ; du côté positif, le plus grand ne vaut que {fr(h29['max_z_positif'], 2)} (base "
+                            f"{mois_fr(h29['base_max_z_positif'])})")
+    assert h2["propre_a_la_base_max_abs_pb"] > 0 and h2["max_abs_propre_pb"] < e5d["part_propre_pb"]
+    e["placebo deux mois"] = (f"deux\n  mois ({h2['bases']} bases), la plus grande part propre est de "
+                              f"{fr(h2['max_abs_propre_pb'])} pb (base {mois_fr(h2['base_max_abs'])}), contre "
+                              f"{fr(e5d['part_propre_pb'])} pb à l'automne 2026")
+    e["placebo nominal"] = "À 95 %, il l'exclurait dans 5 % des bases"
+    rejets = h29["propre_aux_bases_ou_l_intervalle_exclut_zero_pb"]
+    episode = {b: x for b, x in rejets.items() if "2007" <= b[:4] <= "2010"}
+    assert len(rejets) == h29["exclut_zero"] and len(episode) >= len(rejets) - 1    # « presque tous »
+    assert all(x < 0 for x in episode.values())                                     # « toutes négatives »
+    e["placebo rejets"] = (f"il l'exclut dans {fr(100 * h29['part_exclut_zero'])} % des cas à {h29['horizon_mois']} "
+                           f"mois ({h29['exclut_zero']} bases, dont {len(episode)} prises de {mois_fr(min(episode))} à "
+                           f"{mois_fr(max(episode))}, toutes négatives")
+    e["placebo rejets deux mois"] = f"et dans {fr(100 * h2['part_exclut_zero'])} % à deux mois"
+    e["placebo z"] = (f"devrait avoir un écart-type de 1 sur l'ensemble des bases ; il a "
+                      f"{fr(h29['ecart_type_z'], 2)} à {h29['horizon_mois']} mois et {fr(h2['ecart_type_z'], 2)} à "
+                      "deux mois")
+    parts = sorted(100 * v["part_exclut_zero"] for v in pl["par_dates_pairs_h29"].values())
+    e["placebo pairs"] = f"voit son intervalle exclure 0 dans {fr(parts[0])} % à {fr(parts[-1])} % des bases"
+    assert et["ic95_etalonne_pb"][0] > 0 and et5["ic95_etalonne_pb"][0] > 0 and et["ic95_centile_empirique_pb"][0] > 0
+    assert all(abs(a - b) < 1e-3 for a, b in zip(et5["ic95_nominal_pb"], e5d["ic95_pb"]))
+    e["placebo élargi"] = (f"Élargi de l'écart-type des z du placebo ({fr(et['ecart_type_z_placebo'], 2)}), "
+                           f"l'intervalle de tête devient {ic(et['ic95_etalonne_pb'])}**, proche de ceux des fenêtres "
+                           f"longues ({ic(var['fenetre_120']['ic95_pb'])} et {ic(var['depuis_1999']['ic95_pb'])}), et "
+                           f"celui de l'automne 2026 {ic(et5['ic95_etalonne_pb'])} au lieu de "
+                           f"{ic(et5['ic95_nominal_pb'])}")
+    assert h29["part_exclut_zero_apres_elargissement"] > 0.05
+    e["placebo encore étroit"] = (f"même élargi, l'intervalle exclut 0 dans "
+                                  f"{fr(100 * h29['part_exclut_zero_apres_elargissement'])} % des bases placebo. Avec "
+                                  f"le 95e centile des |z| du placebo, {fr(h29['centile_95_abs_z'], 2)} au lieu de "
+                                  f"1,96, l'intervalle de tête serait {ic(et['ic95_centile_empirique_pb'])}. 0 reste "
+                                  "exclu dans tous les cas")
+    e["placebo chevauchement"] = (f"les {h29['bases']} fenêtres de {h29['horizon_mois']} mois se chevauchent, la "
+                                  f"période n'en contient que {h29['fenetres_sans_chevauchement']} sans chevauchement")
+    return e
+
 # Formulations corrigées après les audits : elles ne doivent pas revenir. « Indépendant » désignait des agents
 # d'IA (décision du 28 novembre 2026), comme l'ancienne phrase sur leur rôle.
 INTERDITES = ["audit indépendant", "relecture indépendante", "independent audit", "independent review",
               "independent pass", "sous la direction de Guillaume Beaudouin",
-              "under the direction of Guillaume Beaudouin",
+              "under the direction of Guillaume Beaudouin", "dépasse tout ce que", "Étalonné sur ce placebo",
               "avant tout calcul", "before any computation", "CC BY", "d'indiquer les modifications", "bien connu",
               "sont propres à la France", "are specific to France"]
 
@@ -617,7 +714,7 @@ def normaliser(texte: str) -> str:
 
 
 def charger() -> dict:
-    noms = ["decomposition", "stress", "abe_2025", "controles", "prevision", "references"]
+    noms = ["decomposition", "stress", "abe_2025", "controles", "prevision", "references", "placebo"]
     return {n: json.loads((RESULTATS / f"{n}.json").read_text(encoding="utf-8")) for n in noms}
 
 

@@ -1,0 +1,693 @@
+{
+  "note": "Hors plan, ajouté le 28 novembre 2026, après la seconde relecture de la page par une session de relecture distincte, par IA : ces calculs ne sont pas dans PLAN.md et ne changent ni le titre ni les chiffres de tête. Même méthode que le modèle principal (b sur les 60 variations qui finissent au mois de base, intervalle de Newey-West).",
+  "date_ajout": "2026-11-28",
+  "base": "2024-05",
+  "fin": "2026-10",
+  "n_mois_estimation": 60,
+  "par_pays_contre_les_sept_autres_pairs": {
+    "IT": {
+      "pairs": [
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 2.397811309420989,
+      "variation_observee_pb": -5.599999999999994,
+      "part_propre_pb": 16.47538460148922,
+      "sigma_pb": 65.19618900889073,
+      "ic95_pb": [
+        -111.30679778520272,
+        144.25756698818117
+      ],
+      "z": 0.25270471866449884,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 1.7329473357316632,
+      "ic95_elargi_pb": [
+        -204.96440791950604,
+        237.9151771224845
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "ES": {
+      "pairs": [
+        "IT",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.7375537326124927,
+      "variation_observee_pb": -13.0,
+      "part_propre_pb": -8.129414436606888,
+      "sigma_pb": 24.55122199138187,
+      "ic95_pb": [
+        -56.248925316163096,
+        39.99009644294932
+      ],
+      "z": -0.33112056253088046,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 2.3995232554673573,
+      "ic95_elargi_pb": [
+        -123.59329983381653,
+        107.33447096060274
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "NL": {
+      "pairs": [
+        "IT",
+        "ES",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.21304166962499865,
+      "variation_observee_pb": -19.09999999999998,
+      "part_propre_pb": -17.798626380356495,
+      "sigma_pb": 18.277078617018983,
+      "ic95_pb": [
+        -53.621042212320845,
+        18.023789451607854
+      ],
+      "z": -0.9738222805357433,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 1.871221865430467,
+      "ic95_elargi_pb": [
+        -84.83031415767073,
+        49.23306139695774
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "BE": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.4168122158747004,
+      "variation_observee_pb": 42.39999999999999,
+      "part_propre_pb": 47.73003915072496,
+      "sigma_pb": 18.003647545439087,
+      "ic95_pb": [
+        12.443538371311405,
+        83.01653993013852
+      ],
+      "z": 2.6511316126501567,
+      "exclut_zero": true,
+      "ecart_type_z_placebo_par_dates": 1.561502789797985,
+      "ic95_elargi_pb": [
+        -7.369930258538076,
+        102.830008559988
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "AT": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.39136563638811095,
+      "variation_observee_pb": -22.619999999999997,
+      "part_propre_pb": -19.908501905197003,
+      "sigma_pb": 16.795428859807128,
+      "ic95_pb": [
+        -52.8269375753236,
+        13.009933764929595
+      ],
+      "z": -1.1853523998330118,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 2.4390095323242367,
+      "ic95_elargi_pb": [
+        -100.19688029383795,
+        60.37987648344395
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "PT": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "FI",
+        "IE"
+      ],
+      "b": 1.0069418084592237,
+      "variation_observee_pb": -13.900000000000027,
+      "part_propre_pb": -6.03820060325958,
+      "sigma_pb": 30.66279360340303,
+      "ic95_pb": [
+        -66.13617173131466,
+        54.0597705247955
+      ],
+      "z": -0.19692271621948515,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 4.5224369052462166,
+      "ic95_elargi_pb": [
+        -277.8274831631975,
+        265.7510819566784
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "FI": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "IE"
+      ],
+      "b": 0.4060759380351965,
+      "variation_observee_pb": -7.499999999999972,
+      "part_propre_pb": -4.224511541912927,
+      "sigma_pb": 15.706648472512486,
+      "ic95_pb": [
+        -35.008976865868455,
+        26.559953782042598
+      ],
+      "z": -0.26896327050968627,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 2.6370034847435067,
+      "ic95_elargi_pb": [
+        -85.4032538771493,
+        76.95423079332343
+      ],
+      "exclut_zero_apres_elargissement": false
+    },
+    "IE": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI"
+      ],
+      "b": 0.4166182551665136,
+      "variation_observee_pb": -25.349999999999987,
+      "part_propre_pb": -22.502604937927355,
+      "sigma_pb": 25.078603295953844,
+      "ic95_pb": [
+        -71.65576418056439,
+        26.650554304709676
+      ],
+      "z": -0.8972830214016704,
+      "exclut_zero": false,
+      "ecart_type_z_placebo_par_dates": 6.033353285559853,
+      "ic95_elargi_pb": [
+        -319.06097975013813,
+        274.05576987428344
+      ],
+      "exclut_zero_apres_elargissement": false
+    }
+  },
+  "par_pays_avec_la_france_parmi_les_pairs": {
+    "FR": {
+      "pairs": [
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.39797682420819314,
+      "variation_observee_pb": 96.4,
+      "part_propre_pb": 99.60051974858928,
+      "sigma_pb": 13.594349929935952,
+      "ic95_pb": [
+        72.95608349268021,
+        126.24495600449835
+      ],
+      "z": 7.326611442394917,
+      "exclut_zero": true
+    },
+    "IT": {
+      "pairs": [
+        "FR",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 2.767183470744329,
+      "variation_observee_pb": -5.599999999999994,
+      "part_propre_pb": -94.62699715831778,
+      "sigma_pb": 66.8820888934883,
+      "ic95_pb": [
+        -225.7134826003612,
+        36.45948828372565
+      ],
+      "z": -1.4148331597270243,
+      "exclut_zero": false
+    },
+    "ES": {
+      "pairs": [
+        "FR",
+        "IT",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.962651958725213,
+      "variation_observee_pb": -13.0,
+      "part_propre_pb": -42.35057524183105,
+      "sigma_pb": 22.318292380151682,
+      "ic95_pb": [
+        -86.09362450336306,
+        1.3924740197009626
+      ],
+      "z": -1.8975723823519164,
+      "exclut_zero": false
+    },
+    "NL": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "BE",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.2898850502939303,
+      "variation_observee_pb": -19.09999999999998,
+      "part_propre_pb": -27.398217267512543,
+      "sigma_pb": 17.983085138906624,
+      "ic95_pb": [
+        -62.644416470687,
+        7.847981935661913
+      ],
+      "z": -1.5235548881563246,
+      "exclut_zero": false
+    },
+    "BE": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "AT",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.52914535401232,
+      "variation_observee_pb": 42.39999999999999,
+      "part_propre_pb": 30.50041069590651,
+      "sigma_pb": 16.69938833509558,
+      "ic95_pb": [
+        -2.2297890047291204,
+        63.23061039654214
+      ],
+      "z": 1.8264387942764695,
+      "exclut_zero": false
+    },
+    "AT": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "PT",
+        "FI",
+        "IE"
+      ],
+      "b": 0.5070770593303547,
+      "variation_observee_pb": -22.619999999999997,
+      "part_propre_pb": -35.848320813110455,
+      "sigma_pb": 16.114071775565296,
+      "ic95_pb": [
+        -67.43132113751184,
+        -4.265320488709072
+      ],
+      "z": -2.224659373025094,
+      "exclut_zero": true
+    },
+    "PT": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "FI",
+        "IE"
+      ],
+      "b": 1.2579472010212296,
+      "variation_observee_pb": -13.900000000000027,
+      "part_propre_pb": -44.98991469034134,
+      "sigma_pb": 30.105599024749953,
+      "ic95_pb": [
+        -103.99580451185543,
+        14.015975131172745
+      ],
+      "z": -1.4944035710219523,
+      "exclut_zero": false
+    },
+    "FI": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "IE"
+      ],
+      "b": 0.5049280322084717,
+      "variation_observee_pb": -7.499999999999972,
+      "part_propre_pb": -19.940287328677076,
+      "sigma_pb": 15.127876695122907,
+      "ic95_pb": [
+        -49.590380813680795,
+        9.709806156326643
+      ],
+      "z": -1.3181154057863023,
+      "exclut_zero": false
+    },
+    "IE": {
+      "pairs": [
+        "FR",
+        "IT",
+        "ES",
+        "NL",
+        "BE",
+        "AT",
+        "PT",
+        "FI"
+      ],
+      "b": 0.5438181432422128,
+      "variation_observee_pb": -25.349999999999987,
+      "part_propre_pb": -39.49613008603132,
+      "sigma_pb": 24.419717634380735,
+      "ic95_pb": [
+        -87.35789716205521,
+        8.365636989992566
+      ],
+      "z": -1.6173868460470802,
+      "exclut_zero": false
+    }
+  },
+  "par_dates_france": {
+    "h2": {
+      "horizon_mois": 2,
+      "bases": 243,
+      "premiere_base": "2004-01",
+      "derniere_base": "2024-03",
+      "derniere_fin": "2024-05",
+      "fenetres_sans_chevauchement": 122,
+      "exclut_zero": 19,
+      "part_exclut_zero": 0.07818930041152264,
+      "ecart_type_z": 1.2551834830078608,
+      "sigma_median_pb": 6.210551452111697,
+      "mediane_abs_propre_pb": 2.7435842705070925,
+      "centile_95_abs_propre_pb": 13.548776471314747,
+      "max_abs_propre_pb": 48.35769330734686,
+      "base_max_abs": "2011-09",
+      "propre_a_la_base_max_abs_pb": 48.35769330734686,
+      "min_propre_pb": -40.772903637063,
+      "base_min": "2012-05",
+      "max_propre_pb": 48.35769330734686,
+      "base_max": "2011-09",
+      "max_abs_z": 7.906821919676663,
+      "base_max_abs_z": "2011-09",
+      "z_a_la_base_max_abs_z": 7.906821919676663,
+      "max_z_positif": 7.906821919676663,
+      "base_max_z_positif": "2011-09",
+      "centile_95_abs_z": 2.310855718034504,
+      "part_exclut_zero_apres_elargissement": 0.04526748971193416,
+      "bases_ou_l_intervalle_exclut_zero": [
+        "2004-05",
+        "2004-08",
+        "2008-02",
+        "2008-05",
+        "2008-11",
+        "2009-01",
+        "2009-11",
+        "2010-01",
+        "2010-03",
+        "2010-04",
+        "2010-06",
+        "2010-10",
+        "2011-08",
+        "2011-09",
+        "2011-12",
+        "2012-04",
+        "2012-05",
+        "2012-06",
+        "2012-08"
+      ],
+      "propre_aux_bases_ou_l_intervalle_exclut_zero_pb": {
+        "2004-05": -4.502448095182546,
+        "2004-08": 5.25571594689458,
+        "2008-02": 4.970213464630405,
+        "2008-05": -5.26249685573875,
+        "2008-11": -13.541050516296853,
+        "2009-01": 9.424370934425879,
+        "2009-11": -9.667916200679253,
+        "2010-01": 7.2351544462351605,
+        "2010-03": -15.85294206355102,
+        "2010-04": -9.88997106401444,
+        "2010-06": -13.579753868886648,
+        "2010-10": -9.231151698979412,
+        "2011-08": 10.318109697448602,
+        "2011-09": 48.35769330734686,
+        "2011-12": 23.06228513719076,
+        "2012-04": -27.292279980422503,
+        "2012-05": -40.772903637063,
+        "2012-06": -36.95862616013727,
+        "2012-08": 27.473188149915686
+      },
+      "par_annee_de_base": {
+        "2004": 2,
+        "2008": 3,
+        "2009": 2,
+        "2010": 5,
+        "2011": 3,
+        "2012": 4
+      }
+    },
+    "h29": {
+      "horizon_mois": 29,
+      "bases": 216,
+      "premiere_base": "2004-01",
+      "derniere_base": "2021-12",
+      "derniere_fin": "2024-05",
+      "fenetres_sans_chevauchement": 8,
+      "exclut_zero": 24,
+      "part_exclut_zero": 0.1111111111111111,
+      "ecart_type_z": 1.5364530879601224,
+      "sigma_median_pb": 26.95406237847955,
+      "mediane_abs_propre_pb": 10.204449625806294,
+      "centile_95_abs_propre_pb": 51.567500498723305,
+      "max_abs_propre_pb": 80.20223654901817,
+      "base_max_abs": "2010-03",
+      "propre_a_la_base_max_abs_pb": -80.20223654901817,
+      "min_propre_pb": -80.20223654901817,
+      "base_min": "2010-03",
+      "max_propre_pb": 64.40317084433796,
+      "base_max": "2012-08",
+      "max_abs_z": 7.167981165942897,
+      "base_max_abs_z": "2008-11",
+      "z_a_la_base_max_abs_z": -7.167981165942897,
+      "max_z_positif": 2.1354522797187836,
+      "base_max_z_positif": "2011-09",
+      "centile_95_abs_z": 4.3722970761306215,
+      "part_exclut_zero_apres_elargissement": 0.08333333333333333,
+      "bases_ou_l_intervalle_exclut_zero": [
+        "2007-12",
+        "2008-01",
+        "2008-02",
+        "2008-03",
+        "2008-04",
+        "2008-05",
+        "2008-06",
+        "2008-07",
+        "2008-08",
+        "2008-09",
+        "2008-10",
+        "2008-11",
+        "2008-12",
+        "2009-01",
+        "2009-02",
+        "2009-03",
+        "2009-04",
+        "2009-05",
+        "2009-07",
+        "2010-01",
+        "2010-02",
+        "2010-03",
+        "2010-04",
+        "2011-09"
+      ],
+      "propre_aux_bases_ou_l_intervalle_exclut_zero_pb": {
+        "2007-12": -32.431914755824614,
+        "2008-01": -33.86932503514747,
+        "2008-02": -36.28804356767476,
+        "2008-03": -46.02625799982924,
+        "2008-04": -50.148475036421935,
+        "2008-05": -48.9819254916228,
+        "2008-06": -51.07400392942011,
+        "2008-07": -53.260244663169914,
+        "2008-08": -53.59810475917221,
+        "2008-09": -56.26320289064194,
+        "2008-10": -45.803640570491396,
+        "2008-11": -61.390003281188534,
+        "2008-12": -52.5361163432951,
+        "2009-01": -43.5469309559357,
+        "2009-02": -56.17840876192727,
+        "2009-03": -51.24462855053271,
+        "2009-04": -64.57243012590546,
+        "2009-05": -46.51122589431047,
+        "2009-07": -36.91794544017216,
+        "2010-01": -35.350674580023835,
+        "2010-02": -64.15163550492407,
+        "2010-03": -80.20223654901817,
+        "2010-04": -52.68786374973671,
+        "2011-09": 38.97539621176224
+      },
+      "par_annee_de_base": {
+        "2007": 1,
+        "2008": 12,
+        "2009": 6,
+        "2010": 4,
+        "2011": 1
+      }
+    }
+  },
+  "par_dates_pairs_h29": {
+    "IT": {
+      "bases": 216,
+      "exclut_zero": 35,
+      "part_exclut_zero": 0.16203703703703703,
+      "ecart_type_z": 1.7329473357316632,
+      "max_abs_propre_pb": 196.5925220328576
+    },
+    "ES": {
+      "bases": 216,
+      "exclut_zero": 40,
+      "part_exclut_zero": 0.18518518518518517,
+      "ecart_type_z": 2.3995232554673573,
+      "max_abs_propre_pb": 261.35164906836496
+    },
+    "NL": {
+      "bases": 216,
+      "exclut_zero": 30,
+      "part_exclut_zero": 0.1388888888888889,
+      "ecart_type_z": 1.871221865430467,
+      "max_abs_propre_pb": 158.0739165541792
+    },
+    "BE": {
+      "bases": 216,
+      "exclut_zero": 36,
+      "part_exclut_zero": 0.16666666666666666,
+      "ecart_type_z": 1.561502789797985,
+      "max_abs_propre_pb": 164.26568006639283
+    },
+    "AT": {
+      "bases": 216,
+      "exclut_zero": 31,
+      "part_exclut_zero": 0.14351851851851852,
+      "ecart_type_z": 2.4390095323242367,
+      "max_abs_propre_pb": 258.86727615132975
+    },
+    "PT": {
+      "bases": 216,
+      "exclut_zero": 40,
+      "part_exclut_zero": 0.18518518518518517,
+      "ecart_type_z": 4.5224369052462166,
+      "max_abs_propre_pb": 816.5361207290275
+    },
+    "FI": {
+      "bases": 216,
+      "exclut_zero": 33,
+      "part_exclut_zero": 0.1527777777777778,
+      "ecart_type_z": 2.6370034847435067,
+      "max_abs_propre_pb": 169.4146892190477
+    },
+    "IE": {
+      "bases": 216,
+      "exclut_zero": 56,
+      "part_exclut_zero": 0.25925925925925924,
+      "ecart_type_z": 6.033353285559853,
+      "max_abs_propre_pb": 645.5700362406074
+    }
+  },
+  "etalonnage": {
+    "principal": {
+      "h_mois": 29,
+      "part_propre_pb": 99.60051974858928,
+      "sigma_pb": 13.594349929935952,
+      "ic95_nominal_pb": [
+        72.95608349268021,
+        126.24495600449835
+      ],
+      "ecart_type_z_placebo": 1.5364530879601224,
+      "ic95_etalonne_pb": [
+        58.66259338624115,
+        140.5384461109374
+      ],
+      "bases_placebo_au_moins_aussi_grandes": 0,
+      "z": 7.326611442394917,
+      "ic95_centile_empirique_pb": [
+        40.161983298033796,
+        159.03905619914477
+      ]
+    },
+    "E5": {
+      "h_mois": 2,
+      "part_propre_pb": 56.3160289085654,
+      "sigma_pb": 3.8925198369273737,
+      "ic95_nominal_pb": [
+        48.68683021908002,
+        63.94522759805078
+      ],
+      "ecart_type_z_placebo": 1.2551834830078608,
+      "ic95_etalonne_pb": [
+        46.73998472493814,
+        65.89207309219266
+      ],
+      "bases_placebo_au_moins_aussi_grandes": 0,
+      "ic95_centile_empirique_pb": [
+        47.32097718583904,
+        65.31108063129176
+      ],
+      "note_b": "le placebo réestime b à chaque base ; l'automne 2026 garde le b du modèle principal"
+    },
+    "note": "élargissement de l'intervalle nominal par l'écart-type des z du placebo par dates ; les fenêtres placebo se chevauchent, et la période n'en contient qu'une poignée sans chevauchement"
+  }
+}
