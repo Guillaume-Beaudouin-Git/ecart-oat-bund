@@ -4,7 +4,9 @@
 
 **Toute la hausse de l'écart OAT-Bund de mai 2024 à octobre 2026 (+96 pb, de 51 à 147 pb en moyenne mensuelle) est
 propre à la France : 100 pb [73 ; 126] ; en suivant ses pairs, l'écart aurait baissé de 3 pb.** L'intervalle est à
-95 %. Les arrondis expliquent que 100 − 3 ne fasse pas 96 : la part propre vaut 99,6 pb, la part commune −3,2 pb et
+95 % sous les hypothèses du modèle, dont une variance des résidus constante, celle de 2019-2024 : c'est un intervalle
+nominal, que les fenêtres d'estimation plus longues élargissent à [59 ; 140] et [52 ; 147] (section 3). Les arrondis
+expliquent que 100 − 3 ne fasse pas 96 : la part propre vaut 99,6 pb, la part commune −3,2 pb et
 la hausse 96,4 pb. L'écart moyen des huit pays pairs à l'Allemagne, pondéré par le PIB de 2019, a baissé de 8 pb sur
 la période. Les cinq variantes fixées d'avance donnent toutes 99 ou 100 pb. En octobre 2026, l'écart OAT-Bund
 (147 pb en moyenne mensuelle) est au plus haut depuis novembre 2011, et, en moyenne mensuelle, le taux français
@@ -56,7 +58,9 @@ de validation, et décide de ce qui est gardé.
 
 > **In English.** The whole 96 bp rise in the 10-year OAT-Bund spread between May 2024 and October 2026 (from 51 to
 > 147 bp, monthly averages) is France-specific: 100 bp [73; 126]; had France followed its peers, the spread would
-> have fallen by 3 bp (100 − 3 differs from 96 by rounding). The GDP-weighted spread of eight euro-area peers to
+> have fallen by 3 bp (100 − 3 differs from 96 by rounding). The interval is nominal: 95% under the model's
+> assumptions, including a constant residual variance, that of 2019-2024; longer estimation windows widen it to
+> [59; 140] and [52; 147]. The GDP-weighted spread of eight euro-area peers to
 > Germany fell by 8 bp, and all five robustness variants fixed in the plan give 99 or 100 bp. More than half of the
 > French part came in September and October 2026. It is a lower bound if French stress spilled over to the peers,
 > and it is not a pure default premium. For EUR 100m of 10-year OATs, one basis point of spread is worth EUR 81k.
